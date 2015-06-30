@@ -1,1 +1,1 @@
-require('./locals-req')
+require('./helpers')

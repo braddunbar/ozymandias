@@ -5,7 +5,7 @@ module.exports = function () {
 
   app.use(require('compression'))
   app.use(express.static('public'))
-  app.use(require('./mid/locals-req'))
+  app.use(require('./helpers'))
 
   return app
 }

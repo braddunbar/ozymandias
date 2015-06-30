@@ -1,10 +1,10 @@
 var test = require('tape')
-var localsReq = require('../mid/locals-req')
+var helpers = require('../helpers')
 
 test('locals.req === req', function (t) {
   var req = {}
   var res = {locals: {}}
-  localsReq(req, res, function () {
+  helpers(req, res, function () {
     t.is(res.locals.req, req)
     t.end()
   })
