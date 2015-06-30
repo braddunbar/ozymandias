@@ -1,6 +1,6 @@
 var express = require('express')
 
-module.exports = function () {
+var ozymandias = module.exports = function () {
   var app = express()
 
   app.use(require('compression'))
@@ -9,3 +9,5 @@ module.exports = function () {
 
   return app
 }
+
+for (var p in express) ozymandias[p] = express[p]
