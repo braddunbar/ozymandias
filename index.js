@@ -12,6 +12,7 @@ var ozymandias = module.exports = function () {
 
   // Middleware
   app.use(require('./helpers'))
+  app.use(require('./layout'))
 
   return app
 }
