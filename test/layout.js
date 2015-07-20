@@ -4,13 +4,24 @@ var request = require('supertest')
 var app = require('../')()
 app.set('views', 'test/views')
 
-app.get('/', function (req, res) {
+app.get('/layout', function (req, res) {
   res.render('index')
 })
 
 test('render the layout', function (t) {
   request(app)
-  .get('/')
+  .get('/layout')
   .expect('layout index\n\n')
+  .end(t.end)
+})
+
+app.get('/alternate', function (req, res) {
+  res.render('index', {layout: 'alternate'})
+})
+
+test('render an alternate layout', function (t) {
+  request(app)
+  .get('/alternate')
+  .expect('alternate layout index\n\n')
   .end(t.end)
 })

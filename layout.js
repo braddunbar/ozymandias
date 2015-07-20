@@ -25,7 +25,7 @@ module.exports = function (req, res, next) {
       options.content = result
 
       // Render the layout.
-      render.call(res, 'layout', options, fn)
+      render.call(res, options.layout || 'layout', options, fn)
     })
   }
 
