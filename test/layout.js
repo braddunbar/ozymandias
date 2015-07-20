@@ -25,3 +25,14 @@ test('render an alternate layout', function (t) {
   .expect('alternate layout index\n\n')
   .end(t.end)
 })
+
+app.get('/nolayout', function (req, res) {
+  res.render('index', {layout: false})
+})
+
+test('render no layout', function (t) {
+  request(app)
+  .get('/nolayout')
+  .expect('index\n')
+  .end(t.end)
+})
