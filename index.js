@@ -14,6 +14,7 @@ var ozymandias = module.exports = function () {
   app.use(require('./helpers'))
   app.use(require('./layout'))
   app.use(require('compression')())
+  app.use(require('./mail'))
 
   return app
 }

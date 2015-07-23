@@ -10,12 +10,17 @@
     "url": "https://github.com/braddunbar/ozymandias.git"
   },
   "scripts": {
-    "test": "tape test/index.js"
+    "test": "standard && tape test/index.js"
   },
   "dependencies": {
+    "async": "1.4.0",
+    "aws-sdk": "2.1.39",
     "compression": "1.5.1",
     "ejs": "2.3.3",
-    "express": "4.13.1",
+    "express": "4.13.1"
+  },
+  "devDependencies": {
+    "standard": "4.5.4",
     "supertest": "1.0.1",
     "tape": "4.0.0"
   }
