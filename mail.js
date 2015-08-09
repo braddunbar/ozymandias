@@ -7,16 +7,18 @@ var ses = new aws.SES({
 
 module.exports = exports = function (req, res, next) {
 
-  req.mail = function (view, options, next) {
-    async.parallel([
-      renderHTML.bind(null, view, Object.create(options)),
-      renderText.bind(null, view, Object.create(options))
-    ], function (e, results) {
-      if (e) return next(e)
-      options.html = results[0]
-      options.text = results[1]
-      if (options.send === false) return next(null, format(options))
-      ses.sendEmail(format(options), next)
+  req.mail = function (view, options) {
+    return new Promise(function (resolve, reject) {
+      async.parallel([
+        renderHTML.bind(null, view, Object.create(options)),
+        renderText.bind(null, view, Object.create(options))
+      ], function (e, results) {
+        if (e) return reject(e)
+        options.html = results[0]
+        options.text = results[1]
+        if (options.send === false) return resolve(format(options))
+        ses.sendEmail(format(options), resolve)
+      })
     })
   }
 

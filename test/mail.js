@@ -13,11 +13,10 @@ app.get('/', function (req, res) {
     cc: ['cc@example.com'],
     bcc: ['bcc@example.com'],
     title: 'test email'
-  }, function (e, mail) {
-    if (e) throw e
+  }).then(function (mail) {
     sent = mail
     res.status(200).end()
-  })
+  }).catch(function (e) { throw e })
 })
 
 test('render the layout', function (t) {
