@@ -1,6 +1,6 @@
 {
   "name": "ozymandias",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "index.js",
   "author": "Brad Dunbar <dunbarb2@gmail.com> (http://braddunbar.net/)",
   "license": "ISC",
@@ -13,7 +13,6 @@
     "test": "standard && tape test/index.js"
   },
   "dependencies": {
-    "async": "1.4.0",
     "aws-sdk": "2.1.39",
     "compression": "1.5.1",
     "ejs": "2.3.3",

@@ -1,4 +1,3 @@
-var async = require('async')
 var aws = require('aws-sdk')
 var ses = new aws.SES({
   apiVersion: '2010-12-01',
@@ -8,28 +7,30 @@ var ses = new aws.SES({
 module.exports = exports = function (req, res, next) {
 
   req.mail = function (view, options) {
-    return new Promise(function (resolve, reject) {
-      async.parallel([
-        renderHTML.bind(null, view, Object.create(options)),
-        renderText.bind(null, view, Object.create(options))
-      ], function (e, results) {
-        if (e) return reject(e)
-        options.html = results[0]
-        options.text = results[1]
-        if (options.send === false) return resolve(format(options))
-        ses.sendEmail(format(options), resolve)
+    return Promise.all([
+      render(view, 'html', Object.create(options)),
+      render(view, 'text', Object.create(options))
+    ]).then(function (results) {
+      options.html = results[0]
+      options.text = results[1]
+      if (options.send === false) return format(options)
+      return new Promise(function (resolve, reject) {
+        ses.sendEmail(format(options), function (e, result) {
+          if (e) reject(e)
+          else resolve(result)
+        })
       })
     })
   }
 
-  function renderText (view, options, next) {
-    options.layout = false
-    res.render(`${view}.text.ejs`, options, next)
-  }
-
-  function renderHTML (view, options, next) {
-    options.layout = 'mail'
-    res.render(`${view}.html.ejs`, options, next)
+  function render (view, format, options) {
+    options.layout = format === 'html' ? 'mail' : false
+    return new Promise(function (resolve, reject) {
+      res.render(`${view}.${format}.ejs`, options, function (e, result) {
+        if (e) reject(e)
+        else resolve(result)
+      })
+    })
   }
 
   next()
