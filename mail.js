@@ -13,7 +13,11 @@ module.exports = exports = function (req, res, next) {
     ]).then(function (results) {
       options.html = results[0]
       options.text = results[1]
-      if (options.send === false) return format(options)
+
+      if (process.env.NODE_ENV === 'test' || options.send === false) {
+        return format(options)
+      }
+
       return new Promise(function (resolve, reject) {
         ses.sendEmail(format(options), function (e, result) {
           if (e) reject(e)
