@@ -162,21 +162,15 @@ test('order descending', function (t) {
 })
 
 test('order as string', function (t) {
-  User
-  .where({id: [1, 2]})
-  .order('id')
-  .all().then(function (users) {
-    t.deepEqual(users.map(function (user) { return user.id }), [1, 2])
+  User.order('id').all().then(function (users) {
+    t.deepEqual(users.map(function (user) { return user.id }), [1, 2, 3])
     t.end()
   }).catch(t.end)
 })
 
 test('order as array ascending', function (t) {
-  User
-  .where({id: [1, 2]})
-  .order(['id', 'asc'])
-  .all().then(function (users) {
-    t.deepEqual(users.map(function (user) { return user.id }), [1, 2])
+  User.order(['id', 'asc']).all().then(function (users) {
+    t.deepEqual(users.map(function (user) { return user.id }), [1, 2, 3])
     t.end()
   }).catch(t.end)
 })

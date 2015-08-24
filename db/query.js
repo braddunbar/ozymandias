@@ -1,5 +1,20 @@
 'use strict'
 
+let Table = require('sql/lib/table')
+let SQLQuery = require('sql/lib/node/query')
+
+Table.prototype.limit = function () {
+  let query = new SQLQuery(this)
+  query.limit.apply(query, arguments)
+  return query
+}
+
+Table.prototype.order = function () {
+  let query = new SQLQuery(this)
+  query.order.apply(query, arguments)
+  return query
+}
+
 class Query {
 
   constructor (model) {
