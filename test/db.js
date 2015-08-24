@@ -351,12 +351,13 @@ test('three levels', function (t) {
 test('update', function (t) {
   User.find(1).then(function (user) {
     t.is(user.first, 'Brad')
-    return db.rollback(function () {
+    return db.transaction(function () {
       user.update({first: 'Bradley'})
       User.find(1).then(function (user) {
         t.is(user.first, 'Bradley')
         t.end()
       })
+      db.query('rollback')
     })
   }).catch(t.end)
 })
@@ -364,12 +365,13 @@ test('update', function (t) {
 test('update with property names', function (t) {
   Post.find(1).then(function (post) {
     t.is(post.id, 1)
-    return db.rollback(function () {
+    return db.transaction(function () {
       post.update({userId: 2})
       Post.find(1).then(function (post) {
         t.is(post.userId, 2)
         t.end()
       })
+      db.query('rollback')
     })
   }).catch(t.end)
 })
@@ -377,11 +379,12 @@ test('update with property names', function (t) {
 test('transaction', function (t) {
   Post.find(1).then(function (post) {
     t.is(post.userId, 1)
-    return db.rollback(function () {
+    return db.transaction(function () {
       post.update({userId: 2})
       Post.find(1).then(function (post) {
         t.is(post.userId, 2)
       })
+      db.query('rollback')
     }).then(function () {
       return Post.find(1).then(function (post) {
         t.is(post.userId, 1)
@@ -394,8 +397,9 @@ test('transaction', function (t) {
 test('transactions forward errors', function (t) {
   Post.find(1).then(function (post) {
     t.deepEqual(post.slice('id', 'userId'), {id: 1, userId: 1})
-    return db.rollback(function () {
+    return db.transaction(function () {
       post.destroy()
+      db.query('rollback')
     }).then(function () {
       t.end('should get foreign key constraint error')
     }).catch(function (e) {
@@ -407,18 +411,19 @@ test('transactions forward errors', function (t) {
 
 test('destroy a comment', function (t) {
   Comment.find(1).then(function (comment) {
-    return db.rollback(function () {
+    return db.transaction(function () {
       comment.destroy()
       Comment.find(1).then(function (comment) {
         t.is(comment, null)
         t.end()
       })
+      db.query('rollback')
     })
   }).catch(t.end)
 })
 
 test('create a comment', function (t) {
-  db.rollback(function () {
+  db.transaction(function () {
     Comment.create({
       id: 123456789,
       userId: 1,
@@ -426,6 +431,7 @@ test('create a comment', function (t) {
       body: 'blah'
     }).then(check)
     Comment.find(123456789).then(check)
+    db.query('rollback')
   }).then(function () { t.end() }).catch(t.end)
 
   function check (comment) {
@@ -436,4 +442,23 @@ test('create a comment', function (t) {
       body: 'blah'
     })
   }
+})
+
+test('no nesting transactions', function (t) {
+  db.transaction(function () {
+    t.throws(function () {
+      db.transaction(function () {
+      })
+    }, 'transactions cannot be nested')
+  }).then(function () { t.end() })
+})
+
+test('error in transaction body', function (t) {
+  db.transaction(function () {
+    throw new Error('error in transaction body')
+  }).then(function () {
+    t.end('transaction should fail')
+  }).catch(function () {
+    t.end()
+  })
 })
