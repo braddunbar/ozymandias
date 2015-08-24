@@ -6,14 +6,14 @@ let DB = require('../db')
 let db = new DB(process.env.DATABASE_URL)
 
 let User = db.define({
-  name: 'users',
+  tableName: 'users',
   columns: ['id', 'email', 'first', 'last', 'birthday'],
   get email () { return this.data.get('email') },
   set email (value) { this.data.set('email', value.trim()) }
 })
 
 let Post = db.define({
-  name: 'posts',
+  tableName: 'posts',
   columns: [
     {name: 'id'},
     {name: 'body'},
@@ -23,7 +23,7 @@ let Post = db.define({
 })
 
 let Comment = db.define({
-  name: 'comments',
+  tableName: 'comments',
   columns: [
     {name: 'id'},
     {name: 'body'},

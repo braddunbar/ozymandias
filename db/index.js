@@ -14,7 +14,7 @@ class DB {
   define (props) {
     class Child extends Model {}
 
-    let table = sql.define({name: props.name, columns: props.columns})
+    let table = sql.define({name: props.tableName, columns: props.columns})
     Child.db = props.db = this
     Child.table = props.table = table
     Child.columns = props.columns = {}
