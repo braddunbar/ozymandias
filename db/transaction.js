@@ -4,7 +4,6 @@ class Transaction {
 
   constructor (db, options) {
     this.db = db
-    this.rollback = options && options.rollback
     this.queries = []
   }
 
@@ -35,7 +34,7 @@ class Transaction {
       }))
     }
 
-    promises.push(connection.query(this.rollback ? 'rollback' : 'commit'))
+    promises.push(connection.query('commit'))
 
     return Promise.all(promises).then(function () {
       connection.close()
