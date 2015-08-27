@@ -494,3 +494,10 @@ test('long transaction', function (t) {
     })
   }
 })
+
+test('no queries after closing a transaction', function (t) {
+  let transaction = db.transaction()
+  transaction.commit()
+  t.throws(function () { transaction.query('select 1') })
+  t.end()
+})

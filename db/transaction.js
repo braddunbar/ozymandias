@@ -17,6 +17,9 @@ class Transaction {
   }
 
   query (query) {
+    if (this.closed) {
+      throw new Error('cannot query a closed transaction')
+    }
     let promise = this.connect().then(function (connection) {
       return connection.query(query)
     })
@@ -25,8 +28,9 @@ class Transaction {
   }
 
   close (query) {
+    this.closed = true
     return this.connect().then(function (connection) {
-      this.query(query)
+      this.promises.push(connection.query(query))
       return Promise.all(this.promises).then(function (value) {
         connection.close()
         return value
