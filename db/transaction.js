@@ -24,9 +24,9 @@ class Transaction {
     return promise
   }
 
-  commit () {
+  close (query) {
     return this.connect().then(function (connection) {
-      this.query('commit')
+      this.query(query)
       return Promise.all(this.promises).then(function (value) {
         connection.close()
         return value
@@ -37,17 +37,23 @@ class Transaction {
     }.bind(this))
   }
 
+  commit () {
+    return this.close('commit')
+  }
+
+  rollback () {
+    return this.close('rollback')
+  }
+
   run (body) {
     if (this.db._transaction) {
       throw new Error('already running a transaction')
     }
     this.db._transaction = this
     try {
-      return body()
+      return Promise.resolve(body())
     } catch (e) {
-      let promise = Promise.reject(e)
-      this.promises.push(promise)
-      return promise
+      return Promise.reject(e)
     } finally {
       this.db._transaction = null
     }

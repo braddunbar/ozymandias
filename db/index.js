@@ -61,11 +61,22 @@ class DB {
     })
   }
 
-  transaction (body) {
+  transaction () {
+    return new Transaction(this)
+  }
+
+  commit (body) {
     let transaction = new Transaction(this)
-    if (!body) return transaction
-    transaction.run(body)
-    return transaction.commit()
+    return transaction.run(body).then(function () {
+      return transaction.commit()
+    })
+  }
+
+  rollback (body) {
+    let transaction = new Transaction(this)
+    return transaction.run(body).then(function () {
+      return transaction.rollback()
+    })
   }
 
 }
