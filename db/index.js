@@ -1,5 +1,6 @@
 'use strict'
 
+let pg = require('pg')
 let sql = require('sql')
 let Model = require('./model')
 let Connection = require('./connection')
@@ -49,6 +50,10 @@ class DB {
 
   connect () {
     return Connection.create(this)
+  }
+
+  close () {
+    pg.end()
   }
 
   query (query) {
