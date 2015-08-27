@@ -67,16 +67,26 @@ class DB {
 
   commit (body) {
     let transaction = new Transaction(this)
-    return transaction.run(body).then(function () {
+    try {
+      transaction.run(body)
       return transaction.commit()
-    })
+    } catch (e) {
+      return transaction.rollback().then(function () {
+        throw e
+      })
+    }
   }
 
   rollback (body) {
     let transaction = new Transaction(this)
-    return transaction.run(body).then(function () {
+    try {
+      transaction.run(body)
       return transaction.rollback()
-    })
+    } catch (e) {
+      return transaction.rollback().then(function () {
+        throw e
+      })
+    }
   }
 
 }

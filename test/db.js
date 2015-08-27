@@ -439,11 +439,13 @@ test('create a comment', function (t) {
 })
 
 test('no nesting transactions', function (t) {
-  db.rollback(function () {
+  let transaction = db.transaction()
+  transaction.run(function () {
     t.throws(function () {
-      db.rollback(function () {})
+      db.transaction.run()
     }, 'transactions cannot be nested')
-  }).then(function () { t.end() })
+    t.end()
+  })
 })
 
 test('error in transaction body', function (t) {
