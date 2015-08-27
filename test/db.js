@@ -462,3 +462,39 @@ test('error in transaction body', function (t) {
     t.end()
   })
 })
+
+test('long transaction', function (t) {
+  let transaction = db.transaction()
+  User.find(3).then(function (user) {
+    t.is(user.first, 'John')
+    return update(user)
+  }).catch(t.end)
+
+  function update (user) {
+    return transaction.run(function () {
+      return user.update({first: 'Jane'}).then(verifyJohn)
+    })
+  }
+
+  function verifyJohn () {
+    return User.find(3).then(function (user) {
+      t.is(user.first, 'John')
+      return verifyJane()
+    })
+  }
+
+  function verifyJane () {
+    return transaction.run(function () {
+      return User.find(3).then(function (user) {
+        t.is(user.first, 'Jane')
+        return commit()
+      })
+    })
+  }
+
+  function commit () {
+    return transaction.commit().then(function () {
+      t.end()
+    })
+  }
+})

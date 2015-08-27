@@ -2,46 +2,55 @@
 
 class Transaction {
 
-  constructor (db, options) {
+  constructor (db) {
     this.db = db
-    this.queries = []
+    this.promises = []
   }
 
-  add (query) {
-    return new Promise(function (resolve, reject) {
-      this.queries.push({
-        query: query,
-        reject: reject,
-        resolve: resolve
+  connect () {
+    if (this._connect) return this._connect
+    this._connect = this.db.connect().then(function (connection) {
+      this.promises.push(connection.query('begin'))
+      return connection
+    }.bind(this))
+    return this._connect
+  }
+
+  query (query) {
+    let promise = this.connect().then(function (connection) {
+      return connection.query(query)
+    })
+    this.promises.push(promise)
+    return promise
+  }
+
+  commit () {
+    return this.connect().then(function (connection) {
+      this.query('commit')
+      return Promise.all(this.promises).then(function (value) {
+        connection.close()
+        return value
+      }).catch(function (e) {
+        connection.close()
+        throw e
       })
     }.bind(this))
   }
 
-  execute () {
-    return this.db.connect().then(this.query.bind(this))
-  }
-
-  query (connection) {
-    let promises = [connection.query('begin')]
-
-    for (let query of this.queries) {
-      promises.push(connection.query(query.query).then(function (result) {
-        query.resolve(result)
-        return result
-      }).catch(function (e) {
-        query.reject(e)
-        throw e
-      }))
+  run (body) {
+    if (this.db._transaction) {
+      throw new Error('already running a transaction')
     }
-
-    promises.push(connection.query('commit'))
-
-    return Promise.all(promises).then(function () {
-      connection.close()
-    }).catch(function (e) {
-      connection.close()
-      throw e
-    })
+    this.db._transaction = this
+    try {
+      return body()
+    } catch (e) {
+      let promise = Promise.reject(e)
+      this.promises.push(promise)
+      return promise
+    } finally {
+      this.db._transaction = null
+    }
   }
 
 }

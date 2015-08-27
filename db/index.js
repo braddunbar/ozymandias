@@ -52,7 +52,7 @@ class DB {
   }
 
   query (query) {
-    if (this._transaction) return this._transaction.add(query)
+    if (this._transaction) return this._transaction.query(query)
     return this.connect().then(function (connection) {
       return connection.query(query).then(function (result) {
         connection.close()
@@ -62,13 +62,10 @@ class DB {
   }
 
   transaction (body) {
-    if (this._transaction) {
-      throw new Error('transactions cannot be nested')
-    }
-    let transaction = this._transaction = new Transaction(this)
-    try { body() } catch (e) { return Promise.reject(e) }
-    this._transaction = null
-    return transaction.execute()
+    let transaction = new Transaction(this)
+    if (!body) return transaction
+    transaction.run(body)
+    return transaction.commit()
   }
 
 }
