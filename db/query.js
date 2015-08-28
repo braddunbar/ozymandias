@@ -128,6 +128,11 @@ class Query {
     return this
   }
 
+  offset () {
+    this.query = this.query.offset.apply(this.query, arguments)
+    return this
+  }
+
   order () {
     for (let arg of arguments) {
       if (typeof arg === 'string') {

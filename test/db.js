@@ -507,3 +507,10 @@ test('no queries after closing a transaction', function (t) {
   t.throws(function () { transaction.query('select 1') })
   t.end()
 })
+
+test('offset', function (t) {
+  Post.order('id').limit(2).offset(2).all().then(function (posts) {
+    t.deepEqual(posts.map(function (post) { return post.id }), [3, 4])
+    t.end()
+  })
+})
