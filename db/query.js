@@ -5,13 +5,19 @@ let SQLQuery = require('sql/lib/node/query')
 
 Table.prototype.limit = function () {
   let query = new SQLQuery(this)
-  query.limit.apply(query, arguments)
+  query = query.limit.apply(query, arguments)
   return query
 }
 
 Table.prototype.order = function () {
   let query = new SQLQuery(this)
-  query.order.apply(query, arguments)
+  query = query.order.apply(query, arguments)
+  return query
+}
+
+Table.prototype.offset = function () {
+  let query = new SQLQuery(this)
+  query = query.offset.apply(query, arguments)
   return query
 }
 

@@ -48,6 +48,7 @@ let queryMethods = [
   'find',
   'include',
   'limit',
+  'offset',
   'order',
   'where'
 ]
