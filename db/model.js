@@ -1,12 +1,38 @@
 'use strict'
 
+let sql = require('sql')
 let Query = require('./query')
 
 class Model {
 
   constructor (data) {
+    this.constructor.defineProperties()
     this.data = new Map()
     for (let key in data) if (this.properties[key]) this[key] = data[key]
+  }
+
+  get db () {
+    return this.constructor.db
+  }
+
+  get table () {
+    return this.constructor.table
+  }
+
+  get tableName () {
+    return this.constructor.tableName
+  }
+
+  get colunns () {
+    return this.constructor.columns
+  }
+
+  get relations () {
+    return this.constructor.relations
+  }
+
+  get properties () {
+    return this.constructor.properties
   }
 
   slice () {
@@ -26,6 +52,28 @@ class Model {
     return new Query(this.constructor).where({id: this.id}).delete()
   }
 
+  static get table () {
+    if (!this._table) {
+      this._table = sql.define({name: this.tableName, columns: this.columns})
+    }
+    return this._table
+  }
+
+  static get properties () {
+    if (!this._properties) {
+      this._properties = {}
+      for (let column of this.table.columns) {
+        this._properties[column.property] = column
+      }
+    }
+    return this._properties
+  }
+
+  static get relations () {
+    if (!this._relations) this._relations = {}
+    return this._relations
+  }
+
   static create (values) {
     return new Query(this).insert(values)
   }
@@ -38,6 +86,20 @@ class Model {
   static belongsTo (name, options) {
     options.many = false
     this.relations[name] = options
+  }
+
+  static defineProperties () {
+    if (this._propsDefined) return
+    this._propsDefined = true
+    for (let column of this.table.columns) {
+      if (Object.getOwnPropertyDescriptor(this.prototype, column.property)) {
+        continue
+      }
+      Object.defineProperty(this.prototype, column.property, {
+        get: function () { return this.data.get(column.name) },
+        set: function (value) { this.data.set(column.name, value) }
+      })
+    }
   }
 
 }

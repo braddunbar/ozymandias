@@ -5,33 +5,60 @@ let DB = require('../../db')
 
 let db = new DB(process.env.DATABASE_URL)
 
-let User = db.define({
-  tableName: 'users',
-  columns: ['id', 'email', 'first', 'last', 'birthday'],
-  get email () { return this.data.get('email') },
-  set email (value) { this.data.set('email', value.trim()) }
-})
+class User extends db.Model {
 
-let Post = db.define({
-  tableName: 'posts',
-  columns: [
-    {name: 'id'},
-    {name: 'body'},
-    {name: 'published'},
-    {name: 'user_id', property: 'userId'},
-    {name: 'search'}
-  ]
-})
+  static get tableName () {
+    return 'users'
+  }
 
-let Comment = db.define({
-  tableName: 'comments',
-  columns: [
-    {name: 'id'},
-    {name: 'body'},
-    {name: 'post_id', property: 'postId'},
-    {name: 'user_id', property: 'userId'}
-  ]
-})
+  static get columns () {
+    return ['id', 'email', 'first', 'last', 'birthday']
+  }
+
+  get email () {
+    return this.data.get('email')
+  }
+
+  set email (value) {
+    this.data.set('email', value.trim())
+  }
+
+}
+
+class Post extends db.Model {
+
+  static get tableName () {
+    return 'posts'
+  }
+
+  static get columns () {
+    return [
+      {name: 'id'},
+      {name: 'body'},
+      {name: 'published'},
+      {name: 'user_id', property: 'userId'},
+      {name: 'search'}
+    ]
+  }
+
+}
+
+class Comment extends db.Model {
+
+  static get tableName () {
+    return 'comments'
+  }
+
+  static get columns () {
+    return [
+      {name: 'id'},
+      {name: 'body'},
+      {name: 'post_id', property: 'postId'},
+      {name: 'user_id', property: 'userId'}
+    ]
+  }
+
+}
 
 User.hasMany('posts', {
   model: Post,
