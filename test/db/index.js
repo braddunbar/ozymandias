@@ -1,7 +1,7 @@
 'use strict'
 
 let test = require('tape')
-let DB = require('../db')
+let DB = require('../../db')
 
 let db = new DB(process.env.DATABASE_URL)
 
@@ -18,7 +18,8 @@ let Post = db.define({
     {name: 'id'},
     {name: 'body'},
     {name: 'published'},
-    {name: 'user_id', property: 'userId'}
+    {name: 'user_id', property: 'userId'},
+    {name: 'search'}
   ]
 })
 
@@ -511,6 +512,22 @@ test('no queries after closing a transaction', function (t) {
 test('offset', function (t) {
   Post.offset(2).limit(2).all().then(function (posts) {
     t.deepEqual(posts.map(function (post) { return post.id }), [3, 4])
+    t.end()
+  })
+})
+
+test('match', function (t) {
+  Post.match({search: db.call('to_tsquery', ['dolor'])}).all()
+  .then(function (posts) {
+    t.deepEqual(posts.map(function (post) { return post.id }), [2])
+    t.end()
+  })
+})
+
+test('match prefix', function (t) {
+  Post.match({search: db.call('to_tsquery', ['lor:*'])}).all()
+  .then(function (posts) {
+    t.deepEqual(posts.map(function (post) { return post.id }), [1])
     t.end()
   })
 })

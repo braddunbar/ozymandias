@@ -5,6 +5,7 @@ let sql = require('sql')
 let Model = require('./model')
 let Connection = require('./connection')
 let Transaction = require('./transaction')
+let FunctionCall = require('sql/lib/node/functionCall')
 
 class DB {
 
@@ -76,6 +77,10 @@ class DB {
       if (e.message === 'rollback') return transaction.rollback()
       return transaction.rollback().then(function () { throw e })
     }
+  }
+
+  call (name, args) {
+    return new FunctionCall(name, args)
   }
 
 }

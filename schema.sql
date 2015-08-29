@@ -14,6 +14,8 @@ SET search_path = public, pg_catalog;
 ALTER TABLE ONLY public.posts DROP CONSTRAINT posts_user_id_fkey;
 ALTER TABLE ONLY public.comments DROP CONSTRAINT comments_user_id_fkey;
 ALTER TABLE ONLY public.comments DROP CONSTRAINT comments_post_id_fkey;
+DROP TRIGGER update_post_search ON public.posts;
+DROP INDEX public.post_search_index;
 ALTER TABLE ONLY public.users DROP CONSTRAINT users_pkey;
 ALTER TABLE ONLY public.posts DROP CONSTRAINT posts_pkey;
 ALTER TABLE ONLY public.comments DROP CONSTRAINT comments_pkey;
@@ -101,7 +103,8 @@ CREATE TABLE posts (
     id integer NOT NULL,
     body text DEFAULT ''::text NOT NULL,
     published date,
-    user_id integer NOT NULL
+    user_id integer NOT NULL,
+    search tsvector
 );
 
 
@@ -190,18 +193,18 @@ COPY comments (id, post_id, user_id, body) FROM stdin;
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('comments_id_seq', 1, false);
+SELECT pg_catalog.setval('comments_id_seq', 1, true);
 
 
 --
 -- Data for Name: posts; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY posts (id, body, published, user_id) FROM stdin;
-1	Lorem Ipsum	\N	1
-2	Dolor sit amet	2015-07-31	2
-3	Stuff	2015-08-01	1
-4	Nonsense	2015-08-01	2
+COPY posts (id, body, published, user_id, search) FROM stdin;
+1	Lorem Ipsum	\N	1	'ipsum':2 'lorem':1
+2	Dolor sit amet	2015-07-31	2	'amet':3 'dolor':1 'sit':2
+3	Stuff	2015-08-01	1	'stuff':1
+4	Nonsense	2015-08-01	2	'nonsens':1
 \.
 
 
@@ -209,7 +212,7 @@ COPY posts (id, body, published, user_id) FROM stdin;
 -- Name: posts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('posts_id_seq', 1, false);
+SELECT pg_catalog.setval('posts_id_seq', 4, true);
 
 
 --
@@ -227,7 +230,7 @@ COPY users (id, email, first, last, birthday) FROM stdin;
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('users_id_seq', 1, false);
+SELECT pg_catalog.setval('users_id_seq', 3, true);
 
 
 --
@@ -252,6 +255,20 @@ ALTER TABLE ONLY posts
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: post_search_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX post_search_index ON posts USING gin (search);
+
+
+--
+-- Name: update_post_search; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER update_post_search BEFORE INSERT OR UPDATE ON posts FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger('search', 'pg_catalog.english', 'body');
 
 
 --

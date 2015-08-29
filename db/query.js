@@ -113,10 +113,10 @@ class Query {
     })
   }
 
-  where (columns) {
-    for (let name in columns) {
+  where (values) {
+    for (let name in values) {
       let condition
-      let value = columns[name]
+      let value = values[name]
       if (value == null) {
         condition = this.table[name].isNull()
       } else if (Array.isArray(value)) {
@@ -172,6 +172,14 @@ class Query {
       if (!hash[key]) hash[key] = {}
       this._include(hash[key], object[key])
     }
+  }
+
+  match (values) {
+    for (let name in values) {
+      let value = values[name]
+      this.query = this.query.where(this.table[name].match(value))
+    }
+    return this
   }
 
 }
