@@ -4,7 +4,8 @@ let pg = require('pg')
 
 class Connection {
 
-  constructor (client, done) {
+  constructor (db, client, done) {
+    this.db = db
     this.client = client
     this.done = done
   }
@@ -16,6 +17,7 @@ class Connection {
   query (query) {
     let client = this.client
     if (query.toQuery) query = query.toQuery()
+    this.db.log(query)
     return new Promise(function (resolve, reject) {
       client.query(query, function (e, result) {
         if (e) reject(e)
@@ -28,7 +30,7 @@ class Connection {
     return new Promise(function (resolve, reject) {
       pg.connect(db.url, function (e, client, done) {
         if (e) reject(e)
-        else resolve(new Connection(client, done))
+        else resolve(new Connection(db, client, done))
       })
     })
   }

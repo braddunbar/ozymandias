@@ -31,6 +31,9 @@ class Query {
     this.query = this.table
   }
 
+  log () {
+  }
+
   send () {
     return this.db.query(this.query)
   }
