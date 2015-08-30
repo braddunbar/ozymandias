@@ -23,6 +23,11 @@ class User extends db.Model {
     this.data.set('email', value.trim())
   }
 
+  validate () {
+    this.errors = {}
+    if (!this.email) this.errors.email = ['Email cannot be blank']
+  }
+
 }
 
 class Post extends db.Model {
@@ -557,4 +562,18 @@ test('match prefix', function (t) {
     t.deepEqual(posts.map(function (post) { return post.id }), [1])
     t.end()
   })
+})
+
+test('invalid model', function (t) {
+  let user = new User()
+  t.ok(!user.valid)
+  t.deepEqual(user.errors, {email: ['Email cannot be blank']})
+  t.end()
+})
+
+test('valid model', function (t) {
+  let user = new User({email: 'brad@example.com'})
+  t.ok(user.valid)
+  t.deepEqual(user.errors, {})
+  t.end()
 })

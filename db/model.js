@@ -7,6 +7,7 @@ class Model {
 
   constructor (data) {
     this.constructor.defineProperties()
+    this.errors = {}
     this.data = new Map()
     for (let key in data) if (this.properties[key]) this[key] = data[key]
   }
@@ -50,6 +51,14 @@ class Model {
 
   destroy () {
     return new Query(this.constructor).where({id: this.id}).delete()
+  }
+
+  validate () {
+  }
+
+  get valid () {
+    this.validate()
+    return Object.keys(this.errors).length === 0
   }
 
   static get table () {
