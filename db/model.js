@@ -96,8 +96,12 @@ class Model {
         continue
       }
       Object.defineProperty(this.prototype, column.property, {
-        get: function () { return this.data.get(column.name) },
-        set: function (value) { this.data.set(column.name, value) }
+        get: function () {
+          return this.data.get(column.property)
+        },
+        set: function (value) {
+          this.data.set(column.property, value)
+        }
       })
     }
   }
