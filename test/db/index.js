@@ -1,99 +1,17 @@
 'use strict'
 
 let test = require('tape')
-let DB = require('../../db')
+let db = require('./db')
+let User = require('./user')
+let Post = require('./post')
+let Comment = require('./comment')
 
-let db = new DB(process.env.DATABASE_URL)
-
-class User extends db.Model {
-
-  static get tableName () {
-    return 'users'
-  }
-
-  static get columns () {
-    return ['id', 'email', 'first', 'last', 'birthday']
-  }
-
-  get email () {
-    return this.data.get('email')
-  }
-
-  set email (value) {
-    this.data.set('email', value.trim())
-  }
-
-  validate () {
-    this.errors = {}
-    if (!this.email) this.errors.email = ['Email cannot be blank']
-  }
-
-}
-
-class Post extends db.Model {
-
-  static get tableName () {
-    return 'posts'
-  }
-
-  static get columns () {
-    return [
-      {name: 'id'},
-      {name: 'body'},
-      {name: 'published'},
-      {name: 'user_id', property: 'userId'},
-      {name: 'search'}
-    ]
-  }
-
-}
-
-class Comment extends db.Model {
-
-  static get tableName () {
-    return 'comments'
-  }
-
-  static get columns () {
-    return [
-      {name: 'id'},
-      {name: 'body'},
-      {name: 'post_id', property: 'postId'},
-      {name: 'user_id', property: 'userId'}
-    ]
-  }
-
-}
-
-User.hasMany('posts', {
-  model: Post,
-  key: 'userId'
-})
-
-User.hasMany('comments', {
-  model: Comment,
-  key: 'userId'
-})
-
-Post.belongsTo('user', {
-  model: User,
-  key: 'userId'
-})
-
-Post.hasMany('comments', {
-  model: Comment,
-  key: 'postId'
-})
-
-Comment.belongsTo('user', {
-  model: User,
-  key: 'userId'
-})
-
-Comment.belongsTo('post', {
-  model: Post,
-  key: 'postId'
-})
+User.hasMany('posts', {model: Post, key: 'userId'})
+User.hasMany('comments', {model: Comment, key: 'userId'})
+Post.belongsTo('user', {model: User, key: 'userId'})
+Post.hasMany('comments', {model: Comment, key: 'postId'})
+Comment.belongsTo('user', {model: User, key: 'userId'})
+Comment.belongsTo('post', {model: Post, key: 'postId'})
 
 test('query database', function (t) {
   db.query('select email from users where id = 1').then(function (result) {
@@ -163,6 +81,41 @@ test('find all users with where clause', function (t) {
 test('where clause with array', function (t) {
   User.where({id: [1, 2]}).all().then(function (users) {
     t.deepEqual(users.map(function (user) { return user.id }), [1, 2])
+    t.end()
+  }).catch(t.end)
+})
+
+test('where not clause with array', function (t) {
+  User.not({id: [1, 2]}).all().then(function (users) {
+    t.deepEqual(users.map(function (user) { return user.id }), [3])
+    t.end()
+  }).catch(t.end)
+})
+
+test('where not clause with primitive', function (t) {
+  User.not({id: 3}).all().then(function (users) {
+    t.deepEqual(users.map(function (user) { return user.id }), [1, 2])
+    t.end()
+  }).catch(t.end)
+})
+
+test('where not clause with null', function (t) {
+  User.not({birthday: null}).all().then(function (users) {
+    t.deepEqual(users.map(function (user) { return user.id }), [1, 2])
+    t.end()
+  }).catch(t.end)
+})
+
+test('where clause with query', function (t) {
+  User.where({id: Comment.select('userId')}).all().then(function (users) {
+    t.deepEqual(users.map(function (user) { return user.id }), [1, 2])
+    t.end()
+  }).catch(t.end)
+})
+
+test('where not clause with query', function (t) {
+  User.not({id: Comment.select('userId')}).all().then(function (users) {
+    t.deepEqual(users.map(function (user) { return user.id }), [3])
     t.end()
   }).catch(t.end)
 })
@@ -261,6 +214,18 @@ test('find post', function (t) {
     t.is(post.userId, 2)
     t.end()
   }).catch(t.end)
+})
+
+test('include nothing', function (t) {
+  let query = Post.include()
+  t.deepEqual(query.includes, {})
+  t.end()
+})
+
+test('include null', function (t) {
+  let query = Post.include(null)
+  t.deepEqual(query.includes, {})
+  t.end()
 })
 
 test('include string', function (t) {
@@ -372,9 +337,11 @@ test('three levels', function (t) {
     t.is(user.id, 1)
     t.is(user.posts.length, 2)
     t.is(user.posts[0].id, 1)
-    t.is(user.posts[0].comments.length, 1)
+    t.is(user.posts[0].comments.length, 2)
     t.is(user.posts[0].comments[0].id, 1)
     t.is(user.posts[0].comments[0].user.id, 2)
+    t.is(user.posts[0].comments[1].id, 2)
+    t.is(user.posts[0].comments[1].user.id, 1)
     t.is(user.posts[1].id, 3)
     t.is(user.posts[1].comments.length, 0)
     t.end()
@@ -452,6 +419,17 @@ test('destroy a comment', function (t) {
       })
       throw new Error('rollback')
     })
+  }).catch(t.end)
+})
+
+test('destroy several comments', function (t) {
+  return db.transaction(function () {
+    Comment.where({id: [1, 2]}).delete()
+    Comment.where({id: [1, 2]}).all().then(function (comments) {
+      t.is(comments.length, 0)
+      t.end()
+    })
+    throw new Error('rollback')
   }).catch(t.end)
 })
 

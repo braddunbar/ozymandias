@@ -1,24 +1,27 @@
 'use strict'
 
 let Table = require('sql/lib/table')
+let Postgres = require('sql/lib/dialect/postgres')
 let SQLQuery = require('sql/lib/node/query')
 
-Table.prototype.limit = function () {
-  let query = new SQLQuery(this)
-  query = query.limit.apply(query, arguments)
-  return query
+// Fill in some missing table methods.
+for (let method of ['limit', 'offset', 'order']) {
+  Table.prototype[method] = function () {
+    let query = new SQLQuery(this)
+    query = query[method].apply(query, arguments)
+    return query
+  }
 }
 
-Table.prototype.order = function () {
-  let query = new SQLQuery(this)
-  query = query.order.apply(query, arguments)
-  return query
-}
-
-Table.prototype.offset = function () {
-  let query = new SQLQuery(this)
-  query = query.offset.apply(query, arguments)
-  return query
+// Visit queries as subqueries when appropriate.
+let visitQuery = Postgres.prototype.visitQuery
+Postgres.prototype.visitQuery = function (node) {
+  if (this._queryNode) return this.visitSubquery(node)
+  try {
+    return visitQuery.call(this, node)
+  } finally {
+    this._queryNode = null
+  }
 }
 
 class Query {
@@ -116,16 +119,26 @@ class Query {
     })
   }
 
+  not (values) {
+    return this._where(values, true)
+  }
+
   where (values) {
+    return this._where(values)
+  }
+
+  _where (values, not) {
     for (let name in values) {
       let condition
       let value = values[name]
       if (value == null) {
-        condition = this.table[name].isNull()
+        condition = this.table[name][not ? 'isNotNull' : 'isNull']()
       } else if (Array.isArray(value)) {
-        condition = this.table[name].in(value)
+        condition = this.table[name][not ? 'notIn' : 'in'](value)
+      } else if (value instanceof Query) {
+        condition = this.table[name][not ? 'notIn' : 'in'](value.query)
       } else {
-        condition = this.table[name].equals(value)
+        condition = this.table[name][not ? 'notEquals' : 'equals'](value)
       }
       this.query = this.query.where(condition)
     }
@@ -161,6 +174,8 @@ class Query {
   }
 
   _include (hash, object) {
+    if (object == null) return
+
     if (typeof object === 'string') {
       if (!hash[object]) hash[object] = {}
       return
@@ -182,6 +197,13 @@ class Query {
       let value = values[name]
       this.query = this.query.where(this.table[name].match(value))
     }
+    return this
+  }
+
+  select () {
+    let columns = []
+    for (let name of arguments) columns.push(this.table[name])
+    this.query = this.query.select(columns)
     return this
   }
 

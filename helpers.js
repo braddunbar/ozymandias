@@ -14,5 +14,11 @@ module.exports = function (req, res, next) {
   // Put the request in the locals for convenience.
   res.locals.req = req
 
+  // Log an error and render a 500 page.
+  res.error = function (e) {
+    console.log(e.stack)
+    res.status(500).render('500')
+  }
+
   next()
 }

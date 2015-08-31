@@ -186,6 +186,7 @@ ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regcl
 
 COPY comments (id, post_id, user_id, body) FROM stdin;
 1	1	2	...
+2	1	1	FIRST
 \.
 
 

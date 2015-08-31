@@ -1,7 +1,23 @@
 'use strict'
 
+let app = require('../')()
 let test = require('tape')
+let request = require('supertest')
 let helpers = require('../helpers')
+
+app.set('views', 'test/views')
+
+app.get('/error', function (req, res) {
+  res.error({stack: 'test stack'})
+})
+
+test('res.error', function (t) {
+  request(app)
+  .get('/error')
+  .expect('layout 500\n\n')
+  .expect(500)
+  .end(t.end)
+})
 
 test('locals.req === req', function (t) {
   let req = {}

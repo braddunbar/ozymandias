@@ -124,8 +124,10 @@ let queryMethods = [
   'include',
   'limit',
   'match',
+  'not',
   'offset',
   'order',
+  'select',
   'where'
 ]
 
