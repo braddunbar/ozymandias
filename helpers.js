@@ -6,7 +6,7 @@ module.exports = function (req, res, next) {
   req.permit = function () {
     let result = {}
     for (let key of arguments) {
-      result[key] = this.body[key]
+      if (this.body[key] != null) result[key] = this.body[key]
     }
     return result
   }

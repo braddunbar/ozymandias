@@ -32,7 +32,10 @@ test('req.permit', function (t) {
   let req = {body: {id: 1, name: 'test', count: 25}}
   let res = {locals: {}}
   helpers(req, res, function () {
-    t.deepEqual(req.permit('name', 'count'), {name: 'test', count: 25})
+    t.deepEqual(req.permit('name', 'count', 'missing'), {
+      name: 'test',
+      count: 25
+    })
     t.end()
   })
 })

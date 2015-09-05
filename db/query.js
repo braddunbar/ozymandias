@@ -69,43 +69,37 @@ class Query {
 
     // Load models
     return this.send().then(function (result) {
-      // Map models by id
-      let byId
-
       // Construct some models
       let models = result.rows.map(function (row) { return new Model(row) })
 
       // Load includes
       return Promise.all(Object.keys(includes).map(function (name) {
-        let conditions = {}
         let relation = Model.relations[name]
+        let conditions = {}
+        let key = relation.key
+        let many = relation.many
 
-        if (relation.many) {
-          conditions[relation.key] = models.map(function (model) {
-            return model.id
-          })
-        } else {
-          conditions.id = models.map(function (model) {
-            return model[relation.key]
-          })
-        }
+        conditions[many ? key : 'id'] = models.map(function (model) {
+          return model[many ? 'id' : key]
+        })
 
         // Attach includes
-        let query = relation.model.include(includes[name]).where(conditions)
-        return query.all().then(function (includes) {
-          if (relation.many) {
-            if (!byId) {
-              byId = {}
-              for (let model of models) byId[model.id] = model
+        return relation.model
+        .where(conditions)
+        .include(includes[name])
+        .all().then(function (includes) {
+          let byId = {}
+          if (many) {
+            for (let model of models) {
+              model[name] = []
+              byId[model.id] = model
             }
-            for (let model of models) model[name] = []
             for (let include of includes) {
-              byId[include[relation.key]][name].push(include)
+              byId[include[key]][name].push(include)
             }
           } else {
-            let byKey = {}
-            for (let model of models) byKey[model[relation.key]] = model
-            for (let include of includes) byKey[include.id][name] = include
+            for (let include of includes) byId[include.id] = include
+            for (let model of models) model[name] = byId[model[key]]
           }
         })
 

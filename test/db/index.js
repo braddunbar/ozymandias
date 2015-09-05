@@ -303,10 +303,12 @@ test('include hasMany', function (t) {
 })
 
 test('all belongsTo', function (t) {
-  Post.include('user').where({id: [1, 2]}).all().then(function (posts) {
-    t.is(posts.length, 2)
+  Post.include('user').where({id: [1, 2, 3, 4]}).all().then(function (posts) {
+    t.is(posts.length, 4)
     t.is(posts[0].user.id, 1)
     t.is(posts[1].user.id, 2)
+    t.is(posts[2].user.id, 1)
+    t.is(posts[3].user.id, 2)
     t.end()
   }).catch(t.end)
 })
