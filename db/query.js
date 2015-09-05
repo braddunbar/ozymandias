@@ -128,7 +128,7 @@ class Query {
   }
 
   _where (values, not) {
-    for (let name in values) {
+    for (let name of Object.keys(values)) {
       let condition
       let value = values[name]
       if (value == null) {
@@ -193,7 +193,7 @@ class Query {
   }
 
   match (values) {
-    for (let name in values) {
+    for (let name of Object.keys(values)) {
       let value = values[name]
       this.query = this.query.where(this.table[name].match(value))
     }
