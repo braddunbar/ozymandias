@@ -44,6 +44,11 @@ class Model {
 
   update (values) {
     for (let key in values) this[key] = values[key]
+    if (!this.valid) {
+      let e = new Error('invalid')
+      e.model = this
+      return Promise.reject(e)
+    }
     return new Query(this.constructor)
     .where({id: this.id})
     .update(this.slice.apply(this, Object.keys(values)))
@@ -84,7 +89,15 @@ class Model {
   }
 
   static create (values) {
-    return new Query(this).insert(values)
+    let model = new this(values)
+    if (!model.valid) {
+      let e = new Error('invalid')
+      e.model = model
+      return Promise.reject(e)
+    }
+    values = {}
+    for (let key of model.data.keys()) values[key] = model.data.get(key)
+    return new Query(this).insert(values).then(function () { return model })
   }
 
   static hasMany (name, options) {

@@ -43,11 +43,8 @@ class Query {
   }
 
   insert (values) {
-    let Model = this.model
-    this.query = this.query.insert(values).returning(this.table.star())
-    return this.send().then(function (result) {
-      return new Model(result.rows[0])
-    })
+    this.query = this.query.insert(values)
+    return this.send()
   }
 
   update (values) {
