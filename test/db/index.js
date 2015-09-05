@@ -523,7 +523,7 @@ test('offset', function (t) {
   Post.offset(2).limit(2).all().then(function (posts) {
     t.deepEqual(posts.map(function (post) { return post.id }), [3, 4])
     t.end()
-  })
+  }).catch(t.end)
 })
 
 test('match', function (t) {
@@ -531,7 +531,7 @@ test('match', function (t) {
   .then(function (posts) {
     t.deepEqual(posts.map(function (post) { return post.id }), [2])
     t.end()
-  })
+  }).catch(t.end)
 })
 
 test('match prefix', function (t) {
@@ -539,7 +539,7 @@ test('match prefix', function (t) {
   .then(function (posts) {
     t.deepEqual(posts.map(function (post) { return post.id }), [1])
     t.end()
-  })
+  }).catch(t.end)
 })
 
 test('invalid model', function (t) {
@@ -554,4 +554,20 @@ test('valid model', function (t) {
   t.ok(user.valid)
   t.deepEqual(user.errors, {})
   t.end()
+})
+
+test('joins', function (t) {
+  Post.join('user').where({user: {birthday: '1985-11-16'}}).all()
+  .then(function (posts) {
+    t.deepEqual(posts.map(function (post) { return post.id }), [2, 4])
+    t.end()
+  }).catch(t.end)
+})
+
+test('joins', function (t) {
+  User.join('posts').where({posts: {published: '2015-07-31'}}).all()
+  .then(function (users) {
+    t.deepEqual(users.map(function (user) { return user.id }), [2])
+    t.end()
+  }).catch(t.end)
 })

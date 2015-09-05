@@ -32,6 +32,7 @@ class Query {
     this.model = model
     this.table = model.table
     this.query = this.table
+    this.from = this.table
   }
 
   log () {
@@ -64,7 +65,7 @@ class Query {
     let includes = this.includes
 
     // Use aliases
-    this.query = this.query.select(this.table.star())
+    this.query = this.query.select(this.table.star()).from(this.from)
 
     // Load models
     return this.send().then(function (result) {
@@ -120,25 +121,31 @@ class Query {
   }
 
   not (values) {
-    return this._where(values, true)
+    return this._where(this.model, values, true)
   }
 
   where (values) {
-    return this._where(values)
+    return this._where(this.model, values)
   }
 
-  _where (values, not) {
+  _where (model, values, not) {
+    let table = model.table
+
     for (let name of Object.keys(values)) {
       let condition
       let value = values[name]
+
       if (value == null) {
-        condition = this.table[name][not ? 'isNotNull' : 'isNull']()
+        condition = table[name][not ? 'isNotNull' : 'isNull']()
       } else if (Array.isArray(value)) {
-        condition = this.table[name][not ? 'notIn' : 'in'](value)
+        condition = table[name][not ? 'notIn' : 'in'](value)
       } else if (value instanceof Query) {
-        condition = this.table[name][not ? 'notIn' : 'in'](value.query)
+        condition = table[name][not ? 'notIn' : 'in'](value.query)
+      } else if (value instanceof Date || typeof value !== 'object') {
+        condition = table[name][not ? 'notEquals' : 'equals'](value)
       } else {
-        condition = this.table[name][not ? 'notEquals' : 'equals'](value)
+        this._where(model.relations[name].model, value, not)
+        continue
       }
       this.query = this.query.where(condition)
     }
@@ -204,6 +211,22 @@ class Query {
     let columns = []
     for (let name of arguments) columns.push(this.table[name])
     this.query = this.query.select(columns)
+    return this
+  }
+
+  join () {
+    for (let name of arguments) {
+      let condition
+      let relation = this.model.relations[name]
+
+      if (relation.many) {
+        condition = relation.model.table[relation.key].equals(this.table.id)
+      } else {
+        condition = this.table[relation.key].equals(relation.model.table.id)
+      }
+
+      this.from = this.from.join(relation.model.table).on(condition)
+    }
     return this
   }
 

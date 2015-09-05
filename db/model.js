@@ -122,6 +122,7 @@ let queryMethods = [
   'all',
   'find',
   'include',
+  'join',
   'limit',
   'match',
   'not',
