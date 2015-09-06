@@ -378,36 +378,20 @@ test('update with property names', function (t) {
   }).catch(t.end)
 })
 
-test('update fails if invalid', function (t) {
+test('update throws if invalid', function (t) {
   User.find(1).then(function (user) {
-    t.is(user.email, 'brad@example.com')
-    db.transaction(function () {
-      user.update({email: ''}).then(function () {
-        t.end('update should be rejected')
-      }).catch(function (e) {
-        t.is(e.message, 'invalid')
-        t.is(e.model, user)
-        t.deepEqual(user.errors, {email: ['Email cannot be blank']})
-        t.end()
-      })
-      throw new Error('rollback')
-    }).catch(t.end)
+    t.throws(function () {
+      user.update({email: ''})
+    })
+    t.end()
   }).catch(t.end)
 })
 
 test('create fails if invalid', function (t) {
-  db.transaction(function () {
-    User.create({email: '', first: 'joe', last: 'user'}).then(function () {
-      t.end('create should be rejected')
-    }).catch(function (e) {
-      t.is(e.message, 'invalid')
-      t.is(e.model.first, 'joe')
-      t.is(e.model.last, 'user')
-      t.deepEqual(e.model.errors, {email: ['Email cannot be blank']})
-      t.end()
-    }).catch(t.end)
-    throw new Error('rollback')
+  t.throws(function () {
+    User.create({email: '', first: 'joe', last: 'user'})
   })
+  t.end()
 })
 
 test('transaction', function (t) {
