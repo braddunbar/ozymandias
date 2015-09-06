@@ -43,13 +43,13 @@ class DB {
   transaction (body) {
     let transaction = new Transaction(this)
     if (!body) return transaction
-    try {
-      transaction.run(body)
+    return transaction.run(body).then(function () {
       return transaction.commit()
-    } catch (e) {
-      if (e.message === 'rollback') return transaction.rollback()
-      return transaction.rollback().then(function () { throw e })
-    }
+    }).catch(function (e) {
+      return transaction.rollback().then(function () {
+        if (e.message !== 'rollback') throw e
+      })
+    })
   }
 
   call (name, args) {

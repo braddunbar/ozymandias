@@ -412,6 +412,18 @@ test('transaction', function (t) {
   }).catch(t.end)
 })
 
+test('Throwing during a transaction returns a rejected promise', function (t) {
+  let transaction = db.transaction()
+  transaction.run(function () {
+    throw new Error('test')
+  }).then(function () {
+    t.end('promise should be rejected')
+  }).catch(function (e) {
+    t.is(e.message, 'test')
+    t.end()
+  })
+})
+
 test('transactions forward errors', function (t) {
   Post.find(1).then(function (post) {
     t.deepEqual(post.slice('id', 'userId'), {id: 1, userId: 1})

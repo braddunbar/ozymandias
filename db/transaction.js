@@ -56,6 +56,8 @@ class Transaction {
     this.db._transaction = this
     try {
       return Promise.resolve(body())
+    } catch (e) {
+      return Promise.reject(e)
     } finally {
       this.db._transaction = null
     }
