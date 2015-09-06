@@ -116,6 +116,10 @@ class Query {
   }
 
   where (values) {
+    if (typeof values === 'string') {
+      this.query = this.query.where(values)
+      return this
+    }
     return this._where(this.model, values)
   }
 

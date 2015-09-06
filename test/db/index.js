@@ -187,6 +187,14 @@ test('where string', function (t) {
   }).catch(t.end)
 })
 
+test('where sql', function (t) {
+  User.where("email = 'jd@example.com'").all().then(function (users) {
+    t.is(users.length, 1)
+    t.is(users[0].id, 3)
+    t.end()
+  }).catch(t.end)
+})
+
 test('find one', function (t) {
   User.where({id: 3}).find().then(function (user) {
     t.is(user.id, 3)
