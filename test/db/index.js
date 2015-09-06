@@ -493,6 +493,17 @@ test('create a comment', function (t) {
   }
 })
 
+test('creating sets values from db', function (t) {
+  db.transaction(function () {
+    User.create({email: 'test@example.com'}).then(function (user) {
+      t.is(user.first, '')
+      t.is(user.last, '')
+      t.ok(user.id != null)
+      t.end()
+    })
+  }).catch(t.end)
+})
+
 test('no nesting transactions', function (t) {
   let transaction = db.transaction()
   transaction.run(function () {

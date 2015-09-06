@@ -43,7 +43,7 @@ class Query {
   }
 
   insert (values) {
-    this.query = this.query.insert(values)
+    this.query = this.query.insert(values).returning(this.table.star())
     return this.send()
   }
 

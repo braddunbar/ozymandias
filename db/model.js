@@ -89,7 +89,12 @@ class Model {
     if (!model.valid) throw new Error('invalid')
     values = {}
     for (let key of model.data.keys()) values[key] = model.data.get(key)
-    return new Query(this).insert(values).then(function () { return model })
+    return new Query(this).insert(values).then(function (result) {
+      for (let key of Object.keys(result.rows[0])) {
+        model[key] = result.rows[0][key]
+      }
+      return model
+    })
   }
 
   static hasMany (name, options) {
