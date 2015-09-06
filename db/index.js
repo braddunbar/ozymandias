@@ -36,6 +36,9 @@ class DB {
       return connection.query(query).then(function (result) {
         connection.close()
         return result
+      }).catch(function (e) {
+        connection.close()
+        throw e
       })
     })
   }

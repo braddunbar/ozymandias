@@ -13,6 +13,14 @@ Post.hasMany('comments', {model: Comment, key: 'postId'})
 Comment.belongsTo('user', {model: User, key: 'userId'})
 Comment.belongsTo('post', {model: Post, key: 'postId'})
 
+test('connection closed on error', function (t) {
+  db.query('this is not valid syntax').then(function () {
+    t.end('this should fail')
+  }).catch(function () {
+    t.end()
+  })
+})
+
 test('query database', function (t) {
   db.query('select email from users where id = 1').then(function (result) {
     t.deepEqual(result.rows, [{email: 'brad@example.com'}])
