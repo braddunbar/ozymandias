@@ -13,12 +13,12 @@
     "test": "./bin/test"
   },
   "dependencies": {
-    "aws-sdk": "2.1.39",
-    "compression": "1.5.1",
-    "ejs": "2.3.3",
-    "express": "4.13.1",
-    "pg": "4.4.0",
-    "sql": "0.57.0"
+    "aws-sdk": "2.2.0",
+    "compression": "1.5.2",
+    "ejs": "2.3.4",
+    "express": "4.13.3",
+    "pg": "4.4.1",
+    "sql": "0.58.0"
   },
   "devDependencies": {
     "standard": "5.2.2",
