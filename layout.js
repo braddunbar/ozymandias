@@ -2,7 +2,6 @@ module.exports = function (req, res, next) {
   var render = res.render
 
   res.render = function (view, options, fn) {
-
     if (options && options.layout === false) {
       return render.apply(res, arguments)
     }

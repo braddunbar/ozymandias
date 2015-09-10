@@ -5,7 +5,6 @@ var ses = new aws.SES({
 })
 
 module.exports = exports = function (req, res, next) {
-
   req.mail = function (view, options) {
     return Promise.all([
       render(view, 'html', Object.create(options)),

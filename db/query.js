@@ -99,7 +99,6 @@ class Query {
             for (let model of models) model[name] = byId[model[key]]
           }
         })
-
       })).then(function () { return models })
     })
   }
