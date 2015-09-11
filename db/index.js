@@ -1,10 +1,10 @@
 'use strict'
 
 let pg = require('pg')
+let sql = require('sql')
 let Model = require('./model')
 let Connection = require('./connection')
 let Transaction = require('./transaction')
-let FunctionCall = require('sql/lib/node/functionCall')
 
 class DB {
 
@@ -56,7 +56,8 @@ class DB {
   }
 
   call (name, args) {
-    return new FunctionCall(name, args)
+    let creator = sql.functionCallCreator(name)
+    return creator.apply(creator, args)
   }
 
 }
