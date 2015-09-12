@@ -6,6 +6,9 @@ let Model = require('./model')
 let Connection = require('./connection')
 let Transaction = require('./transaction')
 
+// Monkey patch sql a bit
+require('./sql')
+
 class DB {
 
   constructor (url) {
