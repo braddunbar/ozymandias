@@ -1,5 +1,7 @@
 'use strict'
 
+let Raw = require('./raw')
+
 class Query {
 
   constructor (model) {
@@ -92,7 +94,8 @@ class Query {
 
   where (values) {
     if (typeof values === 'string') {
-      this.query = this.query.where(values)
+      let params = Array.prototype.slice.call(arguments, 1)
+      this.query = this.query.where(new Raw(values, params))
       return this
     }
     return this._where(this.model, values)

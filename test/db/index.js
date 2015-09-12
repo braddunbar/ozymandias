@@ -203,6 +203,13 @@ test('where sql', function (t) {
   }).catch(t.end)
 })
 
+test('where sql with values', function (t) {
+  User.where('length(first) = ?', 4).all().then(function (users) {
+    t.deepEqual(users.map(function (user) { return user.id }), [1, 3])
+    t.end()
+  }).catch(t.end)
+})
+
 test('find one', function (t) {
   User.where({id: 3}).find().then(function (user) {
     t.is(user.id, 3)
