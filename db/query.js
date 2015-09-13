@@ -22,7 +22,7 @@ class Query {
 
   insert (values) {
     this.query = this.query.insert(values).returning(this.table.star())
-    return this.send()
+    return this.send().then(function (result) { return result.rows[0] })
   }
 
   update (values) {

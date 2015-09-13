@@ -43,7 +43,10 @@ class Model {
   }
 
   update (values) {
-    for (let key in values) this[key] = values[key]
+    for (let key in values) {
+      this[key] = values[key]
+      values[key] = this[key]
+    }
     if (!this.valid) throw new Error('invalid')
     let query = this.constructor.where({id: this.id})
     return query.update(this.slice.apply(this, Object.keys(values)))
@@ -86,12 +89,9 @@ class Model {
   static create (values) {
     let model = new this(values)
     if (!model.valid) throw new Error('invalid')
-    values = {}
-    for (let key of model.data.keys()) values[key] = model.data.get(key)
-    return this.insert(values).then(function (result) {
-      for (let key of Object.keys(result.rows[0])) {
-        model[key] = result.rows[0][key]
-      }
+    for (let key of Object.keys(values)) values[key] = model[key]
+    return this.insert(values).then(function (values) {
+      for (let key of Object.keys(values)) model[key] = values[key]
       return model
     })
   }
