@@ -188,19 +188,34 @@ class Query {
   }
 
   join () {
-    for (let name of arguments) {
-      let condition
-      let relation = this.model.relations[name]
-
-      if (relation.many) {
-        condition = relation.model.table[relation.key].equals(this.table.id)
-      } else {
-        condition = this.table[relation.key].equals(relation.model.table.id)
-      }
-
-      this.from = this.from.join(relation.model.table).on(condition)
-    }
+    this._join(this.model, Array.prototype.slice.call(arguments))
     return this
+  }
+
+  _join (model, name) {
+    if (Array.isArray(name)) {
+      for (let item of name) this._join(model, item)
+      return
+    }
+
+    if (typeof name === 'object') {
+      for (let key of Object.keys(name)) {
+        this._join(model, key)
+        this._join(model.relations[key].model, name[key])
+      }
+      return
+    }
+
+    let condition
+    let relation = model.relations[name]
+
+    if (relation.many) {
+      condition = relation.model.table[relation.key].equals(model.table.id)
+    } else {
+      condition = model.table[relation.key].equals(relation.model.table.id)
+    }
+
+    this.from = this.from.join(relation.model.table).on(condition)
   }
 
 }

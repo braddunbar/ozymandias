@@ -641,3 +641,11 @@ test('joins', function (t) {
     t.end()
   }).catch(t.end)
 })
+
+test('nested joins', function (t) {
+  User.join({posts: 'comments'}).where({posts: {comments: {userId: 1}}})
+  .all().then(function (users) {
+    t.deepEqual(users.map(function (user) { return user.id }), [1])
+    t.end()
+  }).catch(t.end)
+})
