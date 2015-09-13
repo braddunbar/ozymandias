@@ -45,13 +45,12 @@ class Model {
   update (values) {
     for (let key in values) this[key] = values[key]
     if (!this.valid) throw new Error('invalid')
-    return new Query(this.constructor)
-    .where({id: this.id})
-    .update(this.slice.apply(this, Object.keys(values)))
+    let query = this.constructor.where({id: this.id})
+    return query.update(this.slice.apply(this, Object.keys(values)))
   }
 
   destroy () {
-    return new Query(this.constructor).where({id: this.id}).delete()
+    return this.constructor.where({id: this.id}).delete()
   }
 
   validate () {
@@ -89,7 +88,7 @@ class Model {
     if (!model.valid) throw new Error('invalid')
     values = {}
     for (let key of model.data.keys()) values[key] = model.data.get(key)
-    return new Query(this).insert(values).then(function (result) {
+    return this.insert(values).then(function (result) {
       for (let key of Object.keys(result.rows[0])) {
         model[key] = result.rows[0][key]
       }
@@ -132,6 +131,7 @@ let queryMethods = [
   'all',
   'find',
   'include',
+  'insert',
   'join',
   'limit',
   'match',
@@ -139,6 +139,7 @@ let queryMethods = [
   'offset',
   'order',
   'select',
+  'update',
   'where'
 ]
 
