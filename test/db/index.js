@@ -402,18 +402,24 @@ test('update with property names', function (t) {
 })
 
 test('update throws if invalid', function (t) {
-  User.find(1).then(function (user) {
-    t.throws(function () {
-      user.update({email: ''})
-    })
-    t.end()
-  }).catch(t.end)
+  let user = new User({id: 1})
+  try {
+    user.update({email: ''})
+    t.end('updating should throw if invalid')
+  } catch (e) {
+    t.is(e.message, 'invalid')
+    t.ok(e.model === user, 'should include model with error')
+  }
+  t.end()
 })
 
 test('create fails if invalid', function (t) {
-  t.throws(function () {
+  try {
     User.create({email: '', first: 'joe', last: 'user'})
-  })
+  } catch (e) {
+    t.is(e.message, 'invalid')
+    t.ok(e.model instanceof User, 'should include model with error')
+  }
   t.end()
 })
 
