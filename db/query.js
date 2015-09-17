@@ -181,9 +181,14 @@ class Query {
   }
 
   select () {
-    let columns = []
-    for (let name of arguments) columns.push(this.table[name])
-    this.query = this.query.select(columns)
+    for (let arg of arguments) {
+      if (Array.isArray(arg)) {
+        this.query = this.query.select(new Raw(arg[0], arg.slice(1)))
+      } else {
+        if (this.model.properties[arg]) arg = this.table[arg]
+        this.query = this.query.select(arg)
+      }
+    }
     return this
   }
 

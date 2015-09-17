@@ -649,3 +649,27 @@ test('nested joins', function (t) {
     t.end()
   }).catch(t.end)
 })
+
+test('sql string as select', function (t) {
+  let sql = `(
+    select count(*) from comments
+    where post_id = posts.id
+  )::int as comment_count`
+
+  Post.select('*', sql).find(1).then(function (post) {
+    t.is(post.id, 1)
+    t.is(post.comment_count, 2)
+    t.end()
+  }).catch(t.end)
+})
+
+test('sql with params as select', function (t) {
+  let sql = `(select count(*) from comments
+    where post_id = posts.id and user_id = ?)::int as comment_count`
+
+  Post.select('*', [sql, 1]).find(1).then(function (post) {
+    t.is(post.id, 1)
+    t.is(post.comment_count, 1)
+    t.end()
+  }).catch(t.end)
+})

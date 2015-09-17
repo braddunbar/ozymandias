@@ -9,7 +9,7 @@ class Model {
     this.constructor.defineProperties()
     this.errors = {}
     this.data = new Map()
-    for (let key in data) if (this.properties[key]) this[key] = data[key]
+    for (let key in data) this[key] = data[key]
   }
 
   get db () {
