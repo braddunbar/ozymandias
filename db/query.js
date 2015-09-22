@@ -172,14 +172,6 @@ class Query {
     }
   }
 
-  match (values) {
-    for (let name of Object.keys(values)) {
-      let value = values[name]
-      this.query = this.query.where(this.table[name].match(value))
-    }
-    return this
-  }
-
   select () {
     for (let arg of arguments) {
       if (Array.isArray(arg)) {

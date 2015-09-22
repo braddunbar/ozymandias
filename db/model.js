@@ -142,7 +142,6 @@ let queryMethods = [
   'insert',
   'join',
   'limit',
-  'match',
   'not',
   'offset',
   'order',

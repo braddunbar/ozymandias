@@ -596,22 +596,6 @@ test('offset', function (t) {
   }).catch(t.end)
 })
 
-test('match', function (t) {
-  Post.match({search: db.call('to_tsquery', ['dolor'])}).all()
-  .then(function (posts) {
-    t.deepEqual(posts.map(function (post) { return post.id }), [2])
-    t.end()
-  }).catch(t.end)
-})
-
-test('match prefix', function (t) {
-  Post.match({search: db.call('to_tsquery', ['lor:*'])}).all()
-  .then(function (posts) {
-    t.deepEqual(posts.map(function (post) { return post.id }), [1])
-    t.end()
-  }).catch(t.end)
-})
-
 test('invalid model', function (t) {
   let user = new User()
   t.ok(!user.valid)

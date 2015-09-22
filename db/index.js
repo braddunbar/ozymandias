@@ -1,7 +1,6 @@
 'use strict'
 
 let pg = require('pg')
-let sql = require('sql')
 let Model = require('./model')
 let Connection = require('./connection')
 let Transaction = require('./transaction')
@@ -56,11 +55,6 @@ class DB {
         if (e.message !== 'rollback') throw e
       })
     })
-  }
-
-  call (name, args) {
-    let creator = sql.functionCallCreator(name)
-    return creator.apply(creator, args)
   }
 
 }
