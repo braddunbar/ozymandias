@@ -14,12 +14,12 @@ class Connection {
     this.done()
   }
 
-  query (query) {
+  query (query, values) {
     let client = this.client
     if (query.toQuery) query = query.toQuery()
     this.db.log(query)
     return new Promise(function (resolve, reject) {
-      client.query(query, function (e, result) {
+      client.query(query, values, function (e, result) {
         if (e) reject(e)
         else resolve(result)
       })

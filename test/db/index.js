@@ -28,6 +28,24 @@ test('query database', function (t) {
   }).catch(t.end)
 })
 
+test('query with parameters', function (t) {
+  let sql = 'select email from users where id = $1'
+  db.query(sql, [1]).then(function (result) {
+    t.deepEqual(result.rows, [{email: 'brad@example.com'}])
+    t.end()
+  }).catch(t.end)
+})
+
+test('transaction query with parameters', function (t) {
+  let sql = 'select email from users where id = $1'
+  db.transaction(function () {
+    db.query(sql, [1]).then(function (result) {
+      t.deepEqual(result.rows, [{email: 'brad@example.com'}])
+      t.end()
+    })
+  }).catch(t.end)
+})
+
 test('create a new model with data', function (t) {
   let user = new User({
     id: 1,

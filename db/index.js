@@ -32,10 +32,10 @@ class DB {
     pg.end()
   }
 
-  query (query) {
-    if (this._transaction) return this._transaction.query(query)
+  query (query, values) {
+    if (this._transaction) return this._transaction.query(query, values)
     return this.connect().then(function (connection) {
-      return connection.query(query).then(function (result) {
+      return connection.query(query, values).then(function (result) {
         connection.close()
         return result
       }).catch(function (e) {
