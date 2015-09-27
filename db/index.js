@@ -48,8 +48,10 @@ class DB {
   transaction (body) {
     let transaction = new Transaction(this)
     if (!body) return transaction
-    return transaction.run(body).then(function () {
-      return transaction.commit()
+    return transaction.run(body).then(function (result) {
+      return transaction.commit().then(function () {
+        return result
+      })
     }).catch(function (e) {
       return transaction.rollback().then(function () {
         if (e.message !== 'rollback') throw e

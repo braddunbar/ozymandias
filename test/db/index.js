@@ -46,6 +46,22 @@ test('transaction query with parameters', function (t) {
   }).catch(t.end)
 })
 
+test('transaction promises resolve their return value', function (t) {
+  db.transaction(function () {
+    return db.query('select email from users where id = $1', [1])
+  }).then(function (result) {
+    t.deepEqual(result.rows, [{email: 'brad@example.com'}])
+    t.end()
+  }).catch(t.end)
+})
+
+test('transaction promises resolve their return value', function (t) {
+  db.transaction(function () { return 57 }).then(function (result) {
+    t.is(result, 57)
+    t.end()
+  }).catch(t.end)
+})
+
 test('create a new model with data', function (t) {
   let user = new User({
     id: 1,
