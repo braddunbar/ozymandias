@@ -1,12 +1,14 @@
-var pg = require('pg')
-var test = require('tape')
+'use strict'
 
+let pg = require('pg')
+let tape = require('tape')
+
+require('./db')
 require('./helpers')
 require('./layout')
 require('./mail')
-require('./db')
 
-test('teardown', function (t) {
+tape('teardown', function (t) {
   pg.end()
   t.end()
 })

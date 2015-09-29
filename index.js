@@ -1,7 +1,9 @@
-var express = require('express')
+'use strict'
 
-var ozymandias = module.exports = function () {
-  var app = express()
+let express = require('express')
+
+let ozymandias = module.exports = function () {
+  let app = express()
 
   // No x-powered-by header.
   app.disable('x-powered-by')
@@ -19,4 +21,4 @@ var ozymandias = module.exports = function () {
   return app
 }
 
-for (var p in express) ozymandias[p] = express[p]
+for (let p in express) ozymandias[p] = express[p]
