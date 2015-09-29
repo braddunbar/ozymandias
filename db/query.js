@@ -2,6 +2,13 @@
 
 let Raw = require('./raw')
 
+function uniq (array) {
+  let result = []
+  let set = new Set(array)
+  for (let value of set) result.push(value)
+  return result
+}
+
 class Query {
 
   constructor (model) {
@@ -54,9 +61,9 @@ class Query {
         let key = relation.key
         let many = relation.many
 
-        conditions[many ? key : 'id'] = models.map(function (model) {
+        conditions[many ? key : 'id'] = uniq(models.map(function (model) {
           return model[many ? 'id' : key]
-        })
+        }))
 
         // Attach includes
         return relation.model
