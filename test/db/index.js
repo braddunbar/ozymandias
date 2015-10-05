@@ -705,3 +705,27 @@ test('count with where', function (t) {
     t.end()
   }).catch(t.end)
 })
+
+test('first page with more', function (t) {
+  User.paginate(1, 2).then(function (users) {
+    t.deepEqual(users.map(function (user) { return user.id }), [1, 2])
+    t.is(users.more, true)
+    t.end()
+  }).catch(t.end)
+})
+
+test('second page without more', function (t) {
+  User.paginate(2, 2).then(function (users) {
+    t.deepEqual(users.map(function (user) { return user.id }), [3, 4])
+    t.is(users.more, false)
+    t.end()
+  }).catch(t.end)
+})
+
+test('second page with less than count', function (t) {
+  User.paginate(2, 3).then(function (users) {
+    t.deepEqual(users.map(function (user) { return user.id }), [4])
+    t.is(users.more, false)
+    t.end()
+  }).catch(t.end)
+})

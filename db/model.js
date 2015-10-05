@@ -146,6 +146,7 @@ let queryMethods = [
   'not',
   'offset',
   'order',
+  'paginate',
   'select',
   'update',
   'where'

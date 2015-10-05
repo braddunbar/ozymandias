@@ -102,6 +102,16 @@ class Query {
     })
   }
 
+  paginate (page, count) {
+    return this.offset((page - 1) * count).limit(count + 1).all()
+    .then(function (models) {
+      let more = models.length > count
+      if (models.length > count) models = models.slice(0, count)
+      models.more = more
+      return models
+    })
+  }
+
   not (values) {
     return this._where(this.model, values, true)
   }
