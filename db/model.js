@@ -137,6 +137,7 @@ class Model {
 // Attach Query methods to Model
 let queryMethods = [
   'all',
+  'count',
   'find',
   'include',
   'insert',

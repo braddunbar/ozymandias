@@ -42,6 +42,13 @@ class Query {
     return this.send()
   }
 
+  count () {
+    this.query = this.query.select('count(*) as count').from(this.from)
+    return this.send().then(function (result) {
+      return +result.rows[0].count
+    })
+  }
+
   all () {
     let Model = this.model
     let includes = this.includes

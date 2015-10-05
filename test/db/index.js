@@ -691,3 +691,17 @@ test('sql with params as select', function (t) {
     t.end()
   }).catch(t.end)
 })
+
+test('count', function (t) {
+  User.count().then(function (count) {
+    t.is(count, 4)
+    t.end()
+  }).catch(t.end)
+})
+
+test('count with where', function (t) {
+  User.where('id < 3').count().then(function (count) {
+    t.is(count, 2)
+    t.end()
+  }).catch(t.end)
+})
