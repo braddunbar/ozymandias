@@ -1,5 +1,7 @@
-var aws = require('aws-sdk')
-var ses = new aws.SES({
+'use strict'
+
+let aws = require('aws-sdk')
+let ses = new aws.SES({
   apiVersion: '2010-12-01',
   region: 'us-east-1'
 })
@@ -39,7 +41,7 @@ module.exports = exports = function (req, res, next) {
   next()
 }
 
-var format = exports.format = function (options) {
+let format = exports.format = function (options) {
   return {
     Destination: {
       ToAddresses: options.to,
