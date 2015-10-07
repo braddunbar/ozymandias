@@ -12,6 +12,19 @@ let ozymandias = module.exports = function () {
   app.set('view engine', 'ejs')
   app.engine('ejs', require('ejs').renderFile)
 
+  // Are we in production?
+  let production = app.get('env') === 'production'
+
+  // Static Assets
+  app.use(express.static('public', {
+    etag: !production,
+    lastModified: !production,
+    maxAge: production ? '1d' : 0
+  }))
+
+  // S3 Assets
+  app.use('/assets', require('./assets'))
+
   // Middleware
   app.use(require('./helpers'))
   app.use(require('./layout'))
