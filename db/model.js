@@ -9,7 +9,7 @@ class Model {
     this.constructor.defineProperties()
     this.errors = {}
     this.data = new Map()
-    for (let key in data) this[key] = data[key]
+    Object.assign(this, data)
   }
 
   get db () {
@@ -99,8 +99,7 @@ class Model {
     }
     for (let key of Object.keys(values)) values[key] = model[key]
     return this.insert(values).then(function (values) {
-      for (let key of Object.keys(values)) model[key] = values[key]
-      return model
+      return Object.assign(model, values)
     })
   }
 
