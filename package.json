@@ -21,8 +21,8 @@
     "sql": "0.60.0"
   },
   "devDependencies": {
-    "standard": "5.2.2",
+    "standard": "5.3.1",
     "supertest": "1.1.0",
-    "tape": "4.2.0"
+    "tape": "4.2.1"
   }
 }
