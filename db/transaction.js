@@ -9,10 +9,10 @@ class Transaction {
 
   connect () {
     if (this._connect) return this._connect
-    this._connect = this.db.connect().then(function (connection) {
+    this._connect = this.db.connect().then((connection) => {
       this.promises.push(connection.query('begin'))
       return connection
-    }.bind(this))
+    })
     return this._connect
   }
 
@@ -29,7 +29,7 @@ class Transaction {
 
   close (query) {
     this.closed = true
-    return this.connect().then(function (connection) {
+    return this.connect().then((connection) => {
       this.promises.push(connection.query(query))
       return Promise.all(this.promises).then(function (value) {
         connection.close()
@@ -38,7 +38,7 @@ class Transaction {
         connection.close()
         throw e
       })
-    }.bind(this))
+    })
   }
 
   commit () {
