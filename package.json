@@ -14,10 +14,10 @@
   },
   "dependencies": {
     "aws-sdk": "2.2.0",
-    "compression": "1.5.2",
+    "compression": "1.6.0",
     "ejs": "2.3.4",
     "express": "4.13.3",
-    "pg": "4.4.1",
+    "pg": "4.4.2",
     "sql": "0.60.0"
   },
   "devDependencies": {
