@@ -1,4 +1,7 @@
 {
+  "bin": {
+    "ozy": "./bin/ozy.js"
+  },
   "name": "ozymandias",
   "version": "0.8.0",
   "main": "index.js",
@@ -17,8 +20,12 @@
     "compression": "1.6.0",
     "ejs": "2.3.4",
     "express": "4.13.3",
+    "glob": "5.0.15",
+    "minimist": "1.2.0",
+    "mkdirp": "0.5.1",
     "pg": "4.4.2",
     "request": "2.64.0",
+    "rimraf": "2.4.3",
     "sql": "0.60.0"
   },
   "devDependencies": {
