@@ -3,6 +3,7 @@
 let pg = require('pg')
 let tape = require('tape')
 
+require('./body')
 require('./db')
 require('./helpers')
 require('./layout')

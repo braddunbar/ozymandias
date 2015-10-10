@@ -1,5 +1,6 @@
 'use strict'
 
+let body = require('body-parser')
 let express = require('express')
 
 let ozymandias = module.exports = function () {
@@ -30,6 +31,8 @@ let ozymandias = module.exports = function () {
   app.use(require('./layout'))
   app.use(require('compression')())
   app.use(require('./mail'))
+  app.use(body.json())
+  app.use(body.urlencoded({extended: false}))
 
   return app
 }

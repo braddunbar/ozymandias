@@ -1,7 +1,9 @@
-var test = require('tape')
-var request = require('supertest')
+'use strict'
 
-var app = require('../')()
+let test = require('tape')
+let request = require('supertest')
+
+let app = require('../')()
 app.set('views', 'test/views')
 
 app.get('/layout', function (req, res) {
