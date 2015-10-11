@@ -19,6 +19,9 @@ let ozymandias = module.exports = function () {
   // Require a secure connection.
   if (process.env.SECURE === '1') app.use(require('./secure'))
 
+  // Compress responses by default.
+  app.use(require('compression')())
+
   // Static Assets
   app.use(express.static('public', {
     etag: !production,
@@ -29,13 +32,14 @@ let ozymandias = module.exports = function () {
   // S3 Assets
   app.use('/assets', require('./assets'))
 
+  // Parse the request body.
+  app.use(body.json())
+  app.use(body.urlencoded({extended: false}))
+
   // Middleware
-  app.use(require('compression')())
   app.use(require('./helpers'))
   app.use(require('./layout'))
   app.use(require('./mail'))
-  app.use(body.json())
-  app.use(body.urlencoded({extended: false}))
 
   return app
 }
