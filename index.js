@@ -16,6 +16,9 @@ let ozymandias = module.exports = function () {
   // Are we in production?
   let production = app.get('env') === 'production'
 
+  // Require a secure connection.
+  if (process.env.SECURE === '1') app.use(require('./secure'))
+
   // Static Assets
   app.use(express.static('public', {
     etag: !production,
@@ -27,9 +30,9 @@ let ozymandias = module.exports = function () {
   app.use('/assets', require('./assets'))
 
   // Middleware
+  app.use(require('compression')())
   app.use(require('./helpers'))
   app.use(require('./layout'))
-  app.use(require('compression')())
   app.use(require('./mail'))
   app.use(body.json())
   app.use(body.urlencoded({extended: false}))

@@ -8,6 +8,7 @@ require('./db')
 require('./helpers')
 require('./layout')
 require('./mail')
+require('./secure')
 
 tape('teardown', function (t) {
   pg.end()
