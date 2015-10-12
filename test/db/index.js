@@ -731,9 +731,17 @@ test('second page with less than count', function (t) {
 })
 
 test('group by', function (t) {
-  User.join('posts').select('count(*)::int as post_count').groupBy('users.id')
-  .all().then(function (users) {
+  User.join('posts').select('count(posts.id)::int as post_count').groupBy('users.id')
+  .order('id').all().then(function (users) {
     t.deepEqual(users.map(user => [user.id, user.post_count]), [[1, 2], [2, 2]])
+    t.end()
+  }).catch(t.end)
+})
+
+test('left join', function (t) {
+  User.leftJoin('posts').select('count(posts.id)::int as post_count').groupBy('users.id')
+  .order('id').all().then(function (users) {
+    t.deepEqual(users.map(user => [user.id, user.post_count]), [[1, 2], [2, 2], [3, 0], [4, 0]])
     t.end()
   }).catch(t.end)
 })

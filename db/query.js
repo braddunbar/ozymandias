@@ -213,16 +213,21 @@ class Query {
     return this
   }
 
-  _join (model, name) {
+  leftJoin () {
+    this._join(this.model, Array.prototype.slice.call(arguments), 'left')
+    return this
+  }
+
+  _join (model, name, type) {
     if (Array.isArray(name)) {
-      for (let item of name) this._join(model, item)
+      for (let item of name) this._join(model, item, type)
       return
     }
 
     if (typeof name === 'object') {
       for (let key of Object.keys(name)) {
-        this._join(model, key)
-        this._join(model.relations[key].model, name[key])
+        this._join(model, key, type)
+        this._join(model.relations[key].model, name[key], type)
       }
       return
     }
@@ -236,7 +241,8 @@ class Query {
       condition = model.table[relation.key].equals(relation.model.table.id)
     }
 
-    this.from = this.from.join(relation.model.table).on(condition)
+    let method = type === 'left' ? 'leftJoin' : 'join'
+    this.from = this.from[method](relation.model.table).on(condition)
   }
 
   groupBy (sql) {
