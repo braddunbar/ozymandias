@@ -138,6 +138,7 @@ let queryMethods = [
   'all',
   'count',
   'find',
+  'groupBy',
   'include',
   'insert',
   'join',

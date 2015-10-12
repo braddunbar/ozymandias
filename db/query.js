@@ -239,6 +239,12 @@ class Query {
     this.from = this.from.join(relation.model.table).on(condition)
   }
 
+  groupBy (sql) {
+    let params = Array.prototype.slice.call(arguments, 1)
+    this.query = this.query.group(new Raw(sql, params))
+    return this
+  }
+
 }
 
 module.exports = Query
