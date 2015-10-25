@@ -44,8 +44,8 @@ test('res.locals.json', function (t) {
   let req = {}
   let res = {locals: {}}
   helpers(req, res, function () {
-    let expected = `<script type='application/json' id='test'>{"test":"<\\/script>alert(\\"O_o\\")"}</script>`
-    t.is(res.locals.json('test', {test: '</script>alert("O_o")'}), expected)
+    let expected = `<script type='application/json' id='test'>{"test":"<\\/script>alert(\\"O_o\\")<\\/script>"}</script>`
+    t.is(res.locals.json('test', {test: '</script>alert("O_o")</script>'}), expected)
     t.end()
   })
 })
