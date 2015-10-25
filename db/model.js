@@ -68,6 +68,12 @@ class Model {
     return Object.keys(this.errors).length === 0
   }
 
+  toJSON () {
+    let result = {}
+    for (let key of this.data.keys()) result[key] = this.data.get(key)
+    return result
+  }
+
   static get table () {
     if (!this._table) {
       this._table = sql.define({name: this.tableName, columns: this.columns})

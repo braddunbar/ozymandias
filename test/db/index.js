@@ -745,3 +745,16 @@ test('left join', function (t) {
     t.end()
   }).catch(t.end)
 })
+
+test('toJSON', function (t) {
+  let data = {
+    id: 1,
+    email: 'test@example.com',
+    first: 'john',
+    last: 'doe',
+    birthday: null
+  }
+  let user = new User(data)
+  t.deepEqual(JSON.parse(JSON.stringify(user)), data)
+  t.end()
+})
