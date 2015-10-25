@@ -4,9 +4,8 @@ module.exports = function (req, res, next) {
   // Attach specific params.
   req.permit = function () {
     let result = {}
-    for (let key of arguments) {
-      if (this.body[key] != null) result[key] = this.body[key]
-    }
+    let body = req.body
+    for (let key of arguments) if (body[key] != null) result[key] = body[key]
     return result
   }
 
@@ -17,6 +16,12 @@ module.exports = function (req, res, next) {
   res.error = function (e) {
     console.log(e.stack)
     res.status(500).render('500')
+  }
+
+  // JSON script tags
+  res.locals.json = function (id, data) {
+    let json = JSON.stringify(data).replace(/<\//g, '<\\/')
+    return `<script type='application/json' id='${id}'>${json}</script>`
   }
 
   next()
