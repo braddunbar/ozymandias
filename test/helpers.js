@@ -49,3 +49,13 @@ test('res.locals.json', function (t) {
     t.end()
   })
 })
+
+test('res.locals.json handles undefined', function (t) {
+  let req = {}
+  let res = {locals: {}}
+  helpers(req, res, function () {
+    let expected = `<script type='application/json' id='test'>null</script>`
+    t.is(res.locals.json('test', undefined), expected)
+    t.end()
+  })
+})

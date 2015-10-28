@@ -20,7 +20,7 @@ module.exports = function (req, res, next) {
 
   // JSON script tags
   res.locals.json = function (id, data) {
-    let json = JSON.stringify(data).replace(/<\//g, '<\\/')
+    let json = JSON.stringify(data || null).replace(/<\//g, '<\\/')
     return `<script type='application/json' id='${id}'>${json}</script>`
   }
 
