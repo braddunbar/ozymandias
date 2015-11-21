@@ -16,7 +16,7 @@
     "test": "./bin/test"
   },
   "dependencies": {
-    "aws-sdk": "2.2.17",
+    "aws-sdk": "2.2.18",
     "body-parser": "1.14.1",
     "compression": "1.6.0",
     "ejs": "2.3.4",
@@ -28,7 +28,7 @@
     "mkdirp": "0.5.1",
     "pg": "4.4.2",
     "request": "2.64.0",
-    "rimraf": "2.4.3",
+    "rimraf": "2.4.4",
     "sql": "0.60.0"
   },
   "devDependencies": {
