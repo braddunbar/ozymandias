@@ -1,6 +1,6 @@
 'use strict'
 
-let Raw = require('./raw')
+const Raw = require('./raw')
 
 function uniq (array) {
   let result = []

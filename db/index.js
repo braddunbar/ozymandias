@@ -1,9 +1,9 @@
 'use strict'
 
-let pg = require('pg')
-let Model = require('./model')
-let Connection = require('./connection')
-let Transaction = require('./transaction')
+const pg = require('pg')
+const Model = require('./model')
+const Connection = require('./connection')
+const Transaction = require('./transaction')
 
 // Monkey patch sql a bit
 require('./sql')

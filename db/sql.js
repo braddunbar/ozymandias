@@ -1,9 +1,9 @@
 'use strict'
 
-let Postgres = require('sql/lib/dialect/postgres')
-let Parameter = require('sql/lib/node/parameter')
+const Postgres = require('sql/lib/dialect/postgres')
+const Parameter = require('sql/lib/node/parameter')
+const visit = Postgres.prototype.visit
 
-let visit = Postgres.prototype.visit
 Postgres.prototype.visit = function (node) {
   if (node.type !== 'RAW') return visit.apply(this, arguments)
 

@@ -1,6 +1,6 @@
 'use strict'
 
-let Node = require('sql/lib/node')
+const Node = require('sql/lib/node')
 
 module.exports = Node.define({
 

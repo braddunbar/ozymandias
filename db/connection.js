@@ -1,6 +1,6 @@
 'use strict'
 
-let pg = require('pg')
+const pg = require('pg')
 
 class Connection {
 

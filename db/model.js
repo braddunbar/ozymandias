@@ -1,7 +1,7 @@
 'use strict'
 
-let sql = require('sql')
-let Query = require('./query')
+const sql = require('sql')
+const Query = require('./query')
 
 class Model {
 
