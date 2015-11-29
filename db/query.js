@@ -3,10 +3,7 @@
 const Raw = require('./raw')
 
 function uniq (array) {
-  let result = []
-  let set = new Set(array)
-  for (let value of set) result.push(value)
-  return result
+  return Array.from(new Set(array))
 }
 
 class Query {
