@@ -2,11 +2,11 @@
 
 const Raw = require('./raw')
 
-function uniq (array) {
-  return Array.from(new Set(array))
-}
-
 class Query {
+
+  uniq (array) {
+    return Array.from(new Set(array))
+  }
 
   constructor (model) {
     this.includes = {}
@@ -49,18 +49,18 @@ class Query {
     this.query = this.query.select(this.table.star()).from(this.from)
 
     // Load models
-    return this.send().then(function (result) {
+    return this.send().then((result) => {
       // Construct some models
       let models = result.rows.map((row) => new Model(row))
 
       // Load includes
-      return Promise.all(Object.keys(includes).map(function (name) {
+      return Promise.all(Object.keys(includes).map((name) => {
         let relation = Model.relations[name]
         let conditions = {}
         let key = relation.key
         let many = relation.many
 
-        conditions[many ? key : 'id'] = uniq(models.map(function (model) {
+        conditions[many ? key : 'id'] = this.uniq(models.map((model) => {
           return model[many ? 'id' : key]
         }))
 
@@ -68,7 +68,7 @@ class Query {
         return relation.model
         .where(conditions)
         .include(includes[name])
-        .all().then(function (includes) {
+        .all().then((includes) => {
           let byId = {}
           if (many) {
             for (let model of models) {
@@ -89,14 +89,14 @@ class Query {
 
   find (id) {
     if (id != null) return this.where({id: id}).find()
-    return this.limit(1).all().then(function (models) {
+    return this.limit(1).all().then((models) => {
       return models.length ? models[0] : null
     })
   }
 
   paginate (page, count) {
     return this.offset((page - 1) * count).limit(count + 1).all()
-    .then(function (models) {
+    .then((models) => {
       let more = models.length > count
       if (models.length > count) models = models.slice(0, count)
       models.more = more
