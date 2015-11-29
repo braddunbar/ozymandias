@@ -29,7 +29,7 @@ class Query {
 
   insert (values) {
     this.query = this.query.insert(values).returning(this.table.star())
-    return this.send().then(function (result) { return result.rows[0] })
+    return this.send().then((result) => result.rows[0])
   }
 
   update (values) {
@@ -44,9 +44,7 @@ class Query {
 
   count () {
     this.query = this.query.select('count(*) as count').from(this.from)
-    return this.send().then(function (result) {
-      return +result.rows[0].count
-    })
+    return this.send().then((result) => +result.rows[0].count)
   }
 
   all () {
@@ -59,7 +57,7 @@ class Query {
     // Load models
     return this.send().then(function (result) {
       // Construct some models
-      let models = result.rows.map(function (row) { return new Model(row) })
+      let models = result.rows.map((row) => new Model(row))
 
       // Load includes
       return Promise.all(Object.keys(includes).map(function (name) {
@@ -91,7 +89,7 @@ class Query {
             for (let model of models) model[name] = byId[model[key]]
           }
         })
-      })).then(function () { return models })
+      })).then(() => models)
     })
   }
 
