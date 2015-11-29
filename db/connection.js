@@ -15,22 +15,19 @@ class Connection {
   }
 
   query (query, values) {
-    let client = this.client
     if (query.toQuery) query = query.toQuery()
     this.db.log(query)
-    return new Promise(function (resolve, reject) {
-      client.query(query, values, function (e, result) {
-        if (e) reject(e)
-        else resolve(result)
+    return new Promise((resolve, reject) => {
+      this.client.query(query, values, (e, result) => {
+        e ? reject(e) : resolve(result)
       })
     })
   }
 
   static create (db) {
-    return new Promise(function (resolve, reject) {
-      pg.connect(db.url, function (e, client, done) {
-        if (e) reject(e)
-        else resolve(new Connection(db, client, done))
+    return new Promise((resolve, reject) => {
+      pg.connect(db.url, (e, client, done) => {
+        e ? reject(e) : resolve(new Connection(db, client, done))
       })
     })
   }

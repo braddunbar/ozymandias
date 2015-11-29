@@ -20,9 +20,7 @@ class DB {
     }
   }
 
-  log () {
-    // Overwritten by child classes.
-  }
+  log () {}
 
   connect () {
     return Connection.create(this)
