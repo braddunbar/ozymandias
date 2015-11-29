@@ -17,9 +17,6 @@ class Query {
     this.from = this.table
   }
 
-  log () {
-  }
-
   send () {
     return this.db.query(this.query)
   }
