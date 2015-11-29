@@ -1,7 +1,9 @@
 'use strict'
 
+const ejs = require('ejs')
 const body = require('body-parser')
 const express = require('express')
+const compression = require('compression')
 
 const ozymandias = module.exports = function () {
   const app = express()
@@ -11,7 +13,7 @@ const ozymandias = module.exports = function () {
 
   // View Engine
   app.set('view engine', 'ejs')
-  app.engine('ejs', require('ejs').renderFile)
+  app.engine('ejs', ejs.renderFile)
 
   // Are we in production?
   const production = app.get('env') === 'production'
@@ -20,7 +22,7 @@ const ozymandias = module.exports = function () {
   if (process.env.SECURE === '1') app.use(require('./secure'))
 
   // Compress responses by default.
-  app.use(require('compression')())
+  app.use(compression())
 
   // Static Assets
   app.use(express.static('public', {
