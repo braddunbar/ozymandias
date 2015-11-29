@@ -1,10 +1,10 @@
 'use strict'
 
-let body = require('body-parser')
-let express = require('express')
+const body = require('body-parser')
+const express = require('express')
 
-let ozymandias = module.exports = function () {
-  let app = express()
+const ozymandias = module.exports = function () {
+  const app = express()
 
   // No x-powered-by header.
   app.disable('x-powered-by')
@@ -14,7 +14,7 @@ let ozymandias = module.exports = function () {
   app.engine('ejs', require('ejs').renderFile)
 
   // Are we in production?
-  let production = app.get('env') === 'production'
+  const production = app.get('env') === 'production'
 
   // Require a secure connection.
   if (process.env.SECURE === '1') app.use(require('./secure'))
@@ -44,4 +44,4 @@ let ozymandias = module.exports = function () {
   return app
 }
 
-for (let p in express) ozymandias[p] = express[p]
+Object.assign(ozymandias, express)
