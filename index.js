@@ -5,6 +5,7 @@ const body = require('body-parser')
 const express = require('express')
 const compression = require('compression')
 
+// Wrap up an express app.
 const ozymandias = module.exports = function () {
   const app = express()
 
@@ -46,4 +47,5 @@ const ozymandias = module.exports = function () {
   return app
 }
 
+// Assign some express properties for convenience.
 Object.assign(ozymandias, express)
