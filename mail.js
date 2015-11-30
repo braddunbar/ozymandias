@@ -20,9 +20,8 @@ module.exports = exports = function (req, res, next) {
       }
 
       return new Promise(function (resolve, reject) {
-        ses.sendEmail(format(options), function (e, result) {
-          if (e) reject(e)
-          else resolve(result)
+        ses.sendEmail(format(options), (e, result) => {
+          return e ? reject(e) : resolve(result)
         })
       })
     })
@@ -31,9 +30,8 @@ module.exports = exports = function (req, res, next) {
   function render (view, format, options) {
     options.layout = format === 'html' ? 'mail' : false
     return new Promise(function (resolve, reject) {
-      res.render(`${view}.${format}.ejs`, options, function (e, result) {
-        if (e) reject(e)
-        else resolve(result)
+      res.render(`${view}.${format}.ejs`, options, (e, result) => {
+        return e ? reject(e) : resolve(result)
       })
     })
   }
