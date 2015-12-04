@@ -1,6 +1,5 @@
 'use strict'
 
-const DB = require('./db')
 const ejs = require('ejs')
 const body = require('body-parser')
 const express = require('express')
@@ -51,10 +50,8 @@ const ozymandias = module.exports = function () {
 // Assign some express properties for convenience.
 Object.assign(ozymandias, express)
 
-// DB
-const db = ozymandias.db = new DB(process.env.DATABASE_URL)
+// DB instance
+ozymandias.db = require('./db/instance')
 
-db.log = function (value) {
-  if (process.env.NODE_ENV !== 'development') return
-  console.log(value)
-}
+// Router extensions
+ozymandias.Router.find = require('./find')

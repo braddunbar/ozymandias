@@ -5,6 +5,7 @@ let tape = require('tape')
 
 require('./body')
 require('./db')
+require('./find')
 require('./helpers')
 require('./layout')
 require('./mail')
