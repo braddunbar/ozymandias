@@ -2,10 +2,11 @@
 
 const db = require('./db/instance')
 const bcrypt = require('bcrypt')
+const ROUNDS = +process.env.HASH_ROUNDS || 12
 
 function hash (password) {
   return new Promise((resolve, reject) => {
-    bcrypt.hash(password, 12, (e, hash) => e ? reject(e) : resolve(hash))
+    bcrypt.hash(password, ROUNDS, (e, hash) => e ? reject(e) : resolve(hash))
   })
 }
 
@@ -26,11 +27,11 @@ class User extends db.Model {
   }
 
   get email () {
-    return this.data.get('email') || ''
+    return (this.data.get('email') || '').trim()
   }
 
   set email (value) {
-    this.data.set('email', value || '')
+    this.data.set('email', (value || '').trim())
   }
 
   authenticate (password) {

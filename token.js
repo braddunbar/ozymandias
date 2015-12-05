@@ -1,6 +1,7 @@
 'use strict'
 
 const db = require('./db/instance')
+const crypto = require('crypto')
 
 class Token extends db.Model {
 
@@ -14,6 +15,11 @@ class Token extends db.Model {
       'user_id',
       'expires_at'
     ]
+  }
+
+  static create (values) {
+    if (!values.id) values.id = crypto.randomBytes(20).toString('hex')
+    return super.create(values)
   }
 
 }

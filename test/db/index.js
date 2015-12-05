@@ -129,14 +129,14 @@ test('where clause with array', function (t) {
 
 test('where not clause with array', function (t) {
   User.not({id: [1, 2]}).all().then(function (users) {
-    t.deepEqual(users.map(function (user) { return user.id }), [3])
+    t.deepEqual(users.map(function (user) { return user.id }), [3, 4])
     t.end()
   }).catch(t.end)
 })
 
 test('where not clause with primitive', function (t) {
   User.not({id: 3}).all().then(function (users) {
-    t.deepEqual(users.map(function (user) { return user.id }), [1, 2])
+    t.deepEqual(users.map(function (user) { return user.id }), [1, 2, 4])
     t.end()
   }).catch(t.end)
 })
@@ -157,7 +157,7 @@ test('where clause with query', function (t) {
 
 test('where not clause with query', function (t) {
   User.not({id: Comment.select('userId')}).all().then(function (users) {
-    t.deepEqual(users.map(function (user) { return user.id }), [3])
+    t.deepEqual(users.map(function (user) { return user.id }), [3, 4])
     t.end()
   }).catch(t.end)
 })
@@ -191,14 +191,14 @@ test('order descending', function (t) {
 
 test('order as string', function (t) {
   User.order('id').all().then(function (users) {
-    t.deepEqual(users.map(function (user) { return user.id }), [1, 2, 3])
+    t.deepEqual(users.map(function (user) { return user.id }), [1, 2, 3, 4])
     t.end()
   }).catch(t.end)
 })
 
 test('order as array ascending', function (t) {
   User.order(['id', 'asc']).all().then(function (users) {
-    t.deepEqual(users.map(function (user) { return user.id }), [1, 2, 3])
+    t.deepEqual(users.map(function (user) { return user.id }), [1, 2, 3, 4])
     t.end()
   }).catch(t.end)
 })
@@ -215,8 +215,9 @@ test('order as array descending', function (t) {
 
 test('where null', function (t) {
   User.where({birthday: null}).all().then(function (users) {
-    t.is(users.length, 1)
+    t.is(users.length, 2)
     t.is(users[0].email, 'jd@example.com')
+    t.is(users[1].email, 'test@example.com')
     t.end()
   }).catch(t.end)
 })
@@ -550,12 +551,13 @@ test('create a comment', function (t) {
 
 test('creating sets values from db', function (t) {
   db.transaction(function () {
-    User.create({email: 'test@example.com'}).then(function (user) {
+    User.create({email: 'user@example.com'}).then(function (user) {
       t.is(user.first, '')
       t.is(user.last, '')
       t.ok(user.id != null)
       t.end()
     })
+    throw new Error('rollback')
   }).catch(t.end)
 })
 

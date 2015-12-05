@@ -11,12 +11,14 @@ SET client_min_messages = warning;
 
 SET search_path = public, pg_catalog;
 
+ALTER TABLE ONLY public.tokens DROP CONSTRAINT tokens_user_id_fkey;
 ALTER TABLE ONLY public.posts DROP CONSTRAINT posts_user_id_fkey;
 ALTER TABLE ONLY public.comments DROP CONSTRAINT comments_user_id_fkey;
 ALTER TABLE ONLY public.comments DROP CONSTRAINT comments_post_id_fkey;
 DROP TRIGGER update_post_search ON public.posts;
 DROP INDEX public.post_search_index;
 ALTER TABLE ONLY public.users DROP CONSTRAINT users_pkey;
+ALTER TABLE ONLY public.tokens DROP CONSTRAINT tokens_pkey;
 ALTER TABLE ONLY public.posts DROP CONSTRAINT posts_pkey;
 ALTER TABLE ONLY public.comments DROP CONSTRAINT comments_pkey;
 ALTER TABLE public.users ALTER COLUMN id DROP DEFAULT;
@@ -24,6 +26,7 @@ ALTER TABLE public.posts ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.comments ALTER COLUMN id DROP DEFAULT;
 DROP SEQUENCE public.users_id_seq;
 DROP TABLE public.users;
+DROP TABLE public.tokens;
 DROP SEQUENCE public.posts_id_seq;
 DROP TABLE public.posts;
 DROP SEQUENCE public.comments_id_seq;
@@ -128,6 +131,17 @@ ALTER SEQUENCE posts_id_seq OWNED BY posts.id;
 
 
 --
+-- Name: tokens; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE tokens (
+    id character varying(255) NOT NULL,
+    expires_at timestamp with time zone NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -136,7 +150,10 @@ CREATE TABLE users (
     email character varying(255) DEFAULT ''::character varying NOT NULL,
     first character varying(255) DEFAULT ''::character varying NOT NULL,
     last character varying(255) DEFAULT ''::character varying NOT NULL,
-    birthday date
+    birthday date,
+    password character varying(255) DEFAULT ''::character varying NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -194,7 +211,7 @@ COPY comments (id, post_id, user_id, body) FROM stdin;
 -- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('comments_id_seq', 1, true);
+SELECT pg_catalog.setval('comments_id_seq', 2, true);
 
 
 --
@@ -217,13 +234,22 @@ SELECT pg_catalog.setval('posts_id_seq', 4, true);
 
 
 --
+-- Data for Name: tokens; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY tokens (id, expires_at, user_id) FROM stdin;
+\.
+
+
+--
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY users (id, email, first, last, birthday) FROM stdin;
-1	brad@example.com	Brad	Dunbar	1984-05-10
-2	kim@example.com	Kim	Dunbar	1985-11-16
-3	jd@example.com	John	Doe	\N
+COPY users (id, email, first, last, birthday, password, created_at, updated_at) FROM stdin;
+1	brad@example.com	Brad	Dunbar	1984-05-10	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:36:14.869714-05	2015-12-05 10:36:20.117449-05
+2	kim@example.com	Kim	Dunbar	1985-11-16	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:36:14.869714-05	2015-12-05 10:36:20.117449-05
+3	jd@example.com	John	Doe	\N	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:36:14.869714-05	2015-12-05 10:36:20.117449-05
+4	test@example.com			\N	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:41:16.14273-05	2015-12-05 10:41:16.14273-05
 \.
 
 
@@ -231,7 +257,7 @@ COPY users (id, email, first, last, birthday) FROM stdin;
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('users_id_seq', 3, true);
+SELECT pg_catalog.setval('users_id_seq', 5, true);
 
 
 --
@@ -248,6 +274,14 @@ ALTER TABLE ONLY comments
 
 ALTER TABLE ONLY posts
     ADD CONSTRAINT posts_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY tokens
+    ADD CONSTRAINT tokens_pkey PRIMARY KEY (id);
 
 
 --
@@ -294,6 +328,14 @@ ALTER TABLE ONLY comments
 
 ALTER TABLE ONLY posts
     ADD CONSTRAINT posts_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
+
+
+--
+-- Name: tokens_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY tokens
+    ADD CONSTRAINT tokens_user_id_fkey FOREIGN KEY (user_id) REFERENCES users(id);
 
 
 --
