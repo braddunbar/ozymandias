@@ -1,6 +1,13 @@
 'use strict'
 
 const db = require('./db/instance')
+const bcrypt = require('bcrypt')
+
+function hash (password) {
+  return new Promise((resolve, reject) => {
+    bcrypt.hash(password, 12, (e, hash) => e ? reject(e) : resolve(hash))
+  })
+}
 
 class User extends db.Model {
 
@@ -24,6 +31,30 @@ class User extends db.Model {
 
   set email (value) {
     this.data.set('email', value || '')
+  }
+
+  authenticate (password) {
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(password, this.password, (e, match) => {
+        return e ? reject(e) : resolve(match)
+      })
+    })
+  }
+
+  update (values) {
+    if (!values.password) return super.update(values)
+    return hash(values.password).then((hash) => {
+      values.password = hash
+      return super.update(values)
+    })
+  }
+
+  static create (values) {
+    if (!values.password) return super.create(values)
+    return hash(values.password).then((hash) => {
+      values.password = hash
+      return super.create(values)
+    })
   }
 
 }

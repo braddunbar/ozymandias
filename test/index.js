@@ -10,6 +10,7 @@ require('./helpers')
 require('./layout')
 require('./mail')
 require('./secure')
+require('./user')
 
 tape('teardown', function (t) {
   pg.end()
