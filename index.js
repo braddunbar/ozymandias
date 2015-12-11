@@ -20,8 +20,11 @@ const ozymandias = module.exports = function () {
   // Are we in production?
   const production = app.get('env') === 'production'
 
+  // Use a secure connection?
+  const secure = process.env.SECURE === '1'
+
   // Require a secure connection.
-  if (process.env.SECURE === '1') app.use(require('./secure'))
+  if (secure) app.use(require('./secure'))
 
   // Compress responses by default.
   app.use(compression())
@@ -43,6 +46,7 @@ const ozymandias = module.exports = function () {
   // Cookie Session
   app.use(session({
     signed: production,
+    secureProxy: secure,
     name: process.env.ID,
     secret: process.env.SECRET,
     maxAge: 1000 * 60 * 60 * 24 * 14
