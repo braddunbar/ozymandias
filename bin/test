@@ -1,7 +1,9 @@
 #!/bin/sh -e
 
-DATABASE_URL='postgres://localhost/ozymandias'
 
 standard
 ./bin/reset
-DATABASE_URL=$DATABASE_URL HASH_ROUNDS=1 tape test/index.js
+
+DATABASE_URL='postgres://localhost/ozymandias' \
+HASH_ROUNDS=1 \
+tape test/index.js
