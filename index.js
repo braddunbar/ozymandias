@@ -3,6 +3,7 @@
 const ejs = require('ejs')
 const body = require('body-parser')
 const express = require('express')
+const session = require('cookie-session')
 const compression = require('compression')
 
 // Wrap up an express app.
@@ -38,6 +39,14 @@ const ozymandias = module.exports = function () {
   // Parse the request body.
   app.use(body.json())
   app.use(body.urlencoded({extended: false}))
+
+  // Cookie Session
+  app.use(session({
+    signed: production,
+    name: process.env.ID,
+    secret: process.env.SECRET,
+    maxAge: 1000 * 60 * 60 * 24 * 14
+  }))
 
   // Middleware
   app.use(require('./helpers'))
