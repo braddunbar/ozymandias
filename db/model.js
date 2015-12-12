@@ -50,7 +50,7 @@ class Model {
     if (!this.valid) {
       let e = new Error('invalid')
       e.model = this
-      throw e
+      return Promise.reject(e)
     }
     let query = this.constructor.where({id: this.id})
     return query.update(this.slice.apply(this, Object.keys(values)))
@@ -101,7 +101,7 @@ class Model {
     if (!model.valid) {
       let e = new Error('invalid')
       e.model = model
-      throw e
+      return Promise.reject(e)
     }
     for (let key of Object.keys(values)) values[key] = model[key]
     return this.insert(values).then(function (values) {

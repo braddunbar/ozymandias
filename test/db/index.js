@@ -436,26 +436,24 @@ test('update with property names', function (t) {
   }).catch(t.end)
 })
 
-test('update throws if invalid', function (t) {
-  let user = new User({id: 1})
-  try {
-    user.update({email: ''})
-    t.end('updating should throw if invalid')
-  } catch (e) {
-    t.is(e.message, 'invalid')
-    t.ok(e.model === user, 'should include model with error')
-  }
-  t.end()
-})
-
-test('create fails if invalid', function (t) {
-  try {
-    User.create({email: '', first: 'joe', last: 'user'})
-  } catch (e) {
+test('update rejects when invalid', function (t) {
+  new User({id: 1}).update({email: ''}).then(() => {
+    t.end('update should reject when invalid')
+  }).catch((e) => {
     t.is(e.message, 'invalid')
     t.ok(e.model instanceof User, 'should include model with error')
-  }
-  t.end()
+    t.end()
+  })
+})
+
+test('create rejects when invalid', function (t) {
+  User.create({email: '', first: 'joe', last: 'user'}).then(() => {
+    t.end('create should reject when invalid')
+  }).catch((e) => {
+    t.is(e.message, 'invalid')
+    t.ok(e.model instanceof User, 'should include model with error')
+    t.end()
+  })
 })
 
 test('transaction', function (t) {
