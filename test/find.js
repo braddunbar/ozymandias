@@ -1,7 +1,7 @@
 'use strict'
 
 const App = require('../')
-const test = require('tape')
+const test = require('./test')
 const User = require('./db/user')
 const request = require('supertest')
 const Router = require('../').Router

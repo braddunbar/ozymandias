@@ -4,34 +4,29 @@ class Transaction {
 
   constructor (db) {
     this.db = db
-    this.promises = []
   }
 
   connect () {
-    if (this._connect) return this._connect
-    this._connect = this.db.connect().then((connection) => {
-      this.promises.push(connection.query('begin'))
-      return connection
-    })
+    this.started = true
+    if (!this._connect) {
+      this._connect = this.db.connect().then((connection) => {
+        connection.query('begin')
+        return connection
+      })
+    }
     return this._connect
   }
 
   query (query, values) {
-    if (this.closed) {
-      throw new Error('cannot query a closed transaction')
-    }
-    let promise = this.connect().then((connection) => {
-      return connection.query(query, values)
-    })
-    this.promises.push(promise)
-    return promise
+    if (this.closed) throw new Error('cannot query a closed transaction')
+    return this.connect().then((connection) => connection.query(query, values))
   }
 
   close (query) {
     this.closed = true
+    if (!this.started) return Promise.resolve()
     return this.connect().then((connection) => {
-      this.promises.push(connection.query(query))
-      return Promise.all(this.promises).then((value) => {
+      return connection.query(query).then((value) => {
         connection.close()
         return value
       }).catch((e) => {
@@ -47,20 +42,6 @@ class Transaction {
 
   rollback () {
     return this.close('rollback')
-  }
-
-  run (body) {
-    if (this.db._transaction) {
-      throw new Error('already running a transaction')
-    }
-    this.db._transaction = this
-    try {
-      return Promise.resolve(body())
-    } catch (e) {
-      return Promise.reject(e)
-    } finally {
-      this.db._transaction = null
-    }
   }
 
 }

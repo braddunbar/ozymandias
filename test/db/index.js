@@ -1,10 +1,10 @@
 'use strict'
 
-let test = require('tape')
-let db = require('./db')
-let User = require('./user')
-let Post = require('./post')
-let Comment = require('./comment')
+const db = require('../../db/instance')
+const test = require('../test')
+const User = require('./user')
+const Post = require('./post')
+const Comment = require('./comment')
 
 User.hasMany('posts', {model: Post, key: 'userId'})
 User.hasMany('comments', {model: Comment, key: 'userId'})
@@ -32,32 +32,6 @@ test('query with parameters', function (t) {
   let sql = 'select email from users where id = $1'
   db.query(sql, [1]).then(function (result) {
     t.deepEqual(result.rows, [{email: 'brad@example.com'}])
-    t.end()
-  }).catch(t.end)
-})
-
-test('transaction query with parameters', function (t) {
-  let sql = 'select email from users where id = $1'
-  db.transaction(function () {
-    db.query(sql, [1]).then(function (result) {
-      t.deepEqual(result.rows, [{email: 'brad@example.com'}])
-      t.end()
-    })
-  }).catch(t.end)
-})
-
-test('transaction promises resolve their return value', function (t) {
-  db.transaction(function () {
-    return db.query('select email from users where id = $1', [1])
-  }).then(function (result) {
-    t.deepEqual(result.rows, [{email: 'brad@example.com'}])
-    t.end()
-  }).catch(t.end)
-})
-
-test('transaction promises resolve their return value', function (t) {
-  db.transaction(function () { return 57 }).then(function (result) {
-    t.is(result, 57)
     t.end()
   }).catch(t.end)
 })
@@ -411,13 +385,11 @@ test('three levels', function (t) {
 test('update', function (t) {
   User.find(1).then(function (user) {
     t.is(user.first, 'Brad')
-    return db.transaction(function () {
-      user.update({first: 'Bradley'})
-      User.find(1).then(function (user) {
+    return user.update({first: 'Bradley'}).then(() => {
+      return User.find(1).then(function (user) {
         t.is(user.first, 'Bradley')
         t.end()
       })
-      throw new Error('rollback')
     })
   }).catch(t.end)
 })
@@ -425,13 +397,11 @@ test('update', function (t) {
 test('update with property names', function (t) {
   Post.find(1).then(function (post) {
     t.is(post.id, 1)
-    return db.transaction(function () {
-      post.update({userId: 2})
-      Post.find(1).then(function (post) {
+    return post.update({userId: 2}).then(() => {
+      return Post.find(1).then((post) => {
         t.is(post.userId, 2)
         t.end()
       })
-      throw new Error('rollback')
     })
   }).catch(t.end)
 })
@@ -456,175 +426,56 @@ test('create rejects when invalid', function (t) {
   })
 })
 
-test('transaction', function (t) {
-  Post.find(1).then(function (post) {
-    t.is(post.userId, 1)
-    return db.transaction(function () {
-      post.update({userId: 2})
-      Post.find(1).then(function (post) {
-        t.is(post.userId, 2)
-      })
-      throw new Error('rollback')
-    }).then(function () {
-      return Post.find(1).then(function (post) {
-        t.is(post.userId, 1)
-        t.end()
-      })
-    })
-  }).catch(t.end)
-})
-
-test('Throwing during a transaction returns a rejected promise', function (t) {
-  let transaction = db.transaction()
-  transaction.run(function () {
-    throw new Error('test')
-  }).then(function () {
-    t.end('promise should be rejected')
-  }).catch(function (e) {
-    t.is(e.message, 'test')
-    t.end()
-  })
-})
-
-test('transactions forward errors', function (t) {
-  Post.find(1).then(function (post) {
-    t.deepEqual(post.slice('id', 'userId'), {id: 1, userId: 1})
-    return db.transaction(function () {
-      post.destroy()
-      throw new Error('rollback')
-    }).then(function () {
-      t.end('should get foreign key constraint error')
-    }).catch(function (e) {
-      t.ok(e)
-      t.end()
-    })
-  }).catch(t.end)
-})
-
 test('destroy a comment', function (t) {
   Comment.find(1).then(function (comment) {
-    return db.transaction(function () {
-      comment.destroy()
-      Comment.find(1).then(function (comment) {
+    return comment.destroy().then(() => {
+      return Comment.find(1).then((comment) => {
         t.is(comment, null)
         t.end()
       })
-      throw new Error('rollback')
     })
   }).catch(t.end)
 })
 
 test('destroy several comments', function (t) {
-  return db.transaction(function () {
-    Comment.where({id: [1, 2]}).delete()
-    Comment.where({id: [1, 2]}).all().then(function (comments) {
+  Comment.where({id: [1, 2]}).delete().then(() => {
+    return Comment.where({id: [1, 2]}).all().then((comments) => {
       t.is(comments.length, 0)
       t.end()
     })
-    throw new Error('rollback')
   }).catch(t.end)
 })
 
 test('create a comment', function (t) {
-  db.transaction(function () {
-    Comment.create({
-      id: 123456789,
-      userId: 1,
-      postId: 1,
-      body: 'blah'
-    }).then(check)
-    Comment.find(123456789).then(check)
-    throw new Error('rollback')
-  }).then(function () { t.end() }).catch(t.end)
-
-  function check (comment) {
-    t.deepEqual(comment.slice('id', 'userId', 'postId', 'body'), {
-      id: 123456789,
-      userId: 1,
-      postId: 1,
-      body: 'blah'
+  Comment.create({
+    id: 123456789,
+    userId: 1,
+    postId: 1,
+    body: 'blah'
+  }).then(() => {
+    return Comment.find(123456789).then((comment) => {
+      t.deepEqual(comment.slice('id', 'userId', 'postId', 'body'), {
+        id: 123456789,
+        userId: 1,
+        postId: 1,
+        body: 'blah'
+      })
+      t.end()
     })
-  }
+  }).catch(t.end)
 })
 
 test('creating sets values from db', function (t) {
-  db.transaction(function () {
-    User.create({email: 'user@example.com'}).then(function (user) {
-      t.is(user.first, '')
-      t.is(user.last, '')
-      t.ok(user.id != null)
-      t.end()
-    })
-    throw new Error('rollback')
-  }).catch(t.end)
-})
-
-test('no nesting transactions', function (t) {
-  let transaction = db.transaction()
-  transaction.run(function () {
-    t.throws(function () {
-      db.transaction.run()
-    }, 'transactions cannot be nested')
+  User.create({email: 'user@example.com'}).then(function (user) {
+    t.is(user.first, '')
+    t.is(user.last, '')
+    t.ok(user.id != null)
     t.end()
-  })
-})
-
-test('error in transaction body', function (t) {
-  db.transaction(function () {
-    throw new Error('error in transaction body')
-  }).then(function () {
-    t.end('transaction should fail')
-  }).catch(function () {
-    t.end()
-  })
-})
-
-test('long transaction', function (t) {
-  let transaction = db.transaction()
-
-  User.find(3).then(function (user) {
-    t.is(user.first, 'John')
-    return update(user)
   }).catch(t.end)
-
-  function update (user) {
-    return transaction.run(function () {
-      return user.update({first: 'Jane'}).then(verifyJohn)
-    })
-  }
-
-  function verifyJohn () {
-    return User.find(3).then(function (user) {
-      t.is(user.first, 'John')
-      return verifyJane()
-    })
-  }
-
-  function verifyJane () {
-    return transaction.run(function () {
-      return User.find(3).then(function (user) {
-        t.is(user.first, 'Jane')
-        return rollback()
-      })
-    })
-  }
-
-  function rollback () {
-    return transaction.rollback().then(function () {
-      t.end()
-    })
-  }
-})
-
-test('no queries after closing a transaction', function (t) {
-  let transaction = db.transaction()
-  transaction.commit()
-  t.throws(function () { transaction.query('select 1') })
-  t.end()
 })
 
 test('offset', function (t) {
-  Post.offset(2).limit(2).all().then(function (posts) {
+  Post.order('id').offset(2).limit(2).all().then(function (posts) {
     t.deepEqual(posts.map(function (post) { return post.id }), [3, 4])
     t.end()
   }).catch(t.end)
@@ -647,7 +498,7 @@ test('valid model', function (t) {
 test('joins', function (t) {
   Post.join('user').where({user: {birthday: '1985-11-16'}}).all()
   .then(function (posts) {
-    t.deepEqual(posts.map(function (post) { return post.id }), [2, 4])
+    t.deepEqual(posts.map((post) => post.id), [2, 4])
     t.end()
   }).catch(t.end)
 })

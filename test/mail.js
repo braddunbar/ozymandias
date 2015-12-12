@@ -1,4 +1,6 @@
-var test = require('tape')
+'use strict'
+
+var test = require('./test')
 var request = require('supertest')
 var mail = require('../mail')
 

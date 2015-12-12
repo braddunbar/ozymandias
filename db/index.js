@@ -31,7 +31,6 @@ class DB {
   }
 
   query (query, values) {
-    if (this._transaction) return this._transaction.query(query, values)
     return this.connect().then((connection) => {
       return connection.query(query, values).then((result) => {
         connection.close()
@@ -43,16 +42,8 @@ class DB {
     })
   }
 
-  transaction (body) {
-    let transaction = new Transaction(this)
-    if (!body) return transaction
-    return transaction.run(body).then((result) => {
-      return transaction.commit().then(() => result)
-    }).catch((e) => {
-      return transaction.rollback().then(() => {
-        if (e.message !== 'rollback') throw e
-      })
-    })
+  transaction () {
+    return new Transaction(this)
   }
 
 }

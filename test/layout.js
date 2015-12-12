@@ -1,6 +1,6 @@
 'use strict'
 
-let test = require('tape')
+let test = require('./test')
 let request = require('supertest')
 
 let app = require('../')()

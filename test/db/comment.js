@@ -1,6 +1,6 @@
 'use strict'
 
-let db = require('./db')
+let db = require('../../db/instance')
 
 class Comment extends db.Model {
 

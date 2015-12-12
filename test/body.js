@@ -1,7 +1,7 @@
 'use strict'
 
 let ozy = require('../')
-let test = require('tape')
+let test = require('./test')
 let request = require('supertest')
 
 test('parse json bodies', function (t) {

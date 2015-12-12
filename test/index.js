@@ -1,7 +1,7 @@
 'use strict'
 
-let pg = require('pg')
-let tape = require('tape')
+const pg = require('pg')
+const tape = require('tape')
 
 require('./body')
 require('./db')
@@ -13,7 +13,7 @@ require('./secure')
 require('./token')
 require('./user')
 
-tape('teardown', function (t) {
+tape('teardown', (t) => {
   pg.end()
   t.end()
 })

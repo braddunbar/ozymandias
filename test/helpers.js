@@ -1,7 +1,7 @@
 'use strict'
 
 let app = require('../')()
-let test = require('tape')
+let test = require('./test')
 let request = require('supertest')
 let helpers = require('../helpers')
 

@@ -1,8 +1,7 @@
 'use strict'
 
-const test = require('tape')
+const test = require('./test')
 const User = require('../user')
-const db = require('../db/instance')
 
 test('authenticate a user', (t) => {
   const hash = '$2a$04$GSyRKrbgj9PWCc.cHQsFJO3nSc0dz.JO..SZBIFBuyPTnquf3OswG'
@@ -22,32 +21,26 @@ test('email is trimmed', (t) => {
 })
 
 test('creating a user hashes the password', (t) => {
-  db.transaction(() => {
-    User.create({
-      email: 'user@example.com',
-      password: 'password'
-    }).then((user) => {
-      return user.authenticate('password').then((match) => {
-        t.ok(match)
-        t.end()
-      })
-    }).catch(t.end)
-    throw new Error('rollback')
+  User.create({
+    email: 'user@example.com',
+    password: 'password'
+  }).then((user) => {
+    return user.authenticate('password').then((match) => {
+      t.ok(match)
+      t.end()
+    })
   }).catch(t.end)
 })
 
 test('updating a user hashes the password', (t) => {
   const user = new User({id: 1})
-  db.transaction(() => {
-    user.update({
-      email: 'user@example.com',
-      password: 'new password'
-    }).then(() => {
-      return user.authenticate('new password').then((match) => {
-        t.ok(match)
-        t.end()
-      })
-    }).catch(t.end)
-    throw new Error('rollback')
+  user.update({
+    email: 'user@example.com',
+    password: 'new password'
+  }).then(() => {
+    return user.authenticate('new password').then((match) => {
+      t.ok(match)
+      t.end()
+    })
   }).catch(t.end)
 })
