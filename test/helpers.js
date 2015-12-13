@@ -60,12 +60,14 @@ test('res.locals.json handles undefined', (t) => {
   })
 })
 
-test('res.signIn', (t) => {
+test('signIn/signOut', (t) => {
   const req = {session: {}}
   const res = {locals: {}}
   helpers(req, res, () => {
     req.signIn({id: 1})
     t.is(req.session.userId, 1)
+    req.signOut()
+    t.is(req.session.userId, undefined)
     t.end()
   })
 })

@@ -11,7 +11,12 @@ module.exports = function (req, res, next) {
 
   // Sign in a user
   req.signIn = function (user) {
-    req.session.userId = user.id
+    if (user) req.session.userId = user.id
+  }
+
+  // Sign out
+  req.signOut = function (user) {
+    delete req.session.userId
   }
 
   // Put the request in the locals for convenience.
