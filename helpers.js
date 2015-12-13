@@ -9,6 +9,11 @@ module.exports = function (req, res, next) {
     return result
   }
 
+  // Sign in a user
+  req.signIn = function (user) {
+    req.session.userId = user.id
+  }
+
   // Put the request in the locals for convenience.
   res.locals.req = req
 

@@ -59,3 +59,13 @@ test('res.locals.json handles undefined', function (t) {
     t.end()
   })
 })
+
+test('res.signIn', function (t) {
+  const req = {session: {}}
+  const res = {locals: {}}
+  helpers(req, res, function () {
+    req.signIn({id: 1})
+    t.is(req.session.userId, 1)
+    t.end()
+  })
+})
