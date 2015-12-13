@@ -3,6 +3,7 @@
 const pg = require('pg')
 const tape = require('tape')
 
+require('./auth')
 require('./body')
 require('./db')
 require('./find')

@@ -60,4 +60,4 @@ class User extends db.Model {
 
 }
 
-module.exports = User
+db.User = module.exports = User

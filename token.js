@@ -24,4 +24,4 @@ class Token extends db.Model {
 
 }
 
-module.exports = Token
+db.Token = module.exports = Token
