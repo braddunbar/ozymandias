@@ -57,6 +57,7 @@ const ozymandias = module.exports = function () {
   app.use(require('./layout'))
   app.use(require('./mail'))
   app.use(require('./auth'))
+  app.use(require('./flash'))
 
   return app
 }
