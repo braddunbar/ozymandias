@@ -1,17 +1,17 @@
 'use strict'
 
-let app = require('../')()
-let test = require('./test')
-let request = require('supertest')
-let helpers = require('../helpers')
+const app = require('../')()
+const test = require('./test')
+const request = require('supertest')
+const helpers = require('../helpers')
 
 app.set('views', 'test/views')
 
-app.get('/error', function (req, res) {
+app.get('/error', (req, res) => {
   res.error({stack: 'test stack'})
 })
 
-test('res.error', function (t) {
+test('res.error', (t) => {
   request(app)
   .get('/error')
   .expect('layout 500\n\n')
@@ -19,19 +19,19 @@ test('res.error', function (t) {
   .end(t.end)
 })
 
-test('locals.req === req', function (t) {
+test('locals.req === req', (t) => {
   let req = {}
   let res = {locals: {}}
-  helpers(req, res, function () {
+  helpers(req, res, () => {
     t.is(res.locals.req, req)
     t.end()
   })
 })
 
-test('req.permit', function (t) {
+test('req.permit', (t) => {
   let req = {body: {id: 1, name: 'test', count: 25}}
   let res = {locals: {}}
-  helpers(req, res, function () {
+  helpers(req, res, () => {
     t.deepEqual(req.permit('name', 'count', 'missing'), {
       name: 'test',
       count: 25
@@ -40,30 +40,30 @@ test('req.permit', function (t) {
   })
 })
 
-test('res.locals.json', function (t) {
+test('res.locals.json', (t) => {
   let req = {}
   let res = {locals: {}}
-  helpers(req, res, function () {
+  helpers(req, res, () => {
     let expected = `<script type='application/json' id='test'>{"test":"<\\/script>alert(\\"O_o\\")<\\/script>"}</script>`
     t.is(res.locals.json('test', {test: '</script>alert("O_o")</script>'}), expected)
     t.end()
   })
 })
 
-test('res.locals.json handles undefined', function (t) {
+test('res.locals.json handles undefined', (t) => {
   let req = {}
   let res = {locals: {}}
-  helpers(req, res, function () {
+  helpers(req, res, () => {
     let expected = `<script type='application/json' id='test'>null</script>`
     t.is(res.locals.json('test', undefined), expected)
     t.end()
   })
 })
 
-test('res.signIn', function (t) {
+test('res.signIn', (t) => {
   const req = {session: {}}
   const res = {locals: {}}
-  helpers(req, res, function () {
+  helpers(req, res, () => {
     req.signIn({id: 1})
     t.is(req.session.userId, 1)
     t.end()
