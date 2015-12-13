@@ -64,10 +64,12 @@ test('signIn/signOut', (t) => {
   const req = {session: {}}
   const res = {locals: {}}
   helpers(req, res, () => {
+    req.signIn(null)
+    t.is(req.session.userId, undefined)
     req.signIn({id: 1})
     t.is(req.session.userId, 1)
     req.signOut()
-    t.is(req.session.userId, undefined)
+    t.is(req.session, null)
     t.end()
   })
 })

@@ -16,7 +16,7 @@ module.exports = function (req, res, next) {
 
   // Sign out
   req.signOut = function (user) {
-    delete req.session.userId
+    req.session = null
   }
 
   // Put the request in the locals for convenience.
