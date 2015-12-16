@@ -8,11 +8,22 @@ const BUCKET = process.env.BUCKET
 const s3 = new aws.S3({apiVersion: '2006-03-01'})
 
 exports.hasImage = function (Model, options) {
-  let name = options.name
-  let Name = name[0].toUpperCase() + name.slice(1)
+  const name = options.name
+  const Name = name[0].toUpperCase() + name.slice(1)
 
   Model.prototype[`upload${Name}`] = function (file) {
     return new Upload(file, this, options).send()
+  }
+
+  Model.prototype[`${name}Key`] = function (size) {
+    const ext = this[`${name}_ext`]
+    return `${this.tableName}/${this.id}/${name}/${size}.${ext}`
+  }
+
+  Model.prototype[`${name}Path`] = function (size) {
+    const key = this[`${name}Key`](size)
+    const updated_at = this[`${name}_updated_at`]
+    return `/assets/${key}?${+updated_at}`
   }
 }
 
@@ -38,7 +49,7 @@ class Upload {
   }
 
   s3Key (size) {
-    return `${this.model.tableName}/${this.model.id}/${size}.${this.ext}`
+    return `${this.model.tableName}/${this.model.id}/${this.name}/${size}.${this.ext}`
   }
 
   cleanup () {
@@ -63,7 +74,7 @@ class Upload {
   stream (size) {
     if (size === 'original') return fs.createReadStream(this.path)
     let width = this.sizes[size]
-    return gm(this.path).resize(width, width).noProfile().stream(this.ext)
+    return gm(this.path).resize(width, width, '>').noProfile().stream(this.ext)
   }
 
   put (size) {
