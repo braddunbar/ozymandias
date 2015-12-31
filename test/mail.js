@@ -29,7 +29,7 @@ test('render the layout', function (t) {
     if (e) return t.end(e)
     t.deepEqual(sent.Message.Body, {
       Html: {
-        Data: 'mail <h1>test email</h1>\n\n',
+        Data: 'mail <h1>test email</h1>\n',
         Charset: 'utf-8'
       },
       Text: {

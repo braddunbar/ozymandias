@@ -1,5 +1,7 @@
+'use strict'
+
 module.exports = function (req, res, next) {
-  var render = res.render
+  const render = res.render
 
   res.render = function (view, options, fn) {
     if (options && options.layout === false) {
@@ -26,7 +28,7 @@ module.exports = function (req, res, next) {
       if (e) return req.next(e)
 
       // Provide the content to the layout.
-      options.content = result
+      options.content = result.trim()
 
       // Render the layout.
       render.call(res, options.layout || 'layout', options, fn)

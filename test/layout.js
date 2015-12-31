@@ -13,7 +13,7 @@ app.get('/layout', function (req, res) {
 test('render the layout', function (t) {
   request(app)
   .get('/layout')
-  .expect('layout index\n\n')
+  .expect('layout index\n')
   .end(t.end)
 })
 
@@ -24,7 +24,7 @@ app.get('/alternate', function (req, res) {
 test('render an alternate layout', function (t) {
   request(app)
   .get('/alternate')
-  .expect('alternate layout index\n\n')
+  .expect('alternate layout index\n')
   .end(t.end)
 })
 

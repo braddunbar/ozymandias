@@ -36,7 +36,7 @@ test('a missing user', (t) => {
   app.set('views', 'test/views')
 
   request(app).get('/user/12345')
-  .expect('layout 404\n\n')
+  .expect('layout 404\n')
   .expect(404)
   .end(t.end)
 })

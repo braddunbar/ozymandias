@@ -14,7 +14,7 @@ app.get('/error', (req, res) => {
 test('res.error', (t) => {
   request(app)
   .get('/error')
-  .expect('layout 500\n\n')
+  .expect('layout 500\n')
   .expect(500)
   .end(t.end)
 })
