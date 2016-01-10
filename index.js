@@ -37,7 +37,7 @@ const ozymandias = module.exports = function () {
   }))
 
   // S3 Assets
-  app.use('/assets', require('./assets'))
+  app.use('/assets', require('./assets/proxy'))
 
   // Parse the request body.
   app.use(body.json())
