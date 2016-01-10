@@ -6,8 +6,10 @@ const aws = require('aws-sdk')
 const mime = require('mime')
 const BUCKET = process.env.BUCKET
 const s3 = new aws.S3({apiVersion: '2006-03-01'})
+const assets = require('./assets')
 
 exports.hasImage = function (Model, options) {
+  const defaults = options.defaults
   const name = options.name
   const Name = name[0].toUpperCase() + name.slice(1)
 
@@ -23,7 +25,9 @@ exports.hasImage = function (Model, options) {
   Model.prototype[`${name}Path`] = function (size) {
     const key = this[`${name}Key`](size)
     const updated_at = this[`${name}_updated_at`]
-    if (!updated_at) return null
+    if (!updated_at) {
+      return defaults ? assets.path(defaults[this.id % defaults.length]) : null
+    }
     return `/assets/${key}?${+updated_at}`
   }
 }
