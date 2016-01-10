@@ -32,4 +32,5 @@ for (const file of glob.sync('public/{*,**}', {nodir: true})) {
   )
 }
 
-fs.writeFileSync('assets.json', JSON.stringify(assets, null, '  '))
+const data = JSON.stringify(assets, null, '  ')
+fs.writeFileSync(path.join(__dirname, '../assets/fingerprints.json'), data)
