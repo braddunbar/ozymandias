@@ -12,6 +12,7 @@ exports.hasImage = function (Model, options) {
   const defaults = options.defaults
   const name = options.name
   const Name = name[0].toUpperCase() + name.slice(1)
+  const sizes = options.sizes
 
   Model.prototype[`upload${Name}`] = function (file) {
     return new Upload(file, this, options).send()
@@ -29,6 +30,14 @@ exports.hasImage = function (Model, options) {
       return defaults ? assets.path(defaults[this.id % defaults.length]) : null
     }
     return `/assets/${key}?${+updated_at}`
+  }
+
+  for (let size of sizes) {
+    Object.defineProperty(Model.prototype, size + Name, {
+      get: function () {
+        return this[`${name}Path`](size)
+      }
+    })
   }
 }
 
