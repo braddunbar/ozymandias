@@ -32,7 +32,7 @@ exports.hasImage = function (Model, options) {
     return `/assets/${key}?${+updated_at}`
   }
 
-  for (let size of sizes) {
+  for (let size of Object.keys(sizes)) {
     Object.defineProperty(Model.prototype, size + Name, {
       get: function () {
         return this[`${name}Path`](size)
