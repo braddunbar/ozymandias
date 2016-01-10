@@ -23,6 +23,7 @@ exports.hasImage = function (Model, options) {
   Model.prototype[`${name}Path`] = function (size) {
     const key = this[`${name}Key`](size)
     const updated_at = this[`${name}_updated_at`]
+    if (!updated_at) return null
     return `/assets/${key}?${+updated_at}`
   }
 }
