@@ -44,3 +44,9 @@ test('updating a user hashes the password', (t) => {
     })
   }).catch(t.end)
 })
+
+test('toJSON does not include password', (t) => {
+  const user = new User({id: 1, password: 'password'})
+  t.ok(!user.toJSON().password)
+  t.end()
+})
