@@ -41,6 +41,24 @@ test('a missing user', (t) => {
   .end(t.end)
 })
 
+test('a non-numeric id', (t) => {
+  const router = Router()
+  router.find('user', () => User)
+  router.get('/user/:user_id', (req, res) => {
+    t.fail()
+    res.end()
+  })
+
+  const app = App()
+  app.use('/', router)
+  app.set('views', 'test/views')
+
+  request(app).get('/user/abcd')
+  .expect('layout 404\n')
+  .expect(404)
+  .end(t.end)
+})
+
 test('explicit property and param', (t) => {
   const router = Router()
   router.find('user_id', 'person', () => User)
