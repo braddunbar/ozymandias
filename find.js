@@ -12,6 +12,6 @@ module.exports = function (param, property, scope) {
       if (!model) return res.status(404).render('404')
       req[property] = res.locals[property] = model
       next()
-    })
+    }).catch(res.error)
   })
 }
