@@ -20,8 +20,8 @@ test('res.error', (t) => {
 })
 
 test('locals.req === req', (t) => {
-  let req = {}
-  let res = {locals: {}}
+  const req = {}
+  const res = {locals: {}}
   helpers(req, res, () => {
     t.is(res.locals.req, req)
     t.end()
@@ -29,8 +29,8 @@ test('locals.req === req', (t) => {
 })
 
 test('req.permit', (t) => {
-  let req = {body: {id: 1, name: 'test', count: 25}}
-  let res = {locals: {}}
+  const req = {body: {id: 1, name: 'test', count: 25}}
+  const res = {locals: {}}
   helpers(req, res, () => {
     t.deepEqual(req.permit('name', 'count', 'missing'), {
       name: 'test',
@@ -41,20 +41,20 @@ test('req.permit', (t) => {
 })
 
 test('res.locals.json', (t) => {
-  let req = {}
-  let res = {locals: {}}
+  const req = {}
+  const res = {locals: {}}
   helpers(req, res, () => {
-    let expected = `<script type='application/json' id='test'>{"test":"<\\/script>alert(\\"O_o\\")<\\/script>"}</script>`
-    t.is(res.locals.json('test', {test: '</script>alert("O_o")</script>'}), expected)
+    const expected = `<script type='application/json' id='test'>"</<!-<\\!--<\\/script>"</script>`
+    t.is(res.locals.json('test', '</<!-<!--</script>'), expected)
     t.end()
   })
 })
 
 test('res.locals.json handles undefined', (t) => {
-  let req = {}
-  let res = {locals: {}}
+  const req = {}
+  const res = {locals: {}}
   helpers(req, res, () => {
-    let expected = `<script type='application/json' id='test'>null</script>`
+    const expected = `<script type='application/json' id='test'>null</script>`
     t.is(res.locals.json('test', undefined), expected)
     t.end()
   })
