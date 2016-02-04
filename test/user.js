@@ -50,3 +50,11 @@ test('toJSON does not include password', (t) => {
   t.ok(!user.toJSON().password)
   t.end()
 })
+
+test('authenticate a user without a password', (t) => {
+  const user = new User({id: 1, password: null})
+  user.authenticate('password').then((match) => {
+    t.ok(!match)
+    t.end()
+  }).catch(t.end)
+})

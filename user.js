@@ -35,6 +35,7 @@ class User extends db.Model {
   }
 
   authenticate (password) {
+    if (this.password == null) return Promise.resolve(false)
     return new Promise((resolve, reject) => {
       bcrypt.compare(password, this.password, (e, match) => {
         return e ? reject(e) : resolve(match)
