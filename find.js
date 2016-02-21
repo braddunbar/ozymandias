@@ -9,9 +9,14 @@ module.exports = function (param, property, scope) {
   this.param(param, (req, res, next, id) => {
     if (!id) return next()
     scope().find(id).then((model) => {
-      if (!model) return res.status(404).render('404')
-      req[property] = res.locals[property] = model
-      next()
+      if (model) {
+        req[property] = res.locals[property] = model
+        return next()
+      }
+      res.status(404).format({
+        html: () => res.render('404'),
+        json: () => res.json({})
+      })
     }).catch(res.error)
   })
 }
