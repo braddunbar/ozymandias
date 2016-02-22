@@ -44,7 +44,7 @@ test('res.locals.json', (t) => {
   const req = {}
   const res = {locals: {}}
   helpers(req, res, () => {
-    const expected = `<script type='application/json' id='test'>"</<!-<\\!--<\\/script>"</script>`
+    const expected = '<script type=\'application/json\' id=\'test\'>"</<!-<\\!--<\\/script>"</script>'
     t.is(res.locals.json('test', '</<!-<!--</script>'), expected)
     t.end()
   })
@@ -54,7 +54,7 @@ test('res.locals.json handles undefined', (t) => {
   const req = {}
   const res = {locals: {}}
   helpers(req, res, () => {
-    const expected = `<script type='application/json' id='test'>null</script>`
+    const expected = "<script type='application/json' id='test'>null</script>"
     t.is(res.locals.json('test', undefined), expected)
     t.end()
   })

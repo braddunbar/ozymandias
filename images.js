@@ -100,7 +100,7 @@ class Upload {
         CacheControl: `max-age=${60 * 60 * 24 * 7}, public`,
         ContentType: this.mimetype,
         Key: this.s3Key(size)
-      }, e => e ? reject(e) : resolve())
+      }, (e) => e ? reject(e) : resolve())
     })
   }
 

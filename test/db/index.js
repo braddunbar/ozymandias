@@ -584,7 +584,7 @@ test('second page with less than count', (t) => {
 test('group by', (t) => {
   User.join('posts').select('count(posts.id)::int as post_count').groupBy('users.id')
   .order('id').all().then((users) => {
-    t.deepEqual(users.map(user => [user.id, user.post_count]), [[1, 2], [2, 2]])
+    t.deepEqual(users.map((user) => [user.id, user.post_count]), [[1, 2], [2, 2]])
     t.end()
   }).catch(t.end)
 })
@@ -592,7 +592,7 @@ test('group by', (t) => {
 test('left join', (t) => {
   User.leftJoin('posts').select('count(posts.id)::int as post_count').groupBy('users.id')
   .order('id').all().then((users) => {
-    t.deepEqual(users.map(user => [user.id, user.post_count]), [[1, 2], [2, 2], [3, 0], [4, 0]])
+    t.deepEqual(users.map((user) => [user.id, user.post_count]), [[1, 2], [2, 2], [3, 0], [4, 0]])
     t.end()
   }).catch(t.end)
 })
