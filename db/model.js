@@ -37,22 +37,22 @@ class Model {
   }
 
   slice () {
-    let result = {}
-    for (let key of arguments) result[key] = this[key]
+    const result = {}
+    for (const key of arguments) result[key] = this[key]
     return result
   }
 
   update (values) {
-    for (let key in values) {
+    for (const key in values) {
       this[key] = values[key]
       values[key] = this[key]
     }
     if (!this.valid) {
-      let e = new Error('invalid')
+      const e = new Error('invalid')
       e.model = this
       return Promise.reject(e)
     }
-    let query = this.constructor.where({id: this.id})
+    const query = this.constructor.where({id: this.id})
     return query.update(this.slice.apply(this, Object.keys(values)))
   }
 
@@ -69,8 +69,8 @@ class Model {
   }
 
   toJSON () {
-    let result = {}
-    for (let key of this.data.keys()) result[key] = this.data.get(key)
+    const result = {}
+    for (const key of this.data.keys()) result[key] = this.data.get(key)
     return result
   }
 
@@ -84,7 +84,7 @@ class Model {
   static get properties () {
     if (!this._properties) {
       this._properties = {}
-      for (let column of this.table.columns) {
+      for (const column of this.table.columns) {
         this._properties[column.property] = column
       }
     }
@@ -97,14 +97,14 @@ class Model {
   }
 
   static create (values) {
-    let model = new this(values)
+    const model = new this(values)
     if (!model.valid) {
-      let e = new Error('invalid')
+      const e = new Error('invalid')
       e.model = model
       return Promise.reject(e)
     }
-    for (let key of Object.keys(values)) values[key] = model[key]
-    return this.insert(values).then(function (values) {
+    for (const key of Object.keys(values)) values[key] = model[key]
+    return this.insert(values).then((values) => {
       return Object.assign(model, values)
     })
   }
@@ -122,7 +122,7 @@ class Model {
   static defineProperties () {
     if (this._propsDefined) return
     this._propsDefined = true
-    for (let column of this.table.columns) {
+    for (const column of this.table.columns) {
       if (Object.getOwnPropertyDescriptor(this.prototype, column.property)) {
         continue
       }
@@ -140,7 +140,7 @@ class Model {
 }
 
 // Attach Query methods to Model
-let queryMethods = [
+const queryMethods = [
   'all',
   'count',
   'find',
@@ -159,9 +159,9 @@ let queryMethods = [
   'where'
 ]
 
-for (let method of queryMethods) {
+for (const method of queryMethods) {
   Model[method] = function () {
-    let query = new Query(this)
+    const query = new Query(this)
     return query[method].apply(query, arguments)
   }
 }
