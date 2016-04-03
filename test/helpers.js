@@ -40,6 +40,15 @@ test('req.permit', (t) => {
   })
 })
 
+test('req.permit allows explicitly null values', (t) => {
+  const req = {body: {street: null}}
+  const res = {locals: {}}
+  helpers(req, res, () => {
+    t.deepEqual(req.permit('street'), {street: null})
+    t.end()
+  })
+})
+
 test('res.locals.json', (t) => {
   const req = {}
   const res = {locals: {}}

@@ -3,9 +3,11 @@
 module.exports = function (req, res, next) {
   // Attach specific params.
   req.permit = function () {
-    let result = {}
-    let body = req.body
-    for (let key of arguments) if (body[key] != null) result[key] = body[key]
+    const result = {}
+    const body = req.body
+    for (const key of arguments) {
+      if (body[key] !== undefined) result[key] = body[key]
+    }
     return result
   }
 
@@ -30,7 +32,7 @@ module.exports = function (req, res, next) {
 
   // JSON script tags
   res.locals.json = function (id, data) {
-    let json = JSON.stringify(data || null).replace(/<(?=(\/script|!--))/g, '<\\')
+    const json = JSON.stringify(data || null).replace(/<(?=(\/script|!--))/g, '<\\')
     return `<script type='application/json' id='${id}'>${json}</script>`
   }
 
