@@ -1,6 +1,7 @@
 'use strict'
 
 const Raw = require('./raw')
+const slice = Array.prototype.slice
 
 class Query {
 
@@ -97,9 +98,8 @@ class Query {
   paginate (page, count) {
     return this.offset((page - 1) * count).limit(count + 1).all()
     .then((models) => {
-      const more = models.length > count
-      if (models.length > count) models = models.slice(0, count)
-      models.more = more
+      const more = models.more = models.length > count
+      if (more) models.pop()
       return models
     })
   }
@@ -110,7 +110,7 @@ class Query {
 
   where (values) {
     if (typeof values === 'string') {
-      const params = Array.prototype.slice.call(arguments, 1)
+      const params = slice.call(arguments, 1)
       this.query = this.query.where(new Raw(values, params))
       return this
     }
@@ -165,7 +165,7 @@ class Query {
   }
 
   include () {
-    this._include(this.includes, Array.prototype.slice.call(arguments))
+    this._include(this.includes, slice.call(arguments))
     return this
   }
 
@@ -201,12 +201,12 @@ class Query {
   }
 
   join () {
-    this._join(this.model, Array.prototype.slice.call(arguments))
+    this._join(this.model, slice.call(arguments))
     return this
   }
 
   leftJoin () {
-    this._join(this.model, Array.prototype.slice.call(arguments), 'left')
+    this._join(this.model, slice.call(arguments), 'left')
     return this
   }
 
@@ -238,7 +238,7 @@ class Query {
   }
 
   groupBy (sql) {
-    const params = Array.prototype.slice.call(arguments, 1)
+    const params = slice.call(arguments, 1)
     this.query = this.query.group(new Raw(sql, params))
     return this
   }
