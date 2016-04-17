@@ -42,8 +42,8 @@ class Query {
   }
 
   all () {
-    let Model = this.model
-    let includes = this.includes
+    const Model = this.model
+    const includes = this.includes
 
     // Use aliases
     this.query = this.query.select(this.table.star()).from(this.from)
@@ -51,14 +51,14 @@ class Query {
     // Load models
     return this.send().then((result) => {
       // Construct some models
-      let models = result.rows.map((row) => new Model(row))
+      const models = result.rows.map((row) => new Model(row))
 
       // Load includes
       return Promise.all(Object.keys(includes).map((name) => {
-        let relation = Model.relations[name]
-        let conditions = {}
-        let key = relation.key
-        let many = relation.many
+        const relation = Model.relations[name]
+        const conditions = {}
+        const key = relation.key
+        const many = relation.many
 
         conditions[many ? key : 'id'] = this.uniq(models.map((model) => {
           return model[many ? 'id' : key]
@@ -69,18 +69,18 @@ class Query {
         .where(conditions)
         .include(includes[name])
         .all().then((includes) => {
-          let byId = {}
+          const byId = {}
           if (many) {
-            for (let model of models) {
+            for (const model of models) {
               model[name] = []
               byId[model.id] = model
             }
-            for (let include of includes) {
+            for (const include of includes) {
               byId[include[key]][name].push(include)
             }
           } else {
-            for (let include of includes) byId[include.id] = include
-            for (let model of models) model[name] = byId[model[key]]
+            for (const include of includes) byId[include.id] = include
+            for (const model of models) model[name] = byId[model[key]]
           }
         })
       })).then(() => models)
@@ -97,7 +97,7 @@ class Query {
   paginate (page, count) {
     return this.offset((page - 1) * count).limit(count + 1).all()
     .then((models) => {
-      let more = models.length > count
+      const more = models.length > count
       if (models.length > count) models = models.slice(0, count)
       models.more = more
       return models
@@ -110,7 +110,7 @@ class Query {
 
   where (values) {
     if (typeof values === 'string') {
-      let params = Array.prototype.slice.call(arguments, 1)
+      const params = Array.prototype.slice.call(arguments, 1)
       this.query = this.query.where(new Raw(values, params))
       return this
     }
@@ -118,11 +118,11 @@ class Query {
   }
 
   _where (model, values, not) {
-    let table = model.table
+    const table = model.table
 
-    for (let name of Object.keys(values)) {
+    for (const name of Object.keys(values)) {
       let condition
-      let value = values[name]
+      const value = values[name]
 
       if (value == null) {
         condition = table[name][not ? 'isNotNull' : 'isNull']()
@@ -152,7 +152,7 @@ class Query {
   }
 
   order () {
-    for (let arg of arguments) {
+    for (const arg of arguments) {
       if (typeof arg === 'string') {
         this.query = this.query.order(this.table[arg])
       } else if (Array.isArray(arg)) {
@@ -178,11 +178,11 @@ class Query {
     }
 
     if (Array.isArray(object)) {
-      for (let item of object) this._include(hash, item)
+      for (const item of object) this._include(hash, item)
       return
     }
 
-    for (let key of Object.keys(object)) {
+    for (const key of Object.keys(object)) {
       if (!hash[key]) hash[key] = {}
       this._include(hash[key], object[key])
     }
@@ -212,12 +212,12 @@ class Query {
 
   _join (model, name, type) {
     if (Array.isArray(name)) {
-      for (let item of name) this._join(model, item, type)
+      for (const item of name) this._join(model, item, type)
       return
     }
 
     if (typeof name === 'object') {
-      for (let key of Object.keys(name)) {
+      for (const key of Object.keys(name)) {
         this._join(model, key, type)
         this._join(model.relations[key].model, name[key], type)
       }
@@ -225,7 +225,7 @@ class Query {
     }
 
     let condition
-    let relation = model.relations[name]
+    const relation = model.relations[name]
 
     if (relation.many) {
       condition = relation.model.table[relation.key].equals(model.table.id)
@@ -233,12 +233,12 @@ class Query {
       condition = model.table[relation.key].equals(relation.model.table.id)
     }
 
-    let method = type === 'left' ? 'leftJoin' : 'join'
+    const method = type === 'left' ? 'leftJoin' : 'join'
     this.from = this.from[method](relation.model.table).on(condition)
   }
 
   groupBy (sql) {
-    let params = Array.prototype.slice.call(arguments, 1)
+    const params = Array.prototype.slice.call(arguments, 1)
     this.query = this.query.group(new Raw(sql, params))
     return this
   }
