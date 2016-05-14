@@ -25,7 +25,8 @@ module.exports = (req, res, next) => {
         res.json(state)
       },
       html: () => {
-        const element = React.createElement(req.component, state)
+        const component = req.component || req.app.get('component')
+        const element = React.createElement(component, state)
         res.render('layout', {
           layout: false,
           state: state,

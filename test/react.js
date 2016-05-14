@@ -6,9 +6,9 @@ const React = require('react')
 
 const app = require('../')()
 app.set('views', 'test/views')
+app.set('component', ({url, x}) => React.createElement('a', {href: url}, x))
 
 app.get('/react', (req, res) => {
-  req.component = ({url, x}) => React.createElement('a', {href: url}, x)
   res.react({
     foo: 1,
     bar: 2
@@ -35,5 +35,18 @@ test('render state as HTML', (t) => {
   .get('/react?x=y')
   .set('Accept', 'text/html')
   .expect('layout <a href="/react?x=y" data-reactroot="" data-reactid="1" data-react-checksum="2015761408">y</a>\n')
+  .end(t.end)
+})
+
+app.get('/component', (req, res) => {
+  req.component = () => React.createElement('a', {}, 'custom component')
+  res.react({})
+})
+
+test('use req.component if provided', (t) => {
+  request(app)
+  .get('/component')
+  .set('Accept', 'text/html')
+  .expect('layout <a data-reactroot="" data-reactid="1" data-react-checksum="1290998820">custom component</a>\n')
   .end(t.end)
 })
