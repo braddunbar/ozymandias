@@ -14,6 +14,7 @@ require('./mail')
 require('./secure')
 require('./token')
 require('./user')
+require('./react')
 
 tape('teardown', (t) => {
   pg.end()
