@@ -27,10 +27,11 @@ module.exports = (req, res, next) => {
       html: () => {
         const component = req.component || req.app.get('component')
         const element = React.createElement(component, state)
+        const html = ReactDOM.renderToString(element)
         res.render('layout', {
           layout: false,
           state: state,
-          content: ReactDOM.renderToString(element)
+          content: `<div id='root'>${html}</div>`
         })
       }
     })

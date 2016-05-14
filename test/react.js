@@ -34,7 +34,7 @@ test('render state as HTML', (t) => {
   request(app)
   .get('/react?x=y')
   .set('Accept', 'text/html')
-  .expect('layout <a href="/react?x=y" data-reactroot="" data-reactid="1" data-react-checksum="2015761408">y</a>\n')
+  .expect(`layout <div id='root'><a href="/react?x=y" data-reactroot="" data-reactid="1" data-react-checksum="2015761408">y</a></div>\n`)
   .end(t.end)
 })
 
@@ -47,6 +47,6 @@ test('use req.component if provided', (t) => {
   request(app)
   .get('/component')
   .set('Accept', 'text/html')
-  .expect('layout <a data-reactroot="" data-reactid="1" data-react-checksum="1290998820">custom component</a>\n')
+  .expect(`layout <div id='root'><a data-reactroot="" data-reactid="1" data-react-checksum="1290998820">custom component</a></div>\n`)
   .end(t.end)
 })
