@@ -8,36 +8,35 @@ const toJSON = require('object-tojson')
 const url = require('url')
 
 module.exports = (req, res, next) => {
-  const react = (e, state) => {
-    if (e) return res.error(e)
+  res._react = (view, locals) => {
+    locals.layout = false
 
-    const location = url.parse(req.originalUrl)
-    const params = qs.parse((location.search || '').slice(1))
+    res.render(view, locals, (e, state) => {
+      if (e) return res.error(e)
 
-    Object.assign(state, params, {
-      path: location.pathname,
-      url: req.originalUrl,
-      version: assets.version
-    })
+      const location = url.parse(req.originalUrl)
+      const params = qs.parse((location.search || '').slice(1))
 
-    res.format({
-      json: () => res.json(state),
-      html: () => {
-        state = toJSON(state)
+      Object.assign(state, params, {
+        path: location.pathname,
+        url: req.originalUrl,
+        version: assets.version
+      })
 
-        const component = req.component || req.app.get('component')
-        const element = React.createElement(component, state)
-        const html = ReactDOM.renderToString(element)
+      if (req.accepts('json')) return res.json(state)
 
-        res.render('layout', {
-          layout: false,
-          state: state,
-          content: `<div id='root'>${html}</div>`
-        })
-      }
+      state = toJSON(state)
+
+      const component = req.component || req.app.get('component')
+      const element = React.createElement(component, state)
+      const html = ReactDOM.renderToString(element)
+
+      res.render('layout', {
+        layout: false,
+        state: state,
+        content: `<div id='root'>${html}</div>`
+      })
     })
   }
-
-  res._react = (view, locals) => req.app.render(view, locals, react)
   next()
 }
