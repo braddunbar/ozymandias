@@ -23,18 +23,24 @@ module.exports = (req, res, next) => {
         version: assets.version
       })
 
-      if (req.accepts('json')) return res.json(state)
+      res.format({
 
-      state = toJSON(state)
+        json: () => res.json(state),
 
-      const component = req.component || req.app.get('component')
-      const element = React.createElement(component, state)
-      const html = ReactDOM.renderToString(element)
+        html: () => {
+          state = toJSON(state)
 
-      res.render('layout', {
-        layout: false,
-        state: state,
-        content: `<div id='root'>${html}</div>`
+          const component = req.component || req.app.get('component')
+          const element = React.createElement(component, state)
+          const html = ReactDOM.renderToString(element)
+
+          res.render('layout', {
+            layout: false,
+            state: state,
+            content: `<div id='root'>${html}</div>`
+          })
+        }
+
       })
     })
   }
