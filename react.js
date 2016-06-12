@@ -1,33 +1,34 @@
 'use strict'
 
+const assets = require('./assets')
 const qs = require('querystring')
-const url = require('url')
-const toJSON = require('object-tojson')
 const React = require('react')
 const ReactDOM = require('react-dom/server')
-const assets = require('./assets')
+const toJSON = require('object-tojson')
+const url = require('url')
 
 module.exports = (req, res, next) => {
-  req.state = {}
-  res.react = (state) => {
+  const react = (e, state) => {
+    if (e) return res.error(e)
+
     const location = url.parse(req.originalUrl)
     const params = qs.parse((location.search || '').slice(1))
 
-    state = toJSON(Object.assign(req.state, params, state, {
-      currentUser: req.user,
+    Object.assign(state, params, {
       path: location.pathname,
       url: req.originalUrl,
       version: assets.version
-    }))
+    })
 
     res.format({
-      json: () => {
-        res.json(state)
-      },
+      json: () => res.json(state),
       html: () => {
+        state = toJSON(state)
+
         const component = req.component || req.app.get('component')
         const element = React.createElement(component, state)
         const html = ReactDOM.renderToString(element)
+
         res.render('layout', {
           layout: false,
           state: state,
@@ -36,5 +37,7 @@ module.exports = (req, res, next) => {
       }
     })
   }
+
+  res._react = (view, locals) => req.app.render(view, locals, react)
   next()
 }

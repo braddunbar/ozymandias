@@ -4,7 +4,9 @@
 standard
 ./bin/reset
 
-ID='ozymandias' \
 DATABASE_URL='postgres://localhost/ozymandias' \
 HASH_ROUNDS=1 \
+ID='ozymandias' \
+NODE_ENV='test' \
+SECRET='secret' \
 tape test/index.js

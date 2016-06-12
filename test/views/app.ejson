@@ -1,0 +1,1 @@
+json.pick(locals, 'foo', 'bar')

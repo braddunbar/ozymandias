@@ -5,11 +5,12 @@ const request = require('supertest')
 const React = require('react')
 
 const app = require('../')()
+
 app.set('views', 'test/views')
 app.set('component', ({url, x}) => React.createElement('a', {href: url}, x))
 
 app.get('/react', (req, res) => {
-  res.react({
+  res._react('app.ejson', {
     foo: 1,
     bar: 2
   })
@@ -22,10 +23,10 @@ test('render state as json', (t) => {
   .expect({
     foo: 1,
     bar: 2,
-    x: 'y',
     path: '/react',
     url: '/react?x=y',
-    version: '☃'
+    version: '☃',
+    x: 'y'
   })
   .end(t.end)
 })
@@ -40,7 +41,7 @@ test('render state as HTML', (t) => {
 
 app.get('/component', (req, res) => {
   req.component = () => React.createElement('a', {}, 'custom component')
-  res.react({})
+  res._react('app.ejson', {})
 })
 
 test('use req.component if provided', (t) => {
