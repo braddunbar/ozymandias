@@ -51,3 +51,14 @@ test('use req.component if provided', (t) => {
   .expect(`layout <div id='root'><a data-reactroot="" data-reactid="1" data-react-checksum="1290998820">custom component</a></div>\n`)
   .end(t.end)
 })
+
+app.get('/nolocals', (req, res) => {
+  res._react('app.ejson')
+})
+
+test('react without locals', (t) => {
+  request(app)
+  .get('/nolocals')
+  .expect(200)
+  .end(t.end)
+})

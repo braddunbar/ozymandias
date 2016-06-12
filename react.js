@@ -8,7 +8,7 @@ const toJSON = require('object-tojson')
 const url = require('url')
 
 module.exports = (req, res, next) => {
-  res._react = (view, locals) => {
+  res._react = (view, locals = {}) => {
     locals.layout = false
 
     res.render(view, locals, (e, state) => {
