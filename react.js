@@ -1,6 +1,7 @@
 'use strict'
 
 const assets = require('./assets')
+const Json = require('remora')
 const qs = require('querystring')
 const React = require('react')
 const ReactDOM = require('react-dom/server')
@@ -9,39 +10,37 @@ const url = require('url')
 
 module.exports = (req, res, next) => {
   res._react = (view, locals = {}) => {
-    locals.layout = false
+    const json = new Json()
+    const location = url.parse(req.originalUrl)
+    const params = qs.parse((location.search || '').slice(1))
 
-    res.render(view, locals, (e, state) => {
-      if (e) return res.error(e)
+    // Render some json!
+    view(json, Object.assign(res.locals, locals))
 
-      const location = url.parse(req.originalUrl)
-      const params = qs.parse((location.search || '').slice(1))
+    let state = Object.assign(json.result, params, {
+      path: location.pathname,
+      url: req.originalUrl,
+      version: assets.version
+    })
 
-      Object.assign(state, params, {
-        path: location.pathname,
-        url: req.originalUrl,
-        version: assets.version
-      })
+    res.format({
 
-      res.format({
+      json: () => res.json(state),
 
-        json: () => res.json(state),
+      html: () => {
+        state = toJSON(state)
 
-        html: () => {
-          state = toJSON(state)
+        const component = req.component || req.app.get('component')
+        const element = React.createElement(component, state)
+        const html = ReactDOM.renderToString(element)
 
-          const component = req.component || req.app.get('component')
-          const element = React.createElement(component, state)
-          const html = ReactDOM.renderToString(element)
+        res.render('layout', {
+          layout: false,
+          state: state,
+          content: `<div id='root'>${html}</div>`
+        })
+      }
 
-          res.render('layout', {
-            layout: false,
-            state: state,
-            content: `<div id='root'>${html}</div>`
-          })
-        }
-
-      })
     })
   }
   next()

@@ -16,7 +16,6 @@ const ozymandias = module.exports = function () {
   // View Engine
   app.set('view engine', 'ejs')
   app.engine('ejs', ejs.renderFile)
-  app.engine('ejson', require('remora'))
 
   // Are we in production?
   const production = app.get('env') === 'production'

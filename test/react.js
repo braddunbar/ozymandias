@@ -5,12 +5,13 @@ const request = require('supertest')
 const React = require('react')
 
 const app = require('../')()
+const view = (json, locals) => json.pick(locals, 'foo', 'bar')
 
 app.set('views', 'test/views')
 app.set('component', ({url, x}) => React.createElement('a', {href: url}, x))
 
 app.get('/react', (req, res) => {
-  res._react('app.ejson', {
+  res._react(view, {
     foo: 1,
     bar: 2
   })
@@ -41,7 +42,7 @@ test('render state as HTML', (t) => {
 
 app.get('/component', (req, res) => {
   req.component = () => React.createElement('a', {}, 'custom component')
-  res._react('app.ejson', {})
+  res._react(view, {})
 })
 
 test('use req.component if provided', (t) => {
@@ -53,7 +54,7 @@ test('use req.component if provided', (t) => {
 })
 
 app.get('/nolocals', (req, res) => {
-  res._react('app.ejson')
+  res._react(view)
 })
 
 test('react without locals', (t) => {
