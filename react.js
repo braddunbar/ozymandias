@@ -2,7 +2,6 @@
 
 const assets = require('./assets')
 const Json = require('remora')
-const qs = require('querystring')
 const React = require('react')
 const ReactDOM = require('react-dom/server')
 const toJSON = require('object-tojson')
@@ -12,12 +11,11 @@ module.exports = (req, res, next) => {
   res._react = (view, locals = {}) => {
     const json = new Json()
     const location = url.parse(req.originalUrl)
-    const params = qs.parse((location.search || '').slice(1))
 
     // Render some json!
     view(json, Object.assign(res.locals, locals))
 
-    let state = Object.assign(json.result, params, {
+    let state = Object.assign(json.result, {
       path: location.pathname,
       url: req.originalUrl,
       version: assets.version
