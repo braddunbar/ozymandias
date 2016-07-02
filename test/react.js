@@ -5,7 +5,7 @@ const request = require('supertest')
 const React = require('react')
 
 const app = require('../')()
-const view = (json, locals) => json.pick(locals, 'foo', 'bar', 'x')
+const view = (set, locals) => set(locals, 'foo', 'bar', 'x')
 
 app.set('views', 'test/views')
 app.set('component', ({url, x}) => React.createElement('a', {href: url}, x))

@@ -9,11 +9,11 @@ const url = require('url')
 
 module.exports = (req, res, next) => {
   res._react = (view, locals = {}) => {
-    const json = new Json()
+    const json = new Json(Object.assign(res.locals, locals))
     const location = url.parse(req.originalUrl)
 
     // Render some json!
-    view(json, Object.assign(res.locals, locals))
+    json.set(view)
 
     let state = Object.assign(json.result, {
       path: location.pathname,
