@@ -32,7 +32,7 @@
     "pg": "6.0.1",
     "react": "15.0.1",
     "react-dom": "15.0.1",
-    "remora": "github:braddunbar/remora#v3.0.0",
+    "remora": "github:braddunbar/remora#v3.1.0",
     "request": "2.72.0",
     "rimraf": "2.5.2",
     "sql": "0.70.0"
