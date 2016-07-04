@@ -7,15 +7,29 @@ const helpers = require('../helpers')
 
 app.set('views', 'test/views')
 
-app.get('/error', (req, res) => {
-  res.error({stack: 'test stack'})
+app.get('/500', (req, res) => {
+  res.error(new Error('test'))
 })
 
-test('res.error', (t) => {
+app.get('/422', (req, res) => {
+  const error = new Error('invalid')
+  error.model = {errors: {x: 1}}
+  res.error(error)
+})
+
+test('res.error 500', (t) => {
   request(app)
-  .get('/error')
+  .get('/500')
   .expect('layout 500\n')
   .expect(500)
+  .end(t.end)
+})
+
+test('res.error 422', (t) => {
+  request(app)
+  .get('/422')
+  .expect({x: 1})
+  .expect(422)
   .end(t.end)
 })
 

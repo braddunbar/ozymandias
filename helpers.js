@@ -25,8 +25,12 @@ module.exports = function (req, res, next) {
   res.locals.req = req
 
   // Log an error and render a 500 page.
-  res.error = function (e) {
-    console.log(e.stack)
+  res.error = function (error) {
+    if (error.message === 'invalid' && error.model) {
+      res.status(422).json(error.model.errors)
+      return
+    }
+    console.log(error.stack)
     res.status(500).render('500')
   }
 
