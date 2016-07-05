@@ -12,9 +12,7 @@ class Query {
     this.includes = {}
     this.db = model.db
     this.model = model
-    this.table = model.table
-    this.query = this.table
-    this.from = this.table
+    this.table = this.query = this.from = model.table
   }
 
   send () {
@@ -31,14 +29,14 @@ class Query {
     return this.send()
   }
 
-  delete () {
+  ['delete'] () {
     this.query = this.query.delete()
     return this.send()
   }
 
   count () {
     this.query = this.query.select('count(*) as count').from(this.from)
-    return this.send().then((result) => +result.rows[0].count)
+    return this.send().then(({rows: [{count}]}) => +count)
   }
 
   all () {

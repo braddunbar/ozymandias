@@ -31,15 +31,7 @@ class DB {
   }
 
   query (query, values) {
-    return this.connect().then((connection) => {
-      return connection.query(query, values).then((result) => {
-        connection.close()
-        return result
-      }).catch((e) => {
-        connection.close()
-        throw e
-      })
-    })
+    return this.pool.query(query, values)
   }
 
   transaction () {
