@@ -2,10 +2,10 @@
 
 module.exports = function (req, res, next) {
   // Attach specific params.
-  req.permit = function () {
+  req.permit = function (...keys) {
     const result = {}
     const body = req.body
-    for (const key of arguments) {
+    for (const key of keys) {
       if (body[key] !== undefined) result[key] = body[key]
     }
     return result

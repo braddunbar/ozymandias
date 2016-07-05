@@ -1,7 +1,6 @@
 'use strict'
 
 const Raw = require('./raw')
-const slice = Array.prototype.slice
 
 class Query {
 
@@ -108,9 +107,8 @@ class Query {
     return this._where(this.model, values, true)
   }
 
-  where (values) {
+  where (values, ...params) {
     if (typeof values === 'string') {
-      const params = slice.call(arguments, 1)
       this.query = this.query.where(new Raw(values, params))
       return this
     }
@@ -141,18 +139,18 @@ class Query {
     return this
   }
 
-  limit () {
-    this.query = this.query.limit.apply(this.query, arguments)
+  limit (...args) {
+    this.query = this.query.limit(...args)
     return this
   }
 
-  offset () {
-    this.query = this.query.offset.apply(this.query, arguments)
+  offset (...args) {
+    this.query = this.query.offset(...args)
     return this
   }
 
-  order () {
-    for (const arg of arguments) {
+  order (...args) {
+    for (const arg of args) {
       if (typeof arg === 'string') {
         this.query = this.query.order(this.table[arg])
       } else if (Array.isArray(arg)) {
@@ -164,8 +162,8 @@ class Query {
     return this
   }
 
-  include () {
-    this._include(this.includes, slice.call(arguments))
+  include (...args) {
+    this._include(this.includes, args)
     return this
   }
 
@@ -188,8 +186,8 @@ class Query {
     }
   }
 
-  select () {
-    for (let arg of arguments) {
+  select (...args) {
+    for (let arg of args) {
       if (Array.isArray(arg)) {
         this.query = this.query.select(new Raw(arg[0], arg.slice(1)))
       } else {
@@ -200,13 +198,13 @@ class Query {
     return this
   }
 
-  join () {
-    this._join(this.model, slice.call(arguments))
+  join (...args) {
+    this._join(this.model, args)
     return this
   }
 
-  leftJoin () {
-    this._join(this.model, slice.call(arguments), 'left')
+  leftJoin (...args) {
+    this._join(this.model, args, 'left')
     return this
   }
 
@@ -237,8 +235,7 @@ class Query {
     this.from = this.from[method](relation.model.table).on(condition)
   }
 
-  groupBy (sql) {
-    const params = slice.call(arguments, 1)
+  groupBy (sql, ...params) {
     this.query = this.query.group(new Raw(sql, params))
     return this
   }

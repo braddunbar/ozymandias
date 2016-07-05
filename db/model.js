@@ -36,9 +36,9 @@ class Model {
     return this.constructor.properties
   }
 
-  slice () {
+  slice (...args) {
     const result = {}
-    for (const key of arguments) result[key] = this[key]
+    for (const key of args) result[key] = this[key]
     return result
   }
 
@@ -53,7 +53,7 @@ class Model {
       return Promise.reject(e)
     }
     const query = this.constructor.where({id: this.id})
-    return query.update(this.slice.apply(this, Object.keys(values)))
+    return query.update(this.slice(...Object.keys(values)))
   }
 
   destroy () {
@@ -160,9 +160,8 @@ const queryMethods = [
 ]
 
 for (const method of queryMethods) {
-  Model[method] = function () {
-    const query = new Query(this)
-    return query[method].apply(query, arguments)
+  Model[method] = function (...args) {
+    return new Query(this)[method](...args)
   }
 }
 
