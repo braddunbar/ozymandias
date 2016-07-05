@@ -1,6 +1,6 @@
 'use strict'
 
-const pg = require('pg')
+const db = require('../db/instance')
 const tape = require('tape')
 
 require('./auth')
@@ -19,6 +19,6 @@ require('./react')
 require('./render')
 
 tape('teardown', (t) => {
-  pg.end()
+  db.close()
   t.end()
 })

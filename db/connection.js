@@ -1,17 +1,14 @@
 'use strict'
 
-const pg = require('pg')
-
 class Connection {
 
-  constructor (db, client, done) {
+  constructor (db, client) {
     this.db = db
     this.client = client
-    this.done = done
   }
 
   close () {
-    this.done()
+    this.client.release()
   }
 
   query (query, values) {
@@ -25,11 +22,7 @@ class Connection {
   }
 
   static create (db) {
-    return new Promise((resolve, reject) => {
-      pg.connect(db.url, (e, client, done) => {
-        e ? reject(e) : resolve(new Connection(db, client, done))
-      })
-    })
+    return db.pool.connect().then((client) => new Connection(db, client))
   }
 
 }

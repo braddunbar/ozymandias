@@ -1,6 +1,6 @@
 'use strict'
 
-const pg = require('pg')
+const {Pool} = require('pg')
 const Model = require('./model')
 const Connection = require('./connection')
 const Transaction = require('./transaction')
@@ -11,8 +11,8 @@ require('./sql')
 class DB {
 
   constructor (url) {
-    let db = this
-    this.url = url
+    const db = this
+    this.pool = new Pool({connectionString: url})
     this.Model = class DBModel extends Model {
       static get db () {
         return db
@@ -27,7 +27,7 @@ class DB {
   }
 
   close () {
-    pg.end()
+    this.pool.end()
   }
 
   query (query, values) {
