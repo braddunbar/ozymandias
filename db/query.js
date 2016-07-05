@@ -16,7 +16,7 @@ class Query {
   }
 
   send () {
-    return this.db.query(this.query)
+    return this.db.query(this.query.toQuery())
   }
 
   insert (values) {

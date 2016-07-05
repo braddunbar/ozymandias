@@ -30,8 +30,9 @@ class DB {
     this.pool.end()
   }
 
-  query (query, values) {
-    return this.pool.query(query, values)
+  query (...args) {
+    this.log(args)
+    return this.pool.query(...args)
   }
 
   transaction () {
