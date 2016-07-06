@@ -8,13 +8,13 @@ class Transaction {
 
   connect () {
     this.started = true
-    if (!this._connect) {
-      this._connect = this.db.connect().then((connection) => {
+    if (!this.connection) {
+      this.connection = this.db.connect().then((connection) => {
         connection.query('begin')
         return connection
       })
     }
-    return this._connect
+    return this.connection
   }
 
   query (query, values) {
