@@ -154,6 +154,7 @@ const queryMethods = [
   'offset',
   'order',
   'paginate',
+  'search',
   'select',
   'update',
   'where'

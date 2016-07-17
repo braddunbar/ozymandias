@@ -238,6 +238,13 @@ class Query {
     return this
   }
 
+  search (text) {
+    return this.where(
+      "search @@ to_tsquery('simple', ?)",
+      text.split(/\s+/g).map((term) => `${term}:*`).join(' & ')
+    )
+  }
+
 }
 
 module.exports = Query
