@@ -1,4 +1,7 @@
 'use strict'
 
 const assets = require('./fingerprints.json')
-exports.path = (path) => assets[path] || `/${path}`
+
+exports.path = function (path) {
+  return assets[path] || ('/' + path)
+}
