@@ -9,12 +9,14 @@ const view = (set, locals) => set(locals, 'foo', 'bar', 'x')
 
 app.set('views', 'test/views')
 app.set('component', ({url, x}) => React.createElement('a', {href: url}, x))
+app.set('layout.json', (set, {y}) => { set({y}) })
 
 app.get('/react', (req, res) => {
   res.react(view, {
     foo: 1,
     bar: 2,
-    x: req.query.x
+    x: req.query.x,
+    y: 3
   })
 })
 
@@ -28,7 +30,8 @@ test('render state as json', (t) => {
     path: '/react',
     url: '/react?x=y',
     version: '☃',
-    x: 'y'
+    x: 'y',
+    y: 3
   })
   .end(t.end)
 })
