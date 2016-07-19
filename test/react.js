@@ -11,7 +11,7 @@ app.set('views', 'test/views')
 app.set('component', ({url, x}) => React.createElement('a', {href: url}, x))
 
 app.get('/react', (req, res) => {
-  res._react(view, {
+  res.react(view, {
     foo: 1,
     bar: 2,
     x: req.query.x
@@ -43,7 +43,7 @@ test('render state as HTML', (t) => {
 
 app.get('/component', (req, res) => {
   req.component = () => React.createElement('a', {}, 'custom component')
-  res._react(view, {})
+  res.react(view, {})
 })
 
 test('use req.component if provided', (t) => {
@@ -55,7 +55,7 @@ test('use req.component if provided', (t) => {
 })
 
 app.get('/nolocals', (req, res) => {
-  res._react(view)
+  res.react(view)
 })
 
 test('react without locals', (t) => {
