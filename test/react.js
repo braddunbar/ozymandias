@@ -28,7 +28,7 @@ test('render state as json', (t) => {
     foo: 1,
     bar: 2,
     path: '/react',
-    status: 200,
+    statusCode: 200,
     url: '/react?x=y',
     version: '☃',
     x: 'y',

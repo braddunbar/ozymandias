@@ -19,7 +19,7 @@ module.exports = (req, res, next) => {
 
     let state = Object.assign(json.result, {
       path: location.pathname,
-      status: res.statusCode,
+      statusCode: res.statusCode,
       url: req.originalUrl,
       version: assets.version
     })
