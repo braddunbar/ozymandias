@@ -31,8 +31,15 @@ module.exports = function (req, res, next) {
       return
     }
     console.log(error.stack)
-    res.status(500)
-    res.react()
+    res.status(500).react()
+  }
+
+  res.unauthorized = function () {
+    res.status(401).react()
+  }
+
+  res.notfound = function () {
+    res.status(404).react()
   }
 
   // JSON script tags
