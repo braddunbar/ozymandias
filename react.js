@@ -1,6 +1,6 @@
 'use strict'
 
-const assets = require('./assets')
+const version = require('./assets/version')
 const Json = require('remora')
 const React = require('react')
 const ReactDOM = require('react-dom/server')
@@ -21,7 +21,7 @@ module.exports = (req, res, next) => {
       path: location.pathname,
       statusCode: res.statusCode,
       url: req.originalUrl,
-      version: assets.version
+      version: version
     })
 
     res.format({
