@@ -28,6 +28,7 @@ test('render state as json', (t) => {
     foo: 1,
     bar: 2,
     path: '/react',
+    status: 200,
     url: '/react?x=y',
     version: '☃',
     x: 'y',
@@ -64,6 +65,17 @@ app.get('/nolocals', (req, res) => {
 test('react without locals', (t) => {
   request(app)
   .get('/nolocals')
+  .expect(200)
+  .end(t.end)
+})
+
+app.get('/noview', (req, res) => {
+  res.react()
+})
+
+test('react without a view', (t) => {
+  request(app)
+  .get('/noview')
   .expect(200)
   .end(t.end)
 })

@@ -20,7 +20,7 @@ app.get('/422', (req, res) => {
 test('res.error 500', (t) => {
   request(app)
   .get('/500')
-  .expect('layout 500\n')
+  .set('Content-Type', 'application/json')
   .expect(500)
   .end(t.end)
 })

@@ -31,7 +31,8 @@ module.exports = function (req, res, next) {
       return
     }
     console.log(error.stack)
-    res.status(500).render('500')
+    res.status(500)
+    res.react()
   }
 
   // JSON script tags

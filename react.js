@@ -15,17 +15,16 @@ module.exports = (req, res, next) => {
 
     // Render some json!
     if (typeof layout === 'function') json.set(layout)
-    json.set(view)
+    if (typeof view === 'function') json.set(view)
 
     let state = Object.assign(json.result, {
       path: location.pathname,
+      status: res.statusCode,
       url: req.originalUrl,
       version: assets.version
     })
 
     res.format({
-
-      json: () => res.json(state),
 
       html: () => {
         state = toJSON(state)
@@ -39,7 +38,9 @@ module.exports = (req, res, next) => {
           state: state,
           content: `<div id='root'>${html}</div>`
         })
-      }
+      },
+
+      json: () => res.json(state)
 
     })
   }
