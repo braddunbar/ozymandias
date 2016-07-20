@@ -13,10 +13,7 @@ module.exports = function (param, property, scope) {
         req[property] = res.locals[property] = model
         return next()
       }
-      res.status(404).format({
-        html: () => res.render('404'),
-        json: () => res.json({})
-      })
+      res.notfound()
     }).catch(res.error)
   })
 }

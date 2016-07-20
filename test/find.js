@@ -4,6 +4,7 @@ const App = require('../')
 const test = require('./test')
 const User = require('./db/user')
 const request = require('supertest')
+const React = require('react')
 const Router = require('../').Router
 
 test('find a user', (t) => {
@@ -34,10 +35,10 @@ test('a missing user - HTML', (t) => {
   const app = App()
   app.use('/', router)
   app.set('views', 'test/views')
+  app.set('component', () => React.createElement('div'))
 
   request(app).get('/user/12345')
   .expect('Content-Type', /html/)
-  .expect('layout 404\n')
   .expect(404)
   .end(t.end)
 })
