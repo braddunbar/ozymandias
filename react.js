@@ -33,11 +33,7 @@ module.exports = (req, res, next) => {
         const element = React.createElement(component, state)
         const html = ReactDOM.renderToString(element)
 
-        res.render('layout', {
-          layout: false,
-          state: state,
-          content: `<div id='root'>${html}</div>`
-        })
+        res.render(() => `<div id='root'>${html}</div>`, {state})
       },
 
       json: () => res.json(state)
