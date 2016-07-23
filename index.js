@@ -1,6 +1,5 @@
 'use strict'
 
-const ejs = require('ejs')
 const body = require('body-parser')
 const express = require('express')
 const session = require('cookie-session')
@@ -12,10 +11,6 @@ const ozymandias = module.exports = function () {
 
   // No x-powered-by header.
   app.disable('x-powered-by')
-
-  // View Engine
-  app.set('view engine', 'ejs')
-  app.engine('ejs', ejs.renderFile)
 
   // Are we in production?
   const production = app.get('env') === 'production'
