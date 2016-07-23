@@ -42,5 +42,5 @@ exports.html = (literals, ...values) => {
     result += literals.raw[i++]
     result += value instanceof Raw ? value : escape(value)
   }
-  return result + literals.raw[i]
+  return (result + literals.raw[i]).trim()
 }

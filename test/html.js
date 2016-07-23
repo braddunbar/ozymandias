@@ -12,3 +12,8 @@ test('do not escape RAW values', (t) => {
   t.is(html`<p>${raw('&<>"\'`')}</p>`, '<p>&<>"\'`</p>')
   t.end()
 })
+
+test('trim it up', (t) => {
+  t.is(html` x `, 'x')
+  t.end()
+})
