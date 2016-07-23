@@ -1,67 +1,48 @@
 'use strict'
 
-let aws = require('aws-sdk')
-let ses = new aws.SES({
+const aws = require('aws-sdk')
+const ses = new aws.SES({
   apiVersion: '2010-12-01',
   region: 'us-east-1'
 })
 
-module.exports = exports = function (req, res, next) {
-  req.mail = function (view, options) {
-    return Promise.all([
-      render(view, 'html', Object.create(options)),
-      render(view, 'text', Object.create(options))
-    ]).then(function (results) {
-      options.html = results[0]
-      options.text = results[1]
-
-      if (process.env.NODE_ENV === 'test' || options.send === false) {
-        return format(options)
-      }
-
-      return new Promise(function (resolve, reject) {
-        ses.sendEmail(format(options), (e, result) => {
-          return e ? reject(e) : resolve(result)
-        })
-      })
-    })
-  }
-
-  function render (view, format, options) {
-    options.layout = format === 'html' ? 'mail' : false
-    return new Promise(function (resolve, reject) {
-      res.render(`${view}.${format}.ejs`, options, (e, result) => {
-        return e ? reject(e) : resolve(result)
-      })
-    })
-  }
-
-  next()
-}
-
-let format = exports.format = function (options) {
-  return {
-    Destination: {
-      ToAddresses: options.to,
-      CcAddresses: options.cc || [],
-      BccAddresses: options.bcc || []
-    },
-    Message: {
-      Subject: {
-        Data: options.subject,
-        Charset: 'utf-8'
+module.exports = (req, res, next) => {
+  req.mail = (mail, locals) => {
+    locals = Object.assign({}, req.app.locals, res.locals, locals)
+    const options = {
+      Destination: {
+        ToAddresses: locals.to,
+        CcAddresses: locals.cc || [],
+        BccAddresses: locals.bcc || []
       },
-      Body: {
-        Html: {
-          Data: options.html,
+      Message: {
+        Subject: {
+          Data: locals.subject,
           Charset: 'utf-8'
         },
-        Text: {
-          Data: options.text,
-          Charset: 'utf-8'
+        Body: {
+          Html: {
+            Data: mail.html(locals),
+            Charset: 'utf-8'
+          },
+          Text: {
+            Data: mail.text(locals),
+            Charset: 'utf-8'
+          }
         }
-      }
-    },
-    Source: process.env.SOURCE_EMAIL
+      },
+      Source: process.env.SOURCE_EMAIL
+    }
+
+    if (process.env.NODE_ENV === 'test' || locals.send === false) {
+      return options
+    }
+
+    return new Promise(function (resolve, reject) {
+      ses.sendEmail(options, (e, result) => (
+        e ? reject(e) : resolve(result)
+      ))
+    })
   }
+  next()
 }
