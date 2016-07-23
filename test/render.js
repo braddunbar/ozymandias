@@ -18,7 +18,7 @@ test('render a function', (t) => {
 test('render a function with layout', (t) => {
   const app = require('../')()
   app.locals = {x: 1, y: 1, z: 1}
-  app.set('layout', (content, {x, y, z}) => `${z}${y}${x}${content}`)
+  app.set('layout', ({x, y, z}, content) => `${z}${y}${x}${content}`)
 
   app.get('/', (req, res) => {
     res.locals = {y: 2, z: 2}
