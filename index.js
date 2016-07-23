@@ -55,10 +55,8 @@ const ozymandias = module.exports = function () {
   // Middleware
   app.use(require('./helpers'))
   app.use(require('./render'))
-  app.use(require('./layout'))
   app.use(require('./mail'))
   app.use(require('./auth'))
-  app.use(require('./flash'))
   app.use(require('./react'))
 
   return app

@@ -21,7 +21,6 @@
     "body-parser": "1.15.2",
     "compression": "1.6.2",
     "cookie-session": "2.0.0-alpha.1",
-    "ejs": "2.4.1",
     "express": "4.14.0",
     "glob": "7.0.5",
     "gm": "1.22.0",
