@@ -87,8 +87,13 @@ class Upload {
 
   stream (size) {
     if (size === 'original') return fs.createReadStream(this.path)
-    let width = this.sizes[size]
-    return gm(this.path).resize(width, width, '>').noProfile().stream(this.ext)
+    const width = this.sizes[size]
+    return gm(this.path)
+      .resize(width, width, '^')
+      .gravity('center')
+      .crop(width, width, 0, 0)
+      .noProfile()
+      .stream(this.ext)
   }
 
   put (size) {
