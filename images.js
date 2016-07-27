@@ -90,7 +90,7 @@ class Upload {
     const width = this.sizes[size]
     return gm(this.path)
       .resize(width, width, '^')
-      .gravity('center')
+      .gravity('Center')
       .crop(width, width, 0, 0)
       .noProfile()
       .stream(this.ext)
