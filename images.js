@@ -18,8 +18,7 @@ exports.hasImage = function (Model, {defaults, name, sizes}) {
 
   // imageKey
   Model.prototype[`${name}Key`] = function (size) {
-    const ext = this[`${name}_ext`]
-    return `${this.tableName}/${this.id}/${name}/${size}.${ext}`
+    return `${this.tableName}/${this.id}/${name}/${size}`
   }
 
   // imagePath
@@ -51,10 +50,6 @@ class Upload {
     this.sizes = Object.assign(sizes, {original: null})
   }
 
-  get ext () {
-    return mime.extension(this.mimetype)
-  }
-
   get path () {
     return this.file.path
   }
@@ -64,8 +59,8 @@ class Upload {
   }
 
   s3Key (size) {
-    const {ext, model: {id, tableName}, name} = this
-    return `${tableName}/${id}/${name}/${size}.${ext}`
+    const {model: {id, tableName}, name} = this
+    return `${tableName}/${id}/${name}/${size}`
   }
 
   cleanup () {
@@ -77,10 +72,7 @@ class Upload {
       Object.keys(this.sizes).map(this.put.bind(this))
     ).then(() => {
       this.cleanup()
-      return this.model.update({
-        [`${this.name}_updated_at`]: new Date(),
-        [`${this.name}_ext`]: this.ext
-      })
+      return this.model.update({[`${this.name}_updated_at`]: new Date()})
     }).catch((e) => {
       this.cleanup()
       throw e
@@ -95,7 +87,7 @@ class Upload {
       .gravity('Center')
       .crop(width, width, 0, 0)
       .noProfile()
-      .stream(this.ext)
+      .stream()
   }
 
   put (size) {
