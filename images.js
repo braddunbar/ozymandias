@@ -8,21 +8,21 @@ const BUCKET = process.env.BUCKET
 const s3 = new aws.S3({apiVersion: '2006-03-01'})
 const assets = require('./assets')
 
-exports.hasImage = function (Model, options) {
-  const defaults = options.defaults
-  const name = options.name
+exports.hasImage = function (Model, {defaults, name, sizes}) {
   const Name = name[0].toUpperCase() + name.slice(1)
-  const sizes = options.sizes
 
+  // uploadImage
   Model.prototype[`upload${Name}`] = function (file) {
-    return new Upload(file, this, options).send()
+    return new Upload(file, this, {name, sizes}).send()
   }
 
+  // imageKey
   Model.prototype[`${name}Key`] = function (size) {
     const ext = this[`${name}_ext`]
     return `${this.tableName}/${this.id}/${name}/${size}.${ext}`
   }
 
+  // imagePath
   Model.prototype[`${name}Path`] = function (size) {
     const key = this[`${name}Key`](size)
     const updatedAt = this[`${name}_updated_at`]
@@ -30,6 +30,7 @@ exports.hasImage = function (Model, options) {
     if (defaults) return assets.path(defaults[this.id % defaults.length])
   }
 
+  // smallImage
   for (const size of Object.keys(sizes)) {
     Object.defineProperty(Model.prototype, size + Name, {
       get: function () {
