@@ -43,11 +43,11 @@ exports.hasImage = function (Model, options) {
 
 class Upload {
 
-  constructor (file, model, options) {
+  constructor (file, model, {name, sizes}) {
     this.file = file
     this.model = model
-    this.name = options.name
-    this.sizes = Object.assign(options.sizes, {original: null})
+    this.name = name
+    this.sizes = Object.assign(sizes, {original: null})
   }
 
   get ext () {
@@ -63,7 +63,8 @@ class Upload {
   }
 
   s3Key (size) {
-    return `${this.model.tableName}/${this.model.id}/${this.name}/${size}.${this.ext}`
+    const {ext, model: {id, tableName}, name} = this
+    return `${tableName}/${id}/${name}/${size}.${ext}`
   }
 
   cleanup () {
