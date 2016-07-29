@@ -26,13 +26,11 @@ exports.hasImage = function (Model, options) {
   Model.prototype[`${name}Path`] = function (size) {
     const key = this[`${name}Key`](size)
     const updatedAt = this[`${name}_updated_at`]
-    if (!updatedAt) {
-      return defaults ? assets.path(defaults[this.id % defaults.length]) : null
-    }
-    return `/assets/${key}?${+updatedAt}`
+    if (updatedAt) return `/assets/${key}?${+updatedAt}`
+    if (defaults) return assets.path(defaults[this.id % defaults.length])
   }
 
-  for (let size of Object.keys(sizes)) {
+  for (const size of Object.keys(sizes)) {
     Object.defineProperty(Model.prototype, size + Name, {
       get: function () {
         return this[`${name}Path`](size)
