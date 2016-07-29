@@ -34,6 +34,9 @@ const ozymandias = module.exports = function () {
   // S3 Assets
   app.use('/assets', require('./assets/proxy'))
 
+  // Acme Challenge
+  app.use('/.well-known/acme-challenge', require('./acme'))
+
   // Parse the request body.
   app.use(body.json())
   app.use(body.urlencoded({extended: false}))
