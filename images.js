@@ -24,9 +24,11 @@ exports.hasImage = function (Model, {defaults, name, sizes}) {
 
   // imagePath
   Model.prototype[`${name}Path`] = function (size) {
-    const key = this[`${name}Key`](size)
     const updatedAt = this[`${name}_updated_at`]
-    if (updatedAt) return `/assets/${key}?${+updatedAt}`
+    if (updatedAt) {
+      const key = this[`${name}Key`](size)
+      return `/assets/${key}?${+updatedAt}`
+    }
     if (defaults) return assets.path(defaults[this.id % defaults.length])
   }
 
