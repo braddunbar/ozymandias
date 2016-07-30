@@ -3,7 +3,6 @@
 const fs = require('fs')
 const gm = require('gm').subClass({imageMagick: true})
 const aws = require('aws-sdk')
-const mime = require('mime')
 const Busboy = require('busboy')
 const BUCKET = process.env.BUCKET
 const s3 = new aws.S3({apiVersion: '2006-03-01'})
