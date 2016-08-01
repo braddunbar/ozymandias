@@ -11,11 +11,14 @@ const assets = require('./assets')
 // Convert a specific image size.
 const convert = (file, size) => (
   gm(file)
+  .strip()
+  .interlace('Plane')
   .resize(size, size, '^')
   .gravity('Center')
   .crop(size, size, 0, 0)
-  .noProfile()
-  .stream()
+  .quality(70)
+  .density(72, 72)
+  .stream('.jpg')
 )
 
 // Upload an image to s3.
@@ -58,9 +61,9 @@ exports.hasImage = function (Model, {defaults, name, sizes}) {
   }
 
   // convertImage
-  Model.prototype[`convert${Name}`] = function (file, mime) {
+  Model.prototype[`convert${Name}`] = function (file) {
     return Promise.all(Object.keys(sizes).map((size) => (
-      put(this[`${name}Key`](size), convert(file, sizes[size]), mime)
+      put(this[`${name}Key`](size), convert(file, sizes[size]), 'image/jpeg')
     )))
   }
 
