@@ -1,6 +1,5 @@
 'use strict'
 
-const fs = require('fs')
 const gm = require('gm').subClass({imageMagick: true})
 const aws = require('aws-sdk')
 const Busboy = require('busboy')
