@@ -14,8 +14,8 @@ class Connection {
   query (...args) {
     this.db.log(args)
     return new Promise((resolve, reject) => {
-      this.client.query(...args, (e, result) => {
-        e ? reject(e) : resolve(result)
+      this.client.query(...args, (error, result) => {
+        error ? reject(error) : resolve(result)
       })
     })
   }

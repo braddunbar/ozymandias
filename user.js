@@ -4,11 +4,13 @@ const db = require('./db/instance')
 const bcrypt = require('bcrypt')
 const ROUNDS = +process.env.HASH_ROUNDS || 12
 
-function hash (password) {
-  return new Promise((resolve, reject) => {
-    bcrypt.hash(password, ROUNDS, (e, hash) => e ? reject(e) : resolve(hash))
-  })
-}
+const hash = (password) => (
+  new Promise((resolve, reject) => (
+    bcrypt.hash(password, ROUNDS, (error, hash) => (
+      error ? reject(error) : resolve(hash)
+    ))
+  ))
+)
 
 class User extends db.Model {
 
@@ -37,9 +39,9 @@ class User extends db.Model {
   authenticate (password) {
     if (this.password == null) return Promise.resolve(false)
     return new Promise((resolve, reject) => {
-      bcrypt.compare(password, this.password, (e, match) => {
-        return e ? reject(e) : resolve(match)
-      })
+      bcrypt.compare(password, this.password, (error, match) => (
+        error ? reject(error) : resolve(match)
+      ))
     })
   }
 

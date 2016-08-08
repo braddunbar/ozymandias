@@ -39,8 +39,8 @@ module.exports = (req, res, next) => {
     }
 
     return new Promise(function (resolve, reject) {
-      ses.sendEmail(options, (e, result) => (
-        e ? reject(e) : resolve(result)
+      ses.sendEmail(options, (error, result) => (
+        error ? reject(error) : resolve(result)
       ))
     })
   }

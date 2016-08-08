@@ -22,8 +22,8 @@ test('fetch a user', (t) => {
   agent.post('/signin')
   .send('email=brad@example.com')
   .expect(200)
-  .end((e) => {
-    if (e) return t.end(e)
+  .end((error) => {
+    if (error) return t.end(error)
     agent.get('/user/id')
     .set('Accept', 'application/json')
     .expect(200, {id: 1})

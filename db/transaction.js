@@ -29,9 +29,9 @@ class Transaction {
       return connection.query(query).then((value) => {
         connection.close()
         return value
-      }).catch((e) => {
+      }).catch((error) => {
         connection.close()
-        throw e
+        throw error
       })
     })
   }

@@ -409,9 +409,9 @@ test('update with property names', (t) => {
 test('update rejects when invalid', (t) => {
   new User({id: 1}).update({email: ''}).then(() => {
     t.end('update should reject when invalid')
-  }).catch((e) => {
-    t.is(e.message, 'invalid')
-    t.ok(e.model instanceof User, 'should include model with error')
+  }).catch((error) => {
+    t.is(error.message, 'invalid')
+    t.ok(error.model instanceof User, 'should include model with error')
     t.end()
   })
 })
@@ -419,9 +419,9 @@ test('update rejects when invalid', (t) => {
 test('create rejects when invalid', (t) => {
   User.create({email: '', first: 'joe', last: 'user'}).then(() => {
     t.end('create should reject when invalid')
-  }).catch((e) => {
-    t.is(e.message, 'invalid')
-    t.ok(e.model instanceof User, 'should include model with error')
+  }).catch((error) => {
+    t.is(error.message, 'invalid')
+    t.ok(error.model instanceof User, 'should include model with error')
     t.end()
   })
 })

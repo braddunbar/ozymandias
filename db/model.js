@@ -48,9 +48,9 @@ class Model {
       values[key] = this[key]
     }
     if (!this.valid) {
-      const e = new Error('invalid')
-      e.model = this
-      return Promise.reject(e)
+      const error = new Error('invalid')
+      error.model = this
+      return Promise.reject(error)
     }
     const query = this.constructor.where({id: this.id})
     return query.update(this.slice(...Object.keys(values)))
@@ -99,9 +99,9 @@ class Model {
   static create (values) {
     const model = new this(values)
     if (!model.valid) {
-      const e = new Error('invalid')
-      e.model = model
-      return Promise.reject(e)
+      const error = new Error('invalid')
+      error.model = model
+      return Promise.reject(error)
     }
     for (const key of Object.keys(values)) values[key] = model[key]
     return this.insert(values).then((values) => {
