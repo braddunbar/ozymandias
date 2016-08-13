@@ -16,7 +16,7 @@
     "test": "./bin/test"
   },
   "dependencies": {
-    "aws-sdk": "2.4.4",
+    "aws-sdk": "2.5.0",
     "bcrypt": "0.8.7",
     "body-parser": "1.15.2",
     "busboy": "0.2.13",
@@ -32,9 +32,9 @@
     "react": "*",
     "react-dom": "*",
     "remora": "github:braddunbar/remora#v3.1.0",
-    "request": "2.72.0",
+    "request": "2.74.0",
     "rimraf": "2.5.4",
-    "sql": "0.70.0"
+    "sql": "0.70.1"
   },
   "devDependencies": {
     "standard": "7.1.2",
