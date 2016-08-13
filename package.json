@@ -33,7 +33,7 @@
     "react-dom": "*",
     "remora": "github:braddunbar/remora#v3.1.0",
     "request": "2.72.0",
-    "rimraf": "2.5.2",
+    "rimraf": "2.5.4",
     "sql": "0.70.0"
   },
   "devDependencies": {
