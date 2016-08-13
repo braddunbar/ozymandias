@@ -28,7 +28,7 @@
     "minimist": "1.2.0",
     "mkdirp": "0.5.1",
     "object-tojson": "1.0.1",
-    "pg": "6.0.1",
+    "pg": "6.1.0",
     "react": "*",
     "react-dom": "*",
     "remora": "github:braddunbar/remora#v3.1.0",
