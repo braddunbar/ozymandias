@@ -596,16 +596,3 @@ test('left join', (t) => {
     t.end()
   }).catch(t.end)
 })
-
-test('toJSON', (t) => {
-  let data = {
-    id: 1,
-    email: 'test@example.com',
-    first: 'john',
-    last: 'doe',
-    birthday: null
-  }
-  let user = new User(data)
-  t.deepEqual(JSON.parse(JSON.stringify(user)), data)
-  t.end()
-})

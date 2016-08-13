@@ -53,12 +53,6 @@ class User extends db.Model {
     })
   }
 
-  toJSON () {
-    const json = super.toJSON()
-    delete json.password
-    return json
-  }
-
   static create (values) {
     if (!values.password) return super.create(values)
     return hash(values.password).then((hash) => {

@@ -69,9 +69,7 @@ class Model {
   }
 
   toJSON () {
-    const result = {}
-    for (const key of this.data.keys()) result[key] = this.data.get(key)
-    return result
+    throw new Error('toJSON not implemented')
   }
 
   static get table () {
