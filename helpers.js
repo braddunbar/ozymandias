@@ -17,7 +17,7 @@ module.exports = function (req, res, next) {
   }
 
   // Sign out
-  req.signOut = function (user) {
+  req.signOut = function () {
     req.session = null
   }
 

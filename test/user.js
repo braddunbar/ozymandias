@@ -24,12 +24,12 @@ test('creating a user hashes the password', (t) => {
   User.create({
     email: 'user@example.com',
     password: 'password'
-  }).then((user) => {
-    return user.authenticate('password').then((match) => {
+  }).then((user) => (
+    user.authenticate('password').then((match) => {
       t.ok(match)
       t.end()
     })
-  }).catch(t.end)
+  )).catch(t.end)
 })
 
 test('updating a user hashes the password', (t) => {
@@ -37,12 +37,12 @@ test('updating a user hashes the password', (t) => {
   user.update({
     email: 'user@example.com',
     password: 'new password'
-  }).then(() => {
-    return user.authenticate('new password').then((match) => {
+  }).then(() => (
+    user.authenticate('new password').then((match) => {
       t.ok(match)
       t.end()
     })
-  }).catch(t.end)
+  )).catch(t.end)
 })
 
 test('authenticate a user without a password', (t) => {

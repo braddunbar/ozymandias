@@ -14,7 +14,7 @@ app.post('/signin', (req, res) => {
 })
 
 app.get('/user/id', (req, res) => {
-  res.json({id: req.user.id})
+  res.json({id: req.currentUser.id})
 })
 
 test('fetch a user', (t) => {
