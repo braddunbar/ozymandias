@@ -7,7 +7,7 @@ module.exports = function (req, res, next) {
   if (!id) return next()
   db.User.find(id).then((user) => {
     req.currentUser = res.locals.currentUser = user
-    req.admin = res.locals.admin = user && !!user.is_admin
+    req.admin = res.locals.admin = user && !!user.isAdmin
     next()
   }).catch(res.error)
 }
