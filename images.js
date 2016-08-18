@@ -49,7 +49,7 @@ exports.hasImage = function (Model, {defaults, name, sizes}) {
           put(this[`${name}Key`]('original'), file, mime),
           this[`convert${Name}`](file, mime)
         ]).then(() => (
-          this.update({[`${name}_updated_at`]: new Date()})
+          this.update({[`${name}UpdatedAt`]: new Date()})
         )).then(() => resolve())
       })
 
@@ -73,7 +73,7 @@ exports.hasImage = function (Model, {defaults, name, sizes}) {
 
   // imagePath
   Model.prototype[`${name}Path`] = function (size) {
-    const updatedAt = this[`${name}_updated_at`]
+    const updatedAt = this[`${name}UpdatedAt`]
     if (updatedAt) {
       const key = this[`${name}Key`](size)
       return `/assets/${key}?${+updatedAt}`

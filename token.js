@@ -12,8 +12,8 @@ class Token extends db.Model {
   static get columns () {
     return [
       'id',
-      'user_id',
-      'expires_at'
+      'userId',
+      'expiresAt'
     ]
   }
 
