@@ -10,7 +10,7 @@ const Router = require('../').Router
 test('find a user', (t) => {
   const router = Router()
   router.find('user', () => User)
-  router.get('/user/:user_id', (req, res) => {
+  router.get('/user/:userId', (req, res) => {
     t.ok(req.user != null)
     t.is(req.user.id, 1)
     t.ok(res.locals.user != null)
@@ -27,7 +27,7 @@ test('find a user', (t) => {
 test('a missing user - HTML', (t) => {
   const router = Router()
   router.find('user', () => User)
-  router.get('/user/:user_id', (req, res) => {
+  router.get('/user/:userId', (req, res) => {
     t.fail()
     res.end()
   })
@@ -46,7 +46,7 @@ test('a missing user - HTML', (t) => {
 test('a missing user - JSON', (t) => {
   const router = Router()
   router.find('user', () => User)
-  router.get('/user/:user_id', (req, res) => {
+  router.get('/user/:userId', (req, res) => {
     t.fail()
     res.end()
   })
@@ -65,8 +65,8 @@ test('a missing user - JSON', (t) => {
 
 test('explicit property and param', (t) => {
   const router = Router()
-  router.find('user_id', 'person', () => User)
-  router.get('/user/:user_id', (req, res) => {
+  router.find('userId', 'person', () => User)
+  router.get('/user/:userId', (req, res) => {
     t.ok(req.person != null)
     t.is(req.person.id, 1)
     t.ok(res.locals.person != null)

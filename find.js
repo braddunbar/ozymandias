@@ -4,7 +4,7 @@ module.exports = function (param, property, scope) {
   if (!scope) {
     scope = property
     property = param
-    param = `${property}_id`
+    param = `${property}Id`
   }
   this.param(param, (req, res, next, id) => {
     if (!id) return next()
