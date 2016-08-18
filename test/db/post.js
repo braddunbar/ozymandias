@@ -10,11 +10,11 @@ class Post extends db.Model {
 
   static get columns () {
     return [
-      {name: 'id'},
-      {name: 'body'},
-      {name: 'published'},
-      {name: 'user_id', property: 'userId'},
-      {name: 'search'}
+      'id',
+      'body',
+      'published',
+      'userId',
+      'search'
     ]
   }
 
