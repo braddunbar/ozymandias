@@ -1,6 +1,6 @@
 'use strict'
 
-let db = require('../../db/instance')
+const db = require('../../db/instance')
 
 class Post extends db.Model {
 
