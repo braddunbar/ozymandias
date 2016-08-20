@@ -61,6 +61,13 @@ class User extends db.Model {
     })
   }
 
+  validate () {
+    super.validate()
+
+    if (!/^\S+@\S+\.\S+$/.test(this.email)) {
+      this.errors.email = ['Invalid Email']
+    }
+  }
 }
 
 db.User = module.exports = User

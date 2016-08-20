@@ -52,3 +52,24 @@ test('authenticate a user without a password', (t) => {
     t.end()
   }).catch(t.end)
 })
+
+test('validate email', (t) => {
+  const user = new User({email: 'invalid'})
+
+  user.validate()
+  t.deepEqual(user.errors.email, ['Invalid Email'])
+
+  user.email = 'still.invalid'
+  user.validate()
+  t.deepEqual(user.errors.email, ['Invalid Email'])
+
+  user.email = 'still@invalid'
+  user.validate()
+  t.deepEqual(user.errors.email, ['Invalid Email'])
+
+  user.email = 'valid@example.com'
+  user.validate()
+  t.is(user.errors.email, undefined)
+
+  t.end()
+})

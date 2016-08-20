@@ -61,6 +61,7 @@ class Model {
   }
 
   validate () {
+    this.errors = {}
   }
 
   get valid () {
