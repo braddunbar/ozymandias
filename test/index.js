@@ -3,8 +3,8 @@
 const db = require('../db/instance')
 const tape = require('tape')
 
-require('./auth')
 require('./body')
+require('./current-user')
 require('./db')
 require('./find')
 require('./helpers')

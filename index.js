@@ -50,13 +50,12 @@ const ozymandias = module.exports = function () {
     maxAge: 1000 * 60 * 60 * 24 * 14
   }))
 
-  // Middleware
   app.use(require('./helpers'))
   app.use(require('./render'))
   app.use(require('./mail'))
-  app.use(require('./auth'))
   app.use(require('./json'))
   app.use(require('./react'))
+  app.use(require('./current-user'))
 
   return app
 }
