@@ -47,11 +47,7 @@ class Model {
       this[key] = values[key]
       values[key] = this[key]
     }
-    if (!this.valid) {
-      const error = new Error('invalid')
-      error.model = this
-      return Promise.reject(error)
-    }
+    if (!this.valid) return Promise.reject(this.invalidError())
     const query = this.constructor.where({id: this.id})
     return query.update(this.slice(...Object.keys(values)))
   }
@@ -67,6 +63,12 @@ class Model {
   get valid () {
     this.validate()
     return Object.keys(this.errors).length === 0
+  }
+
+  invalidError () {
+    const error = new Error('invalid')
+    error.model = this
+    return error
   }
 
   toJSON () {
@@ -104,15 +106,9 @@ class Model {
 
   static create (values) {
     const model = new this(values)
-    if (!model.valid) {
-      const error = new Error('invalid')
-      error.model = model
-      return Promise.reject(error)
-    }
+    if (!model.valid) return Promise.reject(model.invalidError())
     for (const key of Object.keys(values)) values[key] = model[key]
-    return this.insert(values).then((values) => {
-      return Object.assign(model, values)
-    })
+    return this.insert(values).then((values) => Object.assign(model, values))
   }
 
   static hasMany (name, options) {

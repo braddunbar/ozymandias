@@ -71,5 +71,32 @@ test('validate email', (t) => {
   user.validate()
   t.is(user.errors.email, undefined)
 
+  user.email = 'valid@subdomain.example.com'
+  user.validate()
+  t.is(user.errors.email, undefined)
+
   t.end()
+})
+
+test('validate password on create', (t) => {
+  User.create({password: 'asdf'}).then(() => {
+    t.end('password was not validated')
+  })
+  .catch(({message, model}) => {
+    t.is(message, 'invalid')
+    t.deepEqual(model.errors.password, ['Password must be at least eight characters long'])
+    t.end()
+  })
+})
+
+test('validate password on update', (t) => {
+  User.find(1).then((user) => {
+    user.update({password: 'asdf'}).then(() => {
+      t.end('password was not validated')
+    }).catch(({message, model}) => {
+      t.is(message, 'invalid')
+      t.deepEqual(model.errors.password, ['Password must be at least eight characters long'])
+      t.end()
+    })
+  }).catch(t.end)
 })

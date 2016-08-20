@@ -47,6 +47,16 @@ class User extends db.Model {
 
   update (values) {
     if (!values.password) return super.update(values)
+
+    // Validate the password.
+    if (values.password.length < 8) {
+      this.errors = {
+        password: ['Password must be at least eight characters long']
+      }
+      return Promise.reject(this.invalidError())
+    }
+
+    // Hash the password before updating.
     return hash(values.password).then((hash) => {
       values.password = hash
       return super.update(values)
@@ -55,6 +65,17 @@ class User extends db.Model {
 
   static create (values) {
     if (!values.password) return super.create(values)
+
+    // Validate the password.
+    if (values.password.length < 8) {
+      const model = new this(values)
+      model.errors = {
+        password: ['Password must be at least eight characters long']
+      }
+      return Promise.reject(model.invalidError())
+    }
+
+    // Hash the password before creation.
     return hash(values.password).then((hash) => {
       values.password = hash
       return super.create(values)
