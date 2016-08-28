@@ -47,7 +47,7 @@ exports.hasImage = function (Model, {defaults, name, sizes}) {
 
         Promise.all([
           put(this[`${name}Key`]('original'), file, mime),
-          this[`convert${Name}`](file, mime)
+          this[`convert${Name}`](file)
         ]).then(() => (
           this.update({[`${name}UpdatedAt`]: new Date()})
         )).then(() => resolve())
