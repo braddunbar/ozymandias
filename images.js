@@ -7,6 +7,9 @@ const BUCKET = process.env.BUCKET
 const s3 = new aws.S3({apiVersion: '2006-03-01'})
 const assets = require('./assets')
 
+// Strip an image stream and write it out.
+const strip = (file) => gm(file).strip().stream()
+
 // Convert a specific image size.
 const convert = (file, size) => (
   gm(file)
@@ -46,7 +49,7 @@ exports.hasImage = function (Model, {defaults, name, sizes}) {
         fileFound = true
 
         Promise.all([
-          put(this[`${name}Key`]('original'), file, mime),
+          put(this[`${name}Key`]('original'), strip(file), mime),
           this[`convert${Name}`](file)
         ]).then(() => (
           this.update({[`${name}UpdatedAt`]: new Date()})
