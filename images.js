@@ -64,6 +64,12 @@ exports.hasImage = function (Model, {defaults, name, sizes}) {
 
   // convertImage
   Model.prototype[`convert${Name}`] = function (file) {
+    if (!file) {
+      file = s3.getObject({
+        Bucket: BUCKET,
+        Key: this[`${name}Key`]('original')
+      }).createReadStream()
+    }
     return Promise.all(Object.keys(sizes).map((size) => (
       put(this[`${name}Key`](size), convert(file, sizes[size]), 'image/jpeg')
     )))
