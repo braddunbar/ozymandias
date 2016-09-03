@@ -51,9 +51,7 @@ exports.hasImage = function (Model, {defaults, name, sizes}) {
         Promise.all([
           put(this[`${name}Key`]('original'), strip(file), mime),
           this[`convert${Name}`](file)
-        ]).then(() => (
-          this.update({[`${name}UpdatedAt`]: new Date()})
-        )).then(() => resolve())
+        ]).then(() => resolve())
       })
 
       busboy.on('finish', () => { if (!fileFound) resolve() })
@@ -64,15 +62,19 @@ exports.hasImage = function (Model, {defaults, name, sizes}) {
 
   // convertImage
   Model.prototype[`convert${Name}`] = function (file) {
+    // Use the original by default.
     if (!file) {
       file = s3.getObject({
         Bucket: BUCKET,
         Key: this[`${name}Key`]('original')
       }).createReadStream()
     }
+
     return Promise.all(Object.keys(sizes).map((size) => (
       put(this[`${name}Key`](size), convert(file, sizes[size]), 'image/jpeg')
-    )))
+    ))).then(() => (
+      this.update({[`${name}UpdatedAt`]: new Date()})
+    ))
   }
 
   // imageKey
