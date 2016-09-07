@@ -71,10 +71,6 @@ class Model {
     return error
   }
 
-  toJSON () {
-    throw new Error('toJSON not implemented')
-  }
-
   static get table () {
     if (!this._table) {
       const name = this.tableName
