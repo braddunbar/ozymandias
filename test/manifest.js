@@ -55,6 +55,14 @@ test('handle directories correctly', (t) => {
   t.end()
 })
 
+test('ignore files and directories in public/assets/', (t) => {
+  rimraf.sync('test/public/**/*')
+  mkdirp.sync('test/public/assets/test/test')
+  fs.writeFileSync('test/public/assets/test/test/test', '1')
+  t.deepEqual(manifest('test/public'), {})
+  t.end()
+})
+
 test('clean up', (t) => {
   rimraf.sync('test/public')
   t.end()

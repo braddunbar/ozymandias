@@ -13,7 +13,7 @@ module.exports = (publicPath) => {
 
   // All public files not in assets.
   const publicFiles = new Set(glob.sync(path.join(publicPath, '**/*'), {
-    ignore: path.join(assetPath, '*'),
+    ignore: path.join(assetPath, '**/*'),
     nodir: true
   }).map((file) => path.relative(publicPath, file)))
 

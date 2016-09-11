@@ -3,7 +3,11 @@
 const fs = require('fs')
 const crypto = require('crypto')
 
-module.exports = crypto
-  .createHash('md5')
-  .update(fs.readFileSync('public/assets/.manifest.json'))
-  .digest('hex')
+try {
+  module.exports = crypto
+    .createHash('md5')
+    .update(fs.readFileSync('public/assets/.manifest.json'))
+    .digest('hex')
+} catch (e) {
+  module.exports = '☃'
+}
