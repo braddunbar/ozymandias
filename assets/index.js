@@ -1,8 +1,10 @@
 'use strict'
 
-// Must be ES5 for the client!
-var assets = require('./fingerprints.json')
+let assets = {}
+const fs = require('fs')
 
-exports.path = function (path) {
-  return assets[path] || ('/' + path)
-}
+try {
+  assets = JSON.parse(fs.readFileSync('public/assets/.manifest.json'))
+} catch (e) { }
+
+exports.path = (path) => `/${assets[path] || path}`
