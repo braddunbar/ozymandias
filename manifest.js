@@ -12,10 +12,10 @@ module.exports = (publicPath) => {
   const manifestPath = path.join(assetPath, '.manifest.json')
 
   // All public files not in assets.
-  const publicFiles = new Set(glob.sync(path.join(publicPath, '**/*'), {
+  const publicFiles = glob.sync(path.join(publicPath, '**/*'), {
     ignore: path.join(assetPath, '**/*'),
     nodir: true
-  }).map((file) => path.relative(publicPath, file)))
+  }).map((file) => path.relative(publicPath, file))
 
   for (const file of publicFiles) {
     const buffer = fs.readFileSync(path.join(publicPath, file))
