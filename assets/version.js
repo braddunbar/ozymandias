@@ -1,12 +1,9 @@
 'use strict'
 
+const fs = require('fs')
 const crypto = require('crypto')
 
-if (process.env.NODE_ENV === 'production') {
-  module.exports = crypto
-    .createHash('md5')
-    .update(JSON.stringify(require('./fingerprints.json')))
-    .digest('hex')
-} else {
-  module.exports = '☃'
-}
+module.exports = crypto
+  .createHash('md5')
+  .update(fs.readFileSync('public/assets/.manifest.json'))
+  .digest('hex')
