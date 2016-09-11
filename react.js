@@ -1,6 +1,6 @@
 'use strict'
 
-const version = require('./assets/version')
+const {version} = require('./assets')
 const Json = require('remora')
 const React = require('react')
 const ReactDOM = require('react-dom/server')
