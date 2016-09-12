@@ -20,3 +20,9 @@ class Comment extends db.Model {
 }
 
 module.exports = Comment
+
+const Post = require('./post')
+const User = require('./user')
+
+Comment.belongsTo('user', {model: User, key: 'userId'})
+Comment.belongsTo('post', {model: Post, key: 'postId'})

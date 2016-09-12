@@ -28,3 +28,9 @@ class User extends db.Model {
 }
 
 module.exports = User
+
+const Post = require('./post')
+const Comment = require('./comment')
+
+User.hasMany('posts', {model: Post, key: 'userId'})
+User.hasMany('comments', {model: Comment, key: 'userId'})

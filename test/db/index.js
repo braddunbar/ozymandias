@@ -6,13 +6,6 @@ const User = require('./user')
 const Post = require('./post')
 const Comment = require('./comment')
 
-User.hasMany('posts', {model: Post, key: 'userId'})
-User.hasMany('comments', {model: Comment, key: 'userId'})
-Post.belongsTo('user', {model: User, key: 'userId'})
-Post.hasMany('comments', {model: Comment, key: 'postId'})
-Comment.belongsTo('user', {model: User, key: 'userId'})
-Comment.belongsTo('post', {model: Post, key: 'postId'})
-
 test('connection closed on error', (t) => {
   db.query('this is not valid syntax').then(() => {
     t.end('this should fail')

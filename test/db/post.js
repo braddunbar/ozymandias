@@ -21,3 +21,9 @@ class Post extends db.Model {
 }
 
 module.exports = Post
+
+const User = require('./user')
+const Comment = require('./comment')
+
+Post.belongsTo('user', {model: User, key: 'userId'})
+Post.hasMany('comments', {model: Comment, key: 'postId'})
