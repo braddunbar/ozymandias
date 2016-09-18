@@ -25,15 +25,15 @@ class Transaction {
   close (query) {
     this.closed = true
     if (!this.started) return Promise.resolve()
-    return this.connect().then((connection) => {
-      return connection.query(query).then((value) => {
+    return this.connect().then((connection) => (
+      connection.query(query).then((value) => {
         connection.close()
         return value
       }).catch((error) => {
         connection.close()
         throw error
       })
-    })
+    ))
   }
 
   commit () {
