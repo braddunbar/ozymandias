@@ -21,7 +21,7 @@ class Query {
 
   insert (values) {
     this.query = this.query.insert(values).returning(this.table.star())
-    return this.send().then((result) => result.rows[0])
+    return this.send().then(({rows}) => rows[0])
   }
 
   update (values) {
@@ -47,20 +47,19 @@ class Query {
     this.query = this.query.select(this.table.star()).from(this.from)
 
     // Load models
-    return this.send().then((result) => {
+    return this.send().then(({rows}) => {
       // Construct some models
-      const models = result.rows.map((row) => new Model(row))
+      const models = rows.map((row) => new Model(row))
 
       // Load includes
       return Promise.all(Object.keys(includes).map((name) => {
         const relation = Model.relations[name]
         const conditions = {}
-        const key = relation.key
-        const many = relation.many
+        const {key, many} = relation
 
-        conditions[many ? key : 'id'] = this.uniq(models.map((model) => {
-          return model[many ? 'id' : key]
-        }))
+        conditions[many ? key : 'id'] = this.uniq(models.map((model) => (
+          model[many ? 'id' : key]
+        )))
 
         // Attach includes
         return relation.model
@@ -87,9 +86,9 @@ class Query {
 
   find (id) {
     if (id != null) return this.where({id: id}).find()
-    return this.limit(1).all().then((models) => {
-      return models.length ? models[0] : null
-    })
+    return this.limit(1).all().then((models) => (
+      models.length ? models[0] : null
+    ))
   }
 
   paginate (page, count) {
