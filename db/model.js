@@ -3,6 +3,10 @@
 const sql = require('sql')
 const Query = require('./query')
 
+const snakeCase = (value) => (
+  value.replace(/[A-Z]+/g, (upper) => `_${upper.toLowerCase()}`)
+)
+
 class Model {
 
   constructor (data) {
@@ -66,14 +70,13 @@ class Model {
 
   static get table () {
     if (!this._table) {
-      const name = this.tableName
-      const columns = this.columns.map((property) => ({
-        property,
-        name: property.replace(/[A-Z]+/g, (upper) => (
-          '_' + upper.toLowerCase()
-        ))
-      }))
-      this._table = sql.define({name, columns})
+      this._table = sql.define({
+        name: this.tableName,
+        columns: this.columns.map((property) => ({
+          property,
+          name: snakeCase(property)
+        }))
+      })
     }
     return this._table
   }
