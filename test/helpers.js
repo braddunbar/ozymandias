@@ -67,8 +67,9 @@ test('res.locals.json', (t) => {
   const req = {}
   const res = {locals: {}}
   helpers(req, res, () => {
-    const expected = '<script type=\'application/json\' id=\'test\'>"</<!-<\\!--<\\/script>"</script>'
-    t.is(res.locals.json('test', '</<!-<!--</script>'), expected)
+    const expected =
+      `<script type='application/json' id='id'>"</<!-<\\u0021--<\\/script<\\u0021--<\\/script"</script>`
+    t.is(res.locals.json('id', '</<!-<!--</script<!--</script'), expected)
     t.end()
   })
 })

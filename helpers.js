@@ -44,7 +44,10 @@ module.exports = function (req, res, next) {
 
   // JSON script tags
   res.locals.json = function (id, data) {
-    const json = JSON.stringify(data || null).replace(/<(?=(\/script|!--))/g, '<\\')
+    const json = JSON.stringify(data || null)
+      .replace(/<\/script|<!--/g, (match) => (
+        match === '<!--' ? '<\\u0021--' : '<\\/script'
+      ))
     return `<script type='application/json' id='${id}'>${json}</script>`
   }
 
