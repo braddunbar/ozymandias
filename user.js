@@ -29,11 +29,11 @@ class User extends db.Model {
   }
 
   get email () {
-    return (this.data.get('email') || '').trim()
+    return (this._email || '').trim()
   }
 
   set email (value) {
-    this.data.set('email', (value || '').trim())
+    this._email = (value || '').trim()
   }
 
   authenticate (password) {

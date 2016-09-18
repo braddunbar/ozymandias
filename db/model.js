@@ -6,9 +6,6 @@ const Query = require('./query')
 class Model {
 
   constructor (data) {
-    this.constructor.defineProperties()
-    this.errors = {}
-    this.data = new Map()
     Object.assign(this, data)
   }
 
@@ -24,7 +21,7 @@ class Model {
     return this.constructor.tableName
   }
 
-  get colunns () {
+  get columns () {
     return this.constructor.columns
   }
 
@@ -115,24 +112,6 @@ class Model {
   static belongsTo (name, options) {
     options.many = false
     this.relations[name] = options
-  }
-
-  static defineProperties () {
-    if (this._propsDefined) return
-    this._propsDefined = true
-    for (const column of this.table.columns) {
-      if (Object.getOwnPropertyDescriptor(this.prototype, column.property)) {
-        continue
-      }
-      Object.defineProperty(this.prototype, column.property, {
-        get: function () {
-          return this.data.get(column.property)
-        },
-        set: function (value) {
-          this.data.set(column.property, value)
-        }
-      })
-    }
   }
 
 }
