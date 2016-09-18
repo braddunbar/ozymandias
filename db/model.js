@@ -29,10 +29,6 @@ class Model {
     return this.constructor.relations
   }
 
-  get properties () {
-    return this.constructor.properties
-  }
-
   slice (...args) {
     const result = {}
     for (const key of args) result[key] = this[key]
@@ -80,16 +76,6 @@ class Model {
       this._table = sql.define({name, columns})
     }
     return this._table
-  }
-
-  static get properties () {
-    if (!this._properties) {
-      this._properties = {}
-      for (const column of this.table.columns) {
-        this._properties[column.property] = column
-      }
-    }
-    return this._properties
   }
 
   static get relations () {

@@ -1,6 +1,7 @@
 'use strict'
 
 const Raw = require('./raw')
+const Column = require('sql/lib/column')
 
 class Query {
 
@@ -183,14 +184,14 @@ class Query {
     }
   }
 
-  select (...args) {
-    for (let arg of args) {
-      if (Array.isArray(arg)) {
-        this.query = this.query.select(new Raw(arg[0], arg.slice(1)))
-      } else {
-        if (this.model.properties[arg]) arg = this.table[arg]
-        this.query = this.query.select(arg)
+  select (...columns) {
+    for (let column of columns) {
+      if (Array.isArray(column)) {
+        column = new Raw(column[0], column.slice(1))
+      } else if (this.model.table[column] instanceof Column) {
+        column = this.model.table[column]
       }
+      this.query = this.query.select(column)
     }
     return this
   }
