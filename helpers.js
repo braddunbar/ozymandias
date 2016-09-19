@@ -1,5 +1,15 @@
 'use strict'
 
+// Prevent XSS attacks in embedded JSON.
+const escapeJson = (json) => (
+  json.replace(/<\/script|<!--/g, (match) => {
+    switch (match) {
+      case '<!--': return '<\\u0021--'
+      case '</script': return '<\\/script'
+    }
+  })
+)
+
 module.exports = function (req, res, next) {
   // Attach specific params.
   req.permit = function (...keys) {
@@ -44,10 +54,7 @@ module.exports = function (req, res, next) {
 
   // JSON script tags
   res.locals.json = function (id, data) {
-    const json = JSON.stringify(data || null)
-      .replace(/<\/script|<!--/g, (match) => (
-        match === '<!--' ? '<\\u0021--' : '<\\/script'
-      ))
+    const json = escapeJson(JSON.stringify(data || null))
     return `<script type='application/json' id='${id}'>${json}</script>`
   }
 
