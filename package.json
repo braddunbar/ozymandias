@@ -16,14 +16,14 @@
     "test": "./bin/test"
   },
   "dependencies": {
-    "aws-sdk": "2.5.5",
+    "aws-sdk": "2.6.4",
     "bcrypt": "0.8.7",
     "body-parser": "1.15.2",
     "busboy": "0.2.13",
     "compression": "1.6.2",
     "cookie-session": "2.0.0-alpha.1",
     "express": "4.14.0",
-    "glob": "7.0.6",
+    "glob": "7.1.0",
     "gm": "1.23.0",
     "minimist": "1.2.0",
     "mkdirp": "0.5.1",
@@ -37,7 +37,7 @@
     "sql": "0.71.0"
   },
   "devDependencies": {
-    "standard": "8.0.0",
+    "standard": "8.1.0",
     "supertest": "braddunbar/supertest#ipv6",
     "tape": "4.6.0"
   }
