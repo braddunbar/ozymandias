@@ -55,6 +55,55 @@ test('DELETE /session is a 200', (t) => {
   .end(t.end)
 })
 
+test('GET /session/reset/<tokenId>: 200 for missing token', (t) => {
+  t.agent
+  .get('/session/reset/missing')
+  .set('Accept', 'application/json')
+  .expect(200)
+  .end((error, {body}) => {
+    if (error) return t.end(error)
+    t.ok(!body.token)
+    t.ok(!body.email)
+    t.end()
+  })
+})
+
+test('GET /session/reset/<tokenId>: 200 for expired token', (t) => {
+  const expiresAt = new Date()
+  expiresAt.setDate(expiresAt.getDate() - 5)
+
+  Token.create({expiresAt, userId: 1}).then((token) => {
+    t.agent
+    .get(`/session/reset/${token.id}`)
+    .set('Accept', 'application/json')
+    .expect(200)
+    .end((error, {body}) => {
+      if (error) return t.end(error)
+      t.ok(!body.token)
+      t.ok(!body.email)
+      t.end()
+    })
+  }).catch(t.end)
+})
+
+test('GET /session/reset/<tokenId>: 200 for valid token', (t) => {
+  const expiresAt = new Date()
+  expiresAt.setDate(expiresAt.getDate() + 5)
+
+  Token.create({expiresAt, userId: 1}).then((token) => {
+    t.agent
+    .get(`/session/reset/${token.id}`)
+    .set('Accept', 'application/json')
+    .expect(200)
+    .end((error, {body}) => {
+      if (error) return t.end(error)
+      t.is(body.token, token.id)
+      t.is(body.email, 'brad@example.com')
+      t.end()
+    })
+  }).catch(t.end)
+})
+
 test('POST /session/reset/<tokenId>: 422 for missing token', (t) => {
   t.agent
   .post('/session/reset/missing')

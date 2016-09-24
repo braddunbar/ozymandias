@@ -2,6 +2,7 @@
 
 const User = require('./user')
 const Token = require('./token')
+const json = require('./json/session')
 const forgotMail = require('./mail/forgot')
 const router = module.exports = require('./').Router()
 
@@ -9,7 +10,18 @@ const router = module.exports = require('./').Router()
 const findUser = (request, response, next) => {
   User.where('trim(lower(email)) = trim(lower(?))', request.body.email).find()
   .then((user) => {
-    request.user = response.locals.user = user
+    request.user = user
+    next()
+  }).catch(response.error)
+}
+
+// Find Token
+const findToken = (request, response, next) => {
+  Token.include('user')
+  .where('expires_at >= now()')
+  .find(request.params.tokenId)
+  .then((token) => {
+    request.token = token
     next()
   }).catch(response.error)
 }
@@ -44,27 +56,28 @@ router.delete('/', (request, response) => {
 })
 
 // Reset
-router.post('/reset/:tokenId', (request, response) => {
-  Token.include('user')
-  .where('expires_at >= now()')
-  .find(request.params.tokenId)
-  .then((token) => {
-    if (!token) {
-      return response.status(422).json({
-        password: ['Sorry! That token is expired.']
-      })
-    }
+router.get('/reset/:tokenId', findToken, (request, response) => {
+  response.react(json.reset, {token: request.token})
+})
 
-    if (!request.body.password) {
-      return response.status(422).json({
-        password: ['You must provide a password.']
-      })
-    }
-
-    return token.user.update(request.permit('password')).then(() => {
-      request.signIn(token.user)
-      response.json({})
+router.post('/reset/:tokenId', findToken, (request, response) => {
+  if (!request.token) {
+    return response.status(422).json({
+      password: ['Sorry! That token is expired.']
     })
+  }
+
+  if (!request.body.password) {
+    return response.status(422).json({
+      password: ['You must provide a password.']
+    })
+  }
+
+  const {user} = request.token
+
+  user.update(request.permit('password')).then(() => {
+    request.signIn(user)
+    response.json({})
   }).catch(response.error)
 })
 

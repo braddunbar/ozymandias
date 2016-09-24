@@ -6,6 +6,8 @@ const tape = require('tape')
 const query = db.query
 const request = require('supertest')
 
+app.set('component', () => null)
+
 module.exports = function (name, test) {
   tape(name, (t) => {
     t.agent = request.agent(app)
