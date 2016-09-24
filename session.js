@@ -96,7 +96,7 @@ router.post('/forgot', findUser, (request, response) => {
     request.mail(forgotMail, {
       to: [request.user.email],
       subject: `${process.env.NAME}: Password Reset`,
-      url: `http://${request.get('host')}/signin/reset/${token.id}`
+      url: `http://${request.get('host')}/session/reset/${token.id}`
     })
   )).then(() => {
     response.json({})
