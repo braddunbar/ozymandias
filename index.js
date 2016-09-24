@@ -56,6 +56,7 @@ const ozymandias = module.exports = function () {
   app.use(require('./json'))
   app.use(require('./react'))
   app.use(require('./current-user'))
+  app.use('/session', require('./session'))
 
   return app
 }

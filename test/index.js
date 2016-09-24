@@ -17,6 +17,7 @@ require('./token')
 require('./user')
 require('./react')
 require('./render')
+require('./session')
 
 tape('teardown', (t) => {
   db.close()

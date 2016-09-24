@@ -1,6 +1,6 @@
 'use strict'
 
-const db = require('./db/instance')
+const {Model} = require('./db/instance')
 const bcrypt = require('bcrypt')
 const ROUNDS = +process.env.HASH_ROUNDS || 12
 
@@ -12,7 +12,7 @@ const hash = (password) => (
   ))
 )
 
-class User extends db.Model {
+class User extends Model {
 
   static get tableName () {
     return 'users'
@@ -91,4 +91,6 @@ class User extends db.Model {
   }
 }
 
-db.User = module.exports = User
+module.exports = User
+
+User.hasMany('tokens', {key: 'userId', model: require('./token')})

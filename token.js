@@ -1,9 +1,9 @@
 'use strict'
 
-const db = require('./db/instance')
 const crypto = require('crypto')
+const {Model} = require('./db/instance')
 
-class Token extends db.Model {
+class Token extends Model {
 
   static get tableName () {
     return 'tokens'
@@ -24,4 +24,6 @@ class Token extends db.Model {
 
 }
 
-db.Token = module.exports = Token
+module.exports = Token
+
+Token.belongsTo('user', {key: 'userId', model: require('./user')})
