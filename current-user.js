@@ -1,13 +1,11 @@
 'use strict'
 
-const db = require('./db/instance')
-
-module.exports = function (req, res, next) {
-  const id = req.session.userId
+module.exports = function (request, response, next) {
+  const id = request.session.userId
   if (!id) return next()
-  db.User.find(id).then((user) => {
-    req.currentUser = res.locals.currentUser = user
-    req.admin = res.locals.admin = user && !!user.isAdmin
+  request.app.get('user').find(id).then((user) => {
+    request.currentUser = response.locals.currentUser = user
+    request.admin = response.locals.admin = user && !!user.isAdmin
     next()
-  }).catch(res.error)
+  }).catch(response.error)
 }
