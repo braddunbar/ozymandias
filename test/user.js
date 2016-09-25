@@ -100,3 +100,19 @@ test('validate password on update', (t) => {
     })
   }).catch(t.end)
 })
+
+test('User#isAdmin accepts falsy/truthy strings', (t) => {
+  const user = new User({isAdmin: 0})
+  t.is(user.isAdmin, false)
+  user.isAdmin = 1
+  t.is(user.isAdmin, true)
+  user.isAdmin = '0'
+  t.is(user.isAdmin, false)
+  user.isAdmin = '1'
+  t.is(user.isAdmin, true)
+  user.isAdmin = true
+  t.is(user.isAdmin, true)
+  user.isAdmin = false
+  t.is(user.isAdmin, false)
+  t.end()
+})

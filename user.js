@@ -37,6 +37,14 @@ class User extends Model {
     this._email = (value || '').trim()
   }
 
+  get isAdmin () {
+    return !!+this._isAdmin || false
+  }
+
+  set isAdmin (value) {
+    this._isAdmin = !!+value || false
+  }
+
   authenticate (password) {
     if (this.password == null) return Promise.resolve(false)
     return new Promise((resolve, reject) => {
