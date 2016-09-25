@@ -26,9 +26,9 @@ const ozymandias = module.exports = function () {
 
   // Static Assets
   app.use(express.static('public', {
-    etag: !production,
-    lastModified: !production,
-    maxAge: production ? '1d' : 0
+    etag: false,
+    lastModified: false,
+    maxAge: '1y'
   }))
 
   // S3 Assets
