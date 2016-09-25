@@ -2,12 +2,16 @@
 -- PostgreSQL database dump
 --
 
+-- Dumped from database version 9.5.4
+-- Dumped by pg_dump version 9.5.4
+
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
+SET row_security = off;
 
 SET search_path = public, pg_catalog;
 
@@ -68,7 +72,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: comments; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: comments; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE comments (
@@ -99,7 +103,7 @@ ALTER SEQUENCE comments_id_seq OWNED BY comments.id;
 
 
 --
--- Name: posts; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: posts; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE posts (
@@ -131,7 +135,7 @@ ALTER SEQUENCE posts_id_seq OWNED BY posts.id;
 
 
 --
--- Name: tokens; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: tokens; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE tokens (
@@ -142,7 +146,7 @@ CREATE TABLE tokens (
 
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
 CREATE TABLE users (
@@ -153,7 +157,8 @@ CREATE TABLE users (
     birthday date,
     password character varying(255) DEFAULT ''::character varying NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    is_admin boolean DEFAULT false NOT NULL
 );
 
 
@@ -245,11 +250,11 @@ COPY tokens (id, expires_at, user_id) FROM stdin;
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY users (id, email, first, last, birthday, password, created_at, updated_at) FROM stdin;
-1	brad@example.com	Brad	Dunbar	1984-05-10	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:36:14.869714-05	2015-12-05 10:36:20.117449-05
-2	kim@example.com	Kim	Dunbar	1985-11-16	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:36:14.869714-05	2015-12-05 10:36:20.117449-05
-3	jd@example.com	John	Doe	\N	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:36:14.869714-05	2015-12-05 10:36:20.117449-05
-4	test@example.com			\N	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:41:16.14273-05	2015-12-05 10:41:16.14273-05
+COPY users (id, email, first, last, birthday, password, created_at, updated_at, is_admin) FROM stdin;
+1	brad@example.com	Brad	Dunbar	1984-05-10	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:36:14.869714-05	2015-12-05 10:36:20.117449-05	f
+2	kim@example.com	Kim	Dunbar	1985-11-16	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:36:14.869714-05	2015-12-05 10:36:20.117449-05	f
+3	jd@example.com	John	Doe	\N	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:36:14.869714-05	2015-12-05 10:36:20.117449-05	f
+4	test@example.com			\N	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:41:16.14273-05	2015-12-05 10:41:16.14273-05	f
 \.
 
 
@@ -257,11 +262,11 @@ COPY users (id, email, first, last, birthday, password, created_at, updated_at) 
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('users_id_seq', 5, true);
+SELECT pg_catalog.setval('users_id_seq', 4, true);
 
 
 --
--- Name: comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY comments
@@ -269,7 +274,7 @@ ALTER TABLE ONLY comments
 
 
 --
--- Name: posts_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: posts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY posts
@@ -277,7 +282,7 @@ ALTER TABLE ONLY posts
 
 
 --
--- Name: tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY tokens
@@ -285,7 +290,7 @@ ALTER TABLE ONLY tokens
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
@@ -293,7 +298,7 @@ ALTER TABLE ONLY users
 
 
 --
--- Name: post_search_index; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: post_search_index; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX post_search_index ON posts USING gin (search);

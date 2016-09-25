@@ -7,6 +7,7 @@ const query = db.query
 const request = require('supertest')
 
 app.set('component', () => null)
+app.use('/session', require('./session'))
 
 module.exports = function (name, test) {
   tape(name, (t) => {

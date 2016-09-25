@@ -22,6 +22,7 @@ class User extends Model {
     return [
       'id',
       'email',
+      'isAdmin',
       'password',
       'createdAt',
       'updatedAt'
