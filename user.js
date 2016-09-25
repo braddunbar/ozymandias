@@ -2,7 +2,7 @@
 
 const {Model} = require('./db/instance')
 const bcrypt = require('bcrypt')
-const ROUNDS = +process.env.HASH_ROUNDS || 12
+const ROUNDS = process.env.NODE_ENV === 'production' ? 12 : 1
 
 const hash = (password) => (
   new Promise((resolve, reject) => (
