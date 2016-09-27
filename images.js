@@ -1,5 +1,6 @@
 'use strict'
 
+const ms = require('ms')
 const gm = require('gm').subClass({imageMagick: true})
 const aws = require('aws-sdk')
 const Busboy = require('busboy')
@@ -29,7 +30,7 @@ const put = (key, body, contentType) => (
     ACL: 'public-read',
     Body: body,
     Bucket: BUCKET,
-    CacheControl: `max-age=${60 * 60 * 24 * 7},public`,
+    CacheControl: `max-age=${ms('1y')},public`,
     ContentType: contentType,
     Key: key
   }, (error) => error ? reject(error) : resolve()))

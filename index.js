@@ -1,5 +1,6 @@
 'use strict'
 
+const ms = require('ms')
 const body = require('body-parser')
 const express = require('express')
 const session = require('cookie-session')
@@ -47,7 +48,7 @@ const ozymandias = module.exports = function () {
     secureProxy: secure,
     name: process.env.ID,
     secret: process.env.SECRET,
-    maxAge: 1000 * 60 * 60 * 24 * 14
+    maxAge: ms('30d')
   }))
 
   app.use(require('./helpers'))
