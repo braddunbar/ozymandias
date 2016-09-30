@@ -28,6 +28,7 @@
     "minimist": "1.2.0",
     "mkdirp": "0.5.1",
     "ms": "0.7.1",
+    "node-sass": "3.10.0",
     "object-tojson": "1.0.1",
     "pg": "6.1.0",
     "react": "*",
@@ -35,6 +36,8 @@
     "remora": "github:braddunbar/remora#v3.1.0",
     "request": "2.74.0",
     "rimraf": "2.5.4",
+    "rollup": "0.36.1",
+    "rollup-plugin-buble": "0.14.0",
     "sql": "0.71.0"
   },
   "devDependencies": {
