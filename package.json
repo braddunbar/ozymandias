@@ -19,6 +19,7 @@
     "aws-sdk": "2.6.6",
     "bcrypt": "0.8.7",
     "body-parser": "1.15.2",
+    "browserify": "13.1.0",
     "busboy": "0.2.13",
     "compression": "1.6.2",
     "cookie-session": "2.0.0-alpha.1",
@@ -38,7 +39,8 @@
     "rimraf": "2.5.4",
     "rollup": "0.36.1",
     "rollup-plugin-buble": "0.14.0",
-    "sql": "0.71.0"
+    "sql": "0.71.0",
+    "uglify-js": "2.7.3"
   },
   "devDependencies": {
     "standard": "8.3.0",
