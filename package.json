@@ -41,8 +41,8 @@
     "sql": "0.71.0"
   },
   "devDependencies": {
-    "standard": "8.1.0",
+    "standard": "8.3.0",
     "supertest": "braddunbar/supertest#ipv6",
-    "tape": "4.6.0"
+    "tape": "4.6.2"
   }
 }
