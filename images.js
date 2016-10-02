@@ -36,67 +36,71 @@ const put = (key, body, contentType) => (
   }, (error) => error ? reject(error) : resolve()))
 )
 
-exports.hasImage = function (Model, {defaults, name, sizes}) {
+exports.hasImage = function ({defaults, name, sizes}) {
   const Name = name[0].toUpperCase() + name.slice(1)
-
-  // uploadImage
-  Model.prototype[`upload${Name}`] = function (req) {
-    return new Promise((resolve, reject) => {
-      let fileFound = false
-      const busboy = new Busboy({headers: req.headers})
-
-      busboy.on('file', (fieldName, file, fileName, encoding, mime) => {
-        if (fileFound) return file.resume()
-        fileFound = true
-
-        Promise.all([
-          put(this[`${name}Key`]('original'), strip(file), mime),
-          this[`convert${Name}`](file)
-        ]).then(() => resolve())
-      })
-
-      busboy.on('finish', () => { if (!fileFound) resolve() })
-
-      req.pipe(busboy)
-    })
-  }
-
-  // convertImage
-  Model.prototype[`convert${Name}`] = function (file) {
-    // Use the original by default.
-    if (!file) {
-      file = s3.getObject({
-        Bucket: BUCKET,
-        Key: this[`${name}Key`]('original')
-      }).createReadStream()
-    }
-
-    return Promise.all(Object.keys(sizes).map((size) => (
-      put(this[`${name}Key`](size), convert(file, sizes[size]), 'image/jpeg')
-    ))).then(() => (
-      this.update({[`${name}UpdatedAt`]: new Date()})
-    ))
-  }
-
-  // imageKey
-  Model.prototype[`${name}Key`] = function (size) {
-    return `${this.tableName}/${this.id}/${name}/${size}`
-  }
-
-  // imagePath
-  Model.prototype[`${name}Path`] = function (size) {
-    const updatedAt = this[`${name}UpdatedAt`]
-    if (updatedAt) {
-      const key = this[`${name}Key`](size)
-      return `/assets/${key}?${+updatedAt}`
-    }
-    if (defaults) return assets.path(defaults[this.id % defaults.length])
-  }
 
   // smallImage, mediumImage, largeImage, …
   for (const size of Object.keys(sizes)) {
-    Object.defineProperty(Model.prototype, size + Name, {
+    Object.defineProperty(this.prototype, size + Name, {
       get: function () { return this[`${name}Path`](size) }
     })
   }
+
+  Object.assign(this.prototype, {
+
+    // uploadImage
+    [`upload${Name}`] (req) {
+      return new Promise((resolve, reject) => {
+        let fileFound = false
+        const busboy = new Busboy({headers: req.headers})
+
+        busboy.on('file', (fieldName, file, fileName, encoding, mime) => {
+          if (fileFound) return file.resume()
+          fileFound = true
+
+          Promise.all([
+            put(this[`${name}Key`]('original'), strip(file), mime),
+            this[`convert${Name}`](file)
+          ]).then(() => resolve())
+        })
+
+        busboy.on('finish', () => { if (!fileFound) resolve() })
+
+        req.pipe(busboy)
+      })
+    },
+
+    // convertImage
+    [`convert${Name}`] (file) {
+      // Use the original by default.
+      if (!file) {
+        file = s3.getObject({
+          Bucket: BUCKET,
+          Key: this[`${name}Key`]('original')
+        }).createReadStream()
+      }
+
+      return Promise.all(Object.keys(sizes).map((size) => (
+        put(this[`${name}Key`](size), convert(file, sizes[size]), 'image/jpeg')
+      ))).then(() => (
+        this.update({[`${name}UpdatedAt`]: new Date()})
+      ))
+    },
+
+    // imageKey
+    [`${name}Key`] (size) {
+      return `${this.tableName}/${this.id}/${name}/${size}`
+    },
+
+    // imagePath
+    [`${name}Path`] (size) {
+      const updatedAt = this[`${name}UpdatedAt`]
+      if (updatedAt) {
+        const key = this[`${name}Key`](size)
+        return `/assets/${key}?${+updatedAt}`
+      }
+      if (defaults) return assets.path(defaults[this.id % defaults.length])
+    }
+
+  })
 }
