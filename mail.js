@@ -6,9 +6,9 @@ const ses = new aws.SES({
   region: 'us-east-1'
 })
 
-module.exports = (req, res, next) => {
-  req.mail = (mail, locals) => {
-    locals = Object.assign({}, req.app.locals, res.locals, locals)
+module.exports = (request, response, next) => {
+  request.mail = (mail, locals) => {
+    locals = Object.assign({}, request.app.locals, response.locals, locals)
     const options = {
       Destination: {
         ToAddresses: locals.to,

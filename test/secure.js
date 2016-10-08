@@ -10,7 +10,7 @@ test('redirect from http to https when enabled', function (t) {
   process.env.SECURE = '1'
 
   let app = ozy()
-  app.get('/', function (req, res) { res.status(500).end() })
+  app.get('/', function (request, response) { response.status(500).end() })
 
   request(app).get('/')
   .set('x-forwarded-proto', 'http')
@@ -22,7 +22,7 @@ test('pass through https to next handler when enabled', function (t) {
   process.env.SECURE = '1'
 
   let app = ozy()
-  app.get('/', function (req, res) { res.end('ok') })
+  app.get('/', function (request, response) { response.end('ok') })
 
   request(app).get('/')
   .set('x-forwarded-proto', 'https')
@@ -35,7 +35,7 @@ test('pass through http when disabled', function (t) {
   process.env.SECURE = null
 
   let app = ozy()
-  app.get('/', function (req, res) { res.end('ok') })
+  app.get('/', function (request, response) { response.end('ok') })
 
   request(app).get('/')
   .set('x-forwarded-proto', 'http')
@@ -48,7 +48,7 @@ test('pass through https when disabled', function (t) {
   process.env.SECURE = null
 
   let app = ozy()
-  app.get('/', function (req, res) { res.end('ok') })
+  app.get('/', function (request, response) { response.end('ok') })
 
   request(app).get('/')
   .set('x-forwarded-proto', 'https')

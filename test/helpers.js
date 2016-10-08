@@ -7,17 +7,17 @@ const helpers = require('../helpers')
 
 app.set('views', 'test/views')
 
-app.get('/500', (req, res) => {
-  res.error(new Error('test'))
+app.get('/500', (request, response) => {
+  response.error(new Error('test'))
 })
 
-app.get('/422', (req, res) => {
+app.get('/422', (request, response) => {
   const error = new Error('invalid')
   error.model = {errors: {x: 1}}
-  res.error(error)
+  response.error(error)
 })
 
-test('res.error 500', (t) => {
+test('response.error 500', (t) => {
   request(app)
   .get('/500')
   .set('Content-Type', 'application/json')
@@ -25,7 +25,7 @@ test('res.error 500', (t) => {
   .end(t.end)
 })
 
-test('res.error 422', (t) => {
+test('response.error 422', (t) => {
   request(app)
   .get('/422')
   .expect({x: 1})
@@ -33,20 +33,20 @@ test('res.error 422', (t) => {
   .end(t.end)
 })
 
-test('locals.req === req', (t) => {
-  const req = {}
-  const res = {locals: {}}
-  helpers(req, res, () => {
-    t.is(res.locals.req, req)
+test('locals.request === request', (t) => {
+  const request = {}
+  const response = {locals: {}}
+  helpers(request, response, () => {
+    t.is(response.locals.request, request)
     t.end()
   })
 })
 
-test('req.permit', (t) => {
-  const req = {body: {id: 1, name: 'test', count: 25}}
-  const res = {locals: {}}
-  helpers(req, res, () => {
-    t.deepEqual(req.permit('name', 'count', 'missing'), {
+test('request.permit', (t) => {
+  const request = {body: {id: 1, name: 'test', count: 25}}
+  const response = {locals: {}}
+  helpers(request, response, () => {
+    t.deepEqual(request.permit('name', 'count', 'missing'), {
       name: 'test',
       count: 25
     })
@@ -54,46 +54,46 @@ test('req.permit', (t) => {
   })
 })
 
-test('req.permit allows explicitly null values', (t) => {
-  const req = {body: {street: null}}
-  const res = {locals: {}}
-  helpers(req, res, () => {
-    t.deepEqual(req.permit('street'), {street: null})
+test('request.permit allows explicitly null values', (t) => {
+  const request = {body: {street: null}}
+  const response = {locals: {}}
+  helpers(request, response, () => {
+    t.deepEqual(request.permit('street'), {street: null})
     t.end()
   })
 })
 
-test('res.locals.json', (t) => {
-  const req = {}
-  const res = {locals: {}}
-  helpers(req, res, () => {
+test('response.locals.json', (t) => {
+  const request = {}
+  const response = {locals: {}}
+  helpers(request, response, () => {
     const expected =
       `<script type='application/json' id='id'>"</<!-<\\u0021--<\\/script<\\u0021--<\\/script"</script>`
-    t.is(res.locals.json('id', '</<!-<!--</script<!--</script'), expected)
+    t.is(response.locals.json('id', '</<!-<!--</script<!--</script'), expected)
     t.end()
   })
 })
 
-test('res.locals.json handles undefined', (t) => {
-  const req = {}
-  const res = {locals: {}}
-  helpers(req, res, () => {
+test('response.locals.json handles undefined', (t) => {
+  const request = {}
+  const response = {locals: {}}
+  helpers(request, response, () => {
     const expected = "<script type='application/json' id='test'>null</script>"
-    t.is(res.locals.json('test', undefined), expected)
+    t.is(response.locals.json('test', undefined), expected)
     t.end()
   })
 })
 
 test('signIn/signOut', (t) => {
-  const req = {session: {}}
-  const res = {locals: {}}
-  helpers(req, res, () => {
-    req.signIn(null)
-    t.is(req.session.userId, undefined)
-    req.signIn({id: 1})
-    t.is(req.session.userId, 1)
-    req.signOut()
-    t.is(req.session, null)
+  const request = {session: {}}
+  const response = {locals: {}}
+  helpers(request, response, () => {
+    request.signIn(null)
+    t.is(request.session.userId, undefined)
+    request.signIn({id: 1})
+    t.is(request.session.userId, 1)
+    request.signOut()
+    t.is(request.session, null)
     t.end()
   })
 })

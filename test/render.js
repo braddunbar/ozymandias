@@ -7,9 +7,9 @@ test('render a function', (t) => {
   const app = require('../')()
   app.locals = {x: 1, y: 1, z: 1}
 
-  app.get('/', (req, res) => {
-    res.locals = {y: 2, z: 2}
-    res.render(({x, y, z}) => `${x}${y}${z}`, {z: 3})
+  app.get('/', (request, response) => {
+    response.locals = {y: 2, z: 2}
+    response.render(({x, y, z}) => `${x}${y}${z}`, {z: 3})
   })
 
   request(app).get('/').expect('123').expect(200).end(t.end)
@@ -20,9 +20,9 @@ test('render a function with layout', (t) => {
   app.locals = {x: 1, y: 1, z: 1}
   app.set('layout', ({x, y, z}, content) => `${z}${y}${x}${content}`)
 
-  app.get('/', (req, res) => {
-    res.locals = {y: 2, z: 2}
-    res.render(({x, y, z}) => `${x}${y}${z}`, {z: 3})
+  app.get('/', (request, response) => {
+    response.locals = {y: 2, z: 2}
+    response.render(({x, y, z}) => `${x}${y}${z}`, {z: 3})
   })
   request(app).get('/').expect('321123').expect(200).end(t.end)
 })

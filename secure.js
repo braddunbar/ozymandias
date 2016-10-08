@@ -1,6 +1,6 @@
 'use strict'
 
-module.exports = function (req, res, next) {
-  if (req.headers['x-forwarded-proto'] === 'https') return next()
-  res.redirect(`https://${req.hostname}${req.originalUrl}`)
+module.exports = function (request, response, next) {
+  if (request.headers['x-forwarded-proto'] === 'https') return next()
+  response.redirect(`https://${request.hostname}${request.originalUrl}`)
 }

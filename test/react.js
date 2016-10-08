@@ -11,11 +11,11 @@ app.set('layout', (locals, content) => `layout ${content}`)
 app.set('component', ({url, x}) => React.createElement('a', {href: url}, x))
 app.set('layout.json', (set, {y}) => { set({y}) })
 
-app.get('/react', (req, res) => {
-  res.react(view, {
+app.get('/react', (request, response) => {
+  response.react(view, {
     foo: 1,
     bar: 2,
-    x: req.query.x,
+    x: request.query.x,
     y: 3
   })
 })
@@ -45,12 +45,12 @@ test('render state as HTML', (t) => {
   .end(t.end)
 })
 
-app.get('/component', (req, res) => {
-  req.component = () => React.createElement('a', {}, 'custom component')
-  res.react(view, {})
+app.get('/component', (request, response) => {
+  request.component = () => React.createElement('a', {}, 'custom component')
+  response.react(view, {})
 })
 
-test('use req.component if provided', (t) => {
+test('use request.component if provided', (t) => {
   request(app)
   .get('/component')
   .set('Accept', 'text/html')
@@ -58,8 +58,8 @@ test('use req.component if provided', (t) => {
   .end(t.end)
 })
 
-app.get('/nolocals', (req, res) => {
-  res.react(view)
+app.get('/nolocals', (request, response) => {
+  response.react(view)
 })
 
 test('react without locals', (t) => {
@@ -69,8 +69,8 @@ test('react without locals', (t) => {
   .end(t.end)
 })
 
-app.get('/noview', (req, res) => {
-  res.react()
+app.get('/noview', (request, response) => {
+  response.react()
 })
 
 test('react without a view', (t) => {

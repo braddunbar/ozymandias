@@ -2,12 +2,12 @@
 
 const Json = require('remora')
 
-module.exports = (req, res, next) => {
-  const original = res.json.bind(res)
+module.exports = (request, response, next) => {
+  const original = response.json.bind(response)
 
-  res.json = (value, locals) => {
+  response.json = (value, locals) => {
     if (typeof value !== 'function') return original(value)
-    const json = new Json(Object.assign(res.locals, locals))
+    const json = new Json(Object.assign(response.locals, locals))
     json.set(value)
     return original(json.result)
   }

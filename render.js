@@ -1,24 +1,24 @@
 'use strict'
 
-module.exports = (req, res, next) => {
-  const render = res.render.bind(res)
+module.exports = (request, response, next) => {
+  const render = response.render.bind(response)
 
   // Render a function.
-  res.render = (...args) => {
+  response.render = (...args) => {
     const [view, options] = args
 
     // Call through unless the view is a function.
     if (typeof view !== 'function') return render(...args)
 
-    const {app} = req
+    const {app} = request
     const layout = app.get('layout')
-    const locals = Object.assign({}, app.locals, res.locals, options)
+    const locals = Object.assign({}, app.locals, response.locals, options)
     let body = view(locals)
 
     // Layout?
     if (typeof layout === 'function') body = layout(locals, body)
 
-    res.send(body)
+    response.send(body)
   }
 
   next()

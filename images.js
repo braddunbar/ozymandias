@@ -49,10 +49,10 @@ exports.hasImage = function ({defaults, name, sizes}) {
   Object.assign(this.prototype, {
 
     // uploadImage
-    [`upload${Name}`] (req) {
+    [`upload${Name}`] (request) {
       return new Promise((resolve, reject) => {
         let fileFound = false
-        const busboy = new Busboy({headers: req.headers})
+        const busboy = new Busboy({headers: request.headers})
 
         busboy.on('file', (fieldName, file, fileName, encoding, mime) => {
           if (fileFound) return file.resume()
@@ -66,7 +66,7 @@ exports.hasImage = function ({defaults, name, sizes}) {
 
         busboy.on('finish', () => { if (!fileFound) resolve() })
 
-        req.pipe(busboy)
+        request.pipe(busboy)
       })
     },
 

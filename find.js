@@ -6,14 +6,14 @@ module.exports = function (param, property, scope) {
     property = param
     param = `${property}Id`
   }
-  this.param(param, (req, res, next, id) => {
+  this.param(param, (request, response, next, id) => {
     if (!id) return next()
     scope().find(id).then((model) => {
       if (model) {
-        req[property] = res.locals[property] = model
+        request[property] = response.locals[property] = model
         return next()
       }
-      res.notfound()
-    }).catch(res.error)
+      response.notfound()
+    }).catch(response.error)
   })
 }

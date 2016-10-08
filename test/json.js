@@ -6,9 +6,9 @@ const app = require('../')()
 
 // function
 
-app.get('/function', (req, res) => {
-  res.locals.x = 1
-  res.json((set, {x, y}) => set({x, y}), {y: 2})
+app.get('/function', (request, response) => {
+  response.locals.x = 1
+  response.json((set, {x, y}) => set({x, y}), {y: 2})
 })
 
 test('render a json function', (t) => {
@@ -20,8 +20,8 @@ test('render a json function', (t) => {
 
 // object
 
-app.get('/object', (req, res) => {
-  res.json({x: 1, y: 2})
+app.get('/object', (request, response) => {
+  response.json({x: 1, y: 2})
 })
 
 test('render a json object', (t) => {

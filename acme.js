@@ -2,7 +2,7 @@
 
 const router = module.exports = require('express').Router()
 
-router.get('*', (req, res) => {
-  res.set('Content-Type', 'text/plain')
-  res.send(process.env.ACME || '')
+router.get('*', (request, response) => {
+  response.set('Content-Type', 'text/plain')
+  response.send(process.env.ACME || '')
 })

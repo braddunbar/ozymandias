@@ -7,8 +7,8 @@ let request = require('supertest')
 test('parse json bodies', function (t) {
   let app = ozy()
 
-  app.post('/json', function (req, res) {
-    res.json(req.body)
+  app.post('/json', function (request, response) {
+    response.json(request.body)
   })
 
   let values = {x: 1, y: 2, z: 3}
@@ -24,8 +24,8 @@ test('parse json bodies', function (t) {
 test('parse urlencoded bodies', function (t) {
   let app = ozy()
 
-  app.post('/urlencoded', function (req, res) {
-    res.json(req.body)
+  app.post('/urlencoded', function (request, response) {
+    response.json(request.body)
   })
 
   request(app)

@@ -6,8 +6,8 @@ const request = require('supertest')
 test('send mail', (t) => {
   const app = require('../')()
 
-  app.get('/', (req, res) => {
-    const mail = req.mail({html: () => '<h1>test</h1>', text: () => 'test'}, {
+  app.get('/', (request, response) => {
+    const mail = request.mail({html: () => '<h1>test</h1>', text: () => 'test'}, {
       send: false,
       to: ['to@example.com'],
       cc: ['cc@example.com'],
@@ -40,10 +40,10 @@ test('send mail', (t) => {
       Source: 'source@example.com'
     })
 
-    res.end()
+    response.end()
   })
 
-  app.use((error, req, res, next) => t.end(error))
+  app.use((error, request, response, next) => t.end(error))
 
   request(app)
   .get('/')
