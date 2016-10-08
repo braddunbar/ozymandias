@@ -7,8 +7,16 @@ const args = process.argv.slice(3)
 const file = path.join(__dirname, `ozy-${process.argv[2]}`)
 let command = `${file} ${args.join(' ')}`
 
-if (process.env.NODE_ENV !== 'production') {
-  command = `env $(cat .env | xargs) ${command}`
+switch (process.env.NODE_ENV) {
+  case 'production':
+    break
+
+  case 'test':
+    break
+
+  default:
+    command = `env $(cat .env | xargs) ${command}`
+    break
 }
 
 try {
