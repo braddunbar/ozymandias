@@ -11,4 +11,8 @@ if (process.env.NODE_ENV !== 'production') {
   command = `env $(cat .env | xargs) ${command}`
 }
 
-execSync(command, {stdio: 'inherit'})
+try {
+  execSync(command, {stdio: 'inherit'})
+} catch (error) {
+  process.exit(1)
+}

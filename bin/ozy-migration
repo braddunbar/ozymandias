@@ -1,0 +1,10 @@
+#!/bin/bash -e
+
+if [ -z "$1" ]; then
+  printf "Please supply a migration name.\n"
+  exit 1
+fi
+
+mkdir -p migrate
+
+$EDITOR migrate/$(date +'%Y-%m-%d-%H%M')-$1.sql

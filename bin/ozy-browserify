@@ -9,4 +9,8 @@ if (process.env.NODE_ENV === 'production') {
   command += ' | uglifyjs -m -c warnings=false'
 }
 
-execSync(command, {stdio: 'inherit'})
+try {
+  execSync(command, {stdio: 'inherit'})
+} catch (error) {
+  process.exit(1)
+}
