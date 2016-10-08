@@ -3,10 +3,10 @@
 'use strict'
 
 const {execSync} = require('child_process')
-const bundle = `ozy rollup ${process.argv[2]} | browserify -`
+const command = `ozy rollup ${process.argv[2]} | browserify -`
 
 if (process.env.NODE_ENV === 'production') {
-  execSync(`${bundle} | uglifyjs -m -c warnings=false`, {stdio: 'inherit'})
-} else {
-  execSync(bundle, {stdio: 'inherit'})
+  command += ' | uglifyjs -m -c warnings=false'
 }
+
+execSync(command, {stdio: 'inherit'})
