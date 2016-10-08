@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 'use strict'
 
 const fs = require('fs')
@@ -38,14 +40,12 @@ const assets = {
 }
 
 // Roll it up!
-module.exports = (file) => (
-  rollup({
-    entry: file,
-    onwarn: () => {},
-    plugins: [buble({objectAssign: "require('object-assign')"}), assets]
-  }).then((code) => (
-    code.generate({format: 'cjs'}).code
-  )).catch((error) => {
-    console.error(error.stack)
-  })
-)
+rollup({
+  entry: process.argv[2],
+  onwarn: () => {},
+  plugins: [buble({objectAssign: "require('object-assign')"}), assets]
+}).then((code) => (
+  console.log(code.generate({format: 'cjs'}).code)
+)).catch((error) => {
+  console.error(error.stack)
+})

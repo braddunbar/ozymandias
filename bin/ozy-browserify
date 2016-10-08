@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+
+'use strict'
+
+const {execSync} = require('child_process')
+const bundle = `ozy rollup ${process.argv[2]} | browserify -`
+
+if (process.env.NODE_ENV === 'production') {
+  execSync(`${bundle} | uglifyjs -m -c warnings=false`, {stdio: 'inherit'})
+} else {
+  execSync(bundle, {stdio: 'inherit'})
+}
