@@ -13,7 +13,7 @@
     "url": "https://github.com/braddunbar/ozymandias.git"
   },
   "scripts": {
-    "test": "./bin/test"
+    "test": "env $(cat .testenv | xargs) ./bin/test"
   },
   "dependencies": {
     "aws-sdk": "2.6.6",

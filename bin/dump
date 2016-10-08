@@ -1,7 +1,0 @@
-#!/bin/sh -e
-
-pg_dump \
-  --clean \
-  --no-owner \
-  --no-privileges \
-  'postgres://localhost/ozymandias' > schema.sql

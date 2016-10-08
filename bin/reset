@@ -1,5 +1,0 @@
-#!/bin/sh -e
-
-DATABASE_URL='postgres://localhost/ozymandias'
-psql $DATABASE_URL < schema.sql > /dev/null
-./bin/resequence

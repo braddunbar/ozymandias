@@ -1,12 +1,10 @@
 #!/bin/sh -e
 
-
+# Lint!
 standard
-./bin/reset
 
-DATABASE_URL='postgres://localhost/ozymandias' \
-ID='ozymandias' \
-NODE_ENV='test' \
-SECRET='secret' \
-SOURCE_EMAIL='source@example.com' \
+# Reset state.
+./bin/ozy.js reset > /dev/null
+
+# Kick the tires.
 tape test/index.js

@@ -13,43 +13,23 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
-SET search_path = public, pg_catalog;
-
-ALTER TABLE ONLY public.tokens DROP CONSTRAINT tokens_user_id_fkey;
-ALTER TABLE ONLY public.posts DROP CONSTRAINT posts_user_id_fkey;
-ALTER TABLE ONLY public.comments DROP CONSTRAINT comments_user_id_fkey;
-ALTER TABLE ONLY public.comments DROP CONSTRAINT comments_post_id_fkey;
-DROP TRIGGER update_post_search ON public.posts;
-DROP INDEX public.post_search_index;
-ALTER TABLE ONLY public.users DROP CONSTRAINT users_pkey;
-ALTER TABLE ONLY public.tokens DROP CONSTRAINT tokens_pkey;
-ALTER TABLE ONLY public.posts DROP CONSTRAINT posts_pkey;
-ALTER TABLE ONLY public.comments DROP CONSTRAINT comments_pkey;
-ALTER TABLE public.users ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.posts ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.comments ALTER COLUMN id DROP DEFAULT;
-DROP SEQUENCE public.users_id_seq;
-DROP TABLE public.users;
-DROP TABLE public.tokens;
-DROP SEQUENCE public.posts_id_seq;
-DROP TABLE public.posts;
-DROP SEQUENCE public.comments_id_seq;
-DROP TABLE public.comments;
-DROP EXTENSION plpgsql;
-DROP SCHEMA public;
+DROP DATABASE ozymandias;
 --
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
+-- Name: ozymandias; Type: DATABASE; Schema: -; Owner: -
 --
 
-CREATE SCHEMA public;
+CREATE DATABASE ozymandias WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'en_US.UTF-8' LC_CTYPE = 'en_US.UTF-8';
 
 
---
--- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -
---
+\connect ozymandias
 
-COMMENT ON SCHEMA public IS 'standard public schema';
-
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
