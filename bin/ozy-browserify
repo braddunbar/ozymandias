@@ -3,7 +3,7 @@
 'use strict'
 
 const {execSync} = require('child_process')
-const command = `ozy rollup ${process.argv[2]} | browserify -`
+let command = `ozy rollup ${process.argv[2]} | browserify -`
 
 if (process.env.NODE_ENV === 'production') {
   command += ' | uglifyjs -m -c warnings=false'
