@@ -5,7 +5,8 @@
 const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
-const rollup = require('rollup').rollup
+const resolve = require('resolve')
+const {rollup} = require('rollup')
 const buble = require('rollup-plugin-buble')
 
 // Insert assets into rollup bundle directly.
@@ -35,6 +36,12 @@ const assets = {
     }
 
     return {ast, code, map: {mappings: ''}}
+  },
+
+  resolveId (importee, importer) {
+    if (/^ozymandias/.test(importee)) {
+      return resolve.sync(importee, {basedir: process.cwd()})
+    }
   }
 
 }
