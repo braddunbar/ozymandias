@@ -51,7 +51,7 @@ export default (url, options = {}) => new Promise((resolve, reject) => {
     if (request.status === 0) return
     const error = new Error('XHR Error')
     error.url = url
-    error.status = status
+    error.status = request.status
     reject(error)
   })
 
