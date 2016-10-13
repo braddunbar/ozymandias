@@ -42,3 +42,13 @@ test('render state as HTML', (t) => {
   .expect(`<div id='root'><em data-reactroot="" data-reactid="1" data-react-checksum="1647120041">1</em></div>`)
   .end(t.end)
 })
+
+test('return html for browser accept value', (t) => {
+  t.app.use(get('/', function *() { this.react() }))
+
+  t.agent.get('/')
+  .set('accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
+  .expect('content-type', /html/)
+  .expect(200)
+  .end(t.end)
+})

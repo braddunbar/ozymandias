@@ -16,15 +16,17 @@ module.exports = {
       version: version
     })
 
-    if (this.accepts('json')) {
-      this.body = state
-      return
+    switch (this.accepts('html', 'json')) {
+      case 'html':
+        const element = React.createElement(this.client, toJSON(state))
+        this.state.state = state
+        this.body = `<div id='root'>${ReactDOM.renderToString(element)}</div>`
+        break
+
+      case 'json':
+        this.body = state
+        break
     }
-
-    const element = React.createElement(this.client, toJSON(state))
-
-    this.state.state = state
-    this.body = `<div id='root'>${ReactDOM.renderToString(element)}</div>`
   }
 
 }
