@@ -2,12 +2,11 @@
 
 const test = require('./test')
 const React = require('react')
-const {get} = require('koa-route')
 
 test('render state as json', (t) => {
-  t.app.use(get('/', function *() {
+  t.app.use(function *() {
     this.react({x: 1})
-  }))
+  })
 
   t.agent
   .get('/?x=1')
@@ -25,7 +24,7 @@ test('render state as json', (t) => {
 test('render state as HTML', (t) => {
   t.app.context.client = ({x}) => React.createElement('em', {}, x)
 
-  t.app.use(get('/', function *() {
+  t.app.use(function *() {
     this.react({x: 1})
     t.deepEqual(this.state.state, {
       x: 1,
@@ -34,7 +33,7 @@ test('render state as HTML', (t) => {
       url: '/?x=1',
       version: '99914b932bd37a50b983c5e7c90ae93b'
     })
-  }))
+  })
 
   t.agent
   .get('/?x=1')
@@ -44,11 +43,25 @@ test('render state as HTML', (t) => {
 })
 
 test('return html for browser accept value', (t) => {
-  t.app.use(get('/', function *() { this.react() }))
+  t.app.use(function *() { this.react() })
 
   t.agent.get('/')
   .set('accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
   .expect('content-type', /html/)
   .expect(200)
   .end(t.end)
+})
+
+test('toJSON', (t) => {
+  t.app.context.client = ({x}) => {
+    t.is(x, 1)
+    return null
+  }
+
+  t.app.use(function *() {
+    this.react({x: {toJSON () { return 1 }}})
+    t.is(this.state.state.x, 1)
+  })
+
+  t.agent.get('/').expect(200).end(t.end)
 })

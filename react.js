@@ -18,9 +18,13 @@ module.exports = {
 
     switch (this.accepts('html', 'json')) {
       case 'html':
-        const element = React.createElement(this.client, toJSON(state))
-        this.state.state = state
-        this.body = `<div id='root'>${ReactDOM.renderToString(element)}</div>`
+        // Make sure the client/server state match.
+        this.state.state = toJSON(state)
+
+        const element = React.createElement(this.client, this.state.state)
+        const html = ReactDOM.renderToString(element)
+
+        this.body = `<div id='root'>${html}</div>`
         break
 
       case 'json':
