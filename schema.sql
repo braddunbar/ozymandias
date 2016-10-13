@@ -231,8 +231,8 @@ COPY tokens (id, expires_at, user_id) FROM stdin;
 --
 
 COPY users (id, email, first, last, birthday, password, created_at, updated_at, is_admin) FROM stdin;
-1	brad@example.com	Brad	Dunbar	1984-05-10	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:36:14.869714-05	2015-12-05 10:36:20.117449-05	f
-2	kim@example.com	Kim	Dunbar	1985-11-16	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:36:14.869714-05	2015-12-05 10:36:20.117449-05	f
+1	brad@example.com	Brad	Dunbar	1984-05-10	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:36:14.869714-05	2015-12-05 10:36:20.117449-05	t
+2	kim@example.com	Kim	Dunbar	1985-11-16	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:36:14.869714-05	2015-12-05 10:36:20.117449-05	t
 3	jd@example.com	John	Doe	\N	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:36:14.869714-05	2015-12-05 10:36:20.117449-05	f
 4	test@example.com			\N	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:41:16.14273-05	2015-12-05 10:41:16.14273-05	f
 \.

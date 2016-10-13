@@ -1,62 +1,60 @@
 'use strict'
 
 // Prevent XSS attacks in embedded JSON.
-const escapeJson = (json) => (
-  json.replace(/<\/script|<!--/g, (match) => {
-    switch (match) {
-      case '<!--': return '<\\u0021--'
-      case '</script': return '<\\/script'
-    }
-  })
-)
+const escapeJson = (json) => json.replace(/<\/script|<!--/g, (match) => {
+  switch (match) {
+    case '<!--': return '<\\u0021--'
+    case '</script': return '<\\/script'
+  }
+})
 
-module.exports = function (request, response, next) {
+module.exports = {
+
   // Attach specific params.
-  request.permit = function (...keys) {
+  permit (...keys) {
     const result = {}
-    const body = request.body
+    const {body} = this.request
     for (const key of keys) {
       if (body[key] !== undefined) result[key] = body[key]
     }
     return result
-  }
+  },
 
   // Sign in a user
-  request.signIn = function (user) {
-    if (user) request.session.userId = user.id
-  }
+  signIn (user) {
+    if (user) this.session.userId = user.id
+  },
 
   // Sign out
-  request.signOut = function () {
-    request.session = null
-  }
-
-  // Put the request in the locals for convenience.
-  response.locals.request = request
+  signOut () {
+    this.session = null
+  },
 
   // Log an error and render a 500 page.
-  response.error = function (error) {
+  error (error) {
     if (error.message === 'invalid' && error.model) {
-      response.status(422).json(error.model.errors)
+      this.status = 422
+      this.body = error.model.errors
       return
     }
     console.log(error.stack)
-    response.status(500).react()
-  }
+    this.status = 500
+    this.react()
+  },
 
-  response.unauthorized = function () {
-    response.status(401).react()
-  }
+  unauthorized () {
+    this.status = 401
+    this.react()
+  },
 
-  response.notfound = function () {
-    response.status(404).react()
-  }
+  notfound () {
+    this.status = 404
+    this.react()
+  },
 
-  // JSON script tags
-  response.locals.json = function (id, data) {
-    const json = escapeJson(JSON.stringify(data || null))
+  json (id, value) {
+    const json = escapeJson(JSON.stringify(value || null))
     return `<script type='application/json' id='${id}'>${json}</script>`
   }
 
-  next()
 }

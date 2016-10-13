@@ -1,81 +1,44 @@
 'use strict'
 
 const test = require('./test')
-const request = require('supertest')
 const React = require('react')
-
-const app = require('../')()
-const view = (set, locals) => set(locals, 'foo', 'bar', 'x')
-
-app.set('layout', (locals, content) => `layout ${content}`)
-app.set('component', ({url, x}) => React.createElement('a', {href: url}, x))
-app.set('layout.json', (set, {y}) => { set({y}) })
-
-app.get('/react', (request, response) => {
-  response.react(view, {
-    foo: 1,
-    bar: 2,
-    x: request.query.x,
-    y: 3
-  })
-})
+const {get} = require('koa-route')
 
 test('render state as json', (t) => {
-  request(app)
-  .get('/react?x=y')
+  t.app.use(get('/', function *() {
+    this.react({x: 1})
+  }))
+
+  t.agent
+  .get('/?x=1')
   .set('Accept', 'application/json')
-  .expect({
-    foo: 1,
-    bar: 2,
-    path: '/react',
-    statusCode: 200,
-    url: '/react?x=y',
-    version: '99914b932bd37a50b983c5e7c90ae93b',
-    x: 'y',
-    y: 3
+  .expect(200, {
+    x: 1,
+    path: '/',
+    statusCode: 404,
+    url: '/?x=1',
+    version: '99914b932bd37a50b983c5e7c90ae93b'
   })
   .end(t.end)
 })
 
 test('render state as HTML', (t) => {
-  request(app)
-  .get('/react?x=y')
+  t.app.context.client = ({x}) => React.createElement('em', {}, x)
+
+  t.app.use(get('/', function *() {
+    this.react({x: 1})
+    t.deepEqual(this.state.state, {
+      x: 1,
+      path: '/',
+      statusCode: 404,
+      url: '/?x=1',
+      version: '99914b932bd37a50b983c5e7c90ae93b'
+    })
+  }))
+
+  t.agent
+  .get('/?x=1')
   .set('Accept', 'text/html')
-  .expect('layout <div id=\'root\'><a href="/react?x=y" data-reactroot="" data-reactid="1" data-react-checksum="2015761408">y</a></div>')
-  .end(t.end)
-})
-
-app.get('/component', (request, response) => {
-  request.component = () => React.createElement('a', {}, 'custom component')
-  response.react(view, {})
-})
-
-test('use request.component if provided', (t) => {
-  request(app)
-  .get('/component')
-  .set('Accept', 'text/html')
-  .expect('layout <div id=\'root\'><a data-reactroot="" data-reactid="1" data-react-checksum="1290998820">custom component</a></div>')
-  .end(t.end)
-})
-
-app.get('/nolocals', (request, response) => {
-  response.react(view)
-})
-
-test('react without locals', (t) => {
-  request(app)
-  .get('/nolocals')
-  .expect(200)
-  .end(t.end)
-})
-
-app.get('/noview', (request, response) => {
-  response.react()
-})
-
-test('react without a view', (t) => {
-  request(app)
-  .get('/noview')
-  .expect(200)
+  .expect(`<div id='root'><em data-reactroot="" data-reactid="1" data-react-checksum="1647120041">1</em></div>`)
   .end(t.end)
 })

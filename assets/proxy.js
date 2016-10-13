@@ -1,10 +1,13 @@
 'use strict'
 
-const bucket = process.env.BUCKET
+const {BUCKET} = process.env
 const request = require('request')
-const router = module.exports = require('express').Router()
+const {get} = require('koa-route')
 
-router.get('*', ({url}, response) => {
-  if (!bucket) return response.status(404).end()
-  request(`https://s3.amazonaws.com/${bucket}${url}`).pipe(response)
+module.exports = get('/assets/*', function *(next) {
+  if (BUCKET) {
+    this.body = request(`https://s3.amazonaws.com/${BUCKET}${this.url}`)
+  } else {
+    this.status = 404
+  }
 })

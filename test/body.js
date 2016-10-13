@@ -1,19 +1,16 @@
 'use strict'
 
-let ozy = require('../')
-let test = require('./test')
-let request = require('supertest')
+const test = require('./test')
+const {post} = require('koa-route')
 
-test('parse json bodies', function (t) {
-  let app = ozy()
+test('parse json bodies', (t) => {
+  t.app.use(post('/json', function *() {
+    this.body = this.request.body
+  }))
 
-  app.post('/json', function (request, response) {
-    response.json(request.body)
-  })
+  const values = {x: 1, y: 2, z: 3}
 
-  let values = {x: 1, y: 2, z: 3}
-
-  request(app)
+  t.agent
   .post('/json')
   .set('Content-Type', 'application/json')
   .send(JSON.stringify(values))
@@ -21,14 +18,12 @@ test('parse json bodies', function (t) {
   .end(t.end)
 })
 
-test('parse urlencoded bodies', function (t) {
-  let app = ozy()
+test('parse urlencoded bodies', (t) => {
+  t.app.use(post('/urlencoded', function *() {
+    this.body = this.request.body
+  }))
 
-  app.post('/urlencoded', function (request, response) {
-    response.json(request.body)
-  })
-
-  request(app)
+  t.agent
   .post('/urlencoded')
   .set('Content-Type', 'application/x-www-form-urlencoded')
   .send('x=1&y=2&z=3')

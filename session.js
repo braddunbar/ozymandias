@@ -2,103 +2,99 @@
 
 const User = require('./user')
 const Token = require('./token')
-const json = require('./json/session')
 const forgotMail = require('./mail/forgot')
-const router = module.exports = require('./').Router()
+const {del, get, post} = require('koa-route')
 
 // Find User
-const findUser = (request, response, next) => {
-  User.where('trim(lower(email)) = trim(lower(?))', request.body.email).find()
-  .then((user) => {
-    request.user = user
-    next()
-  }).catch(response.error)
-}
+const findUser = (email) => (
+  User.where('trim(lower(email)) = trim(lower(?))', email).find()
+)
 
 // Find Token
-const findToken = (request, response, next) => {
-  Token.include('user')
-  .where('expires_at >= now()')
-  .find(request.params.tokenId)
-  .then((token) => {
-    request.token = token
-    next()
-  }).catch(response.error)
-}
+const findToken = (id) => (
+  Token.include('user').where('expires_at >= now()').find(id)
+)
 
-// Sign In
-router.post('/', findUser, (request, response) => {
-  if (!request.user) {
-    response.status(422).json({
-      email: ['Sorry! We don’t recognize that email.']
-    })
-    return
-  }
+module.exports = [
 
-  // Is the password correct?
-  request.user.authenticate(request.body.password).then((match) => {
-    if (match) {
-      request.signIn(request.user)
-      response.json({})
+  // Sign In
+  post('/session', function *() {
+    const {email, password} = this.request.body
+    const user = yield findUser(email)
+
+    if (!user) {
+      this.status = 422
+      this.body = {email: ['Sorry! We don’t recognize that email.']}
       return
     }
 
-    response.status(422).json({
-      password: ['Sorry! That password is incorrect.']
-    })
-  }).catch(response.error)
-})
+    if (yield user.authenticate(password)) {
+      this.signIn(user)
+      this.body = {}
+    } else {
+      this.status = 422
+      this.body = {password: ['Sorry! That password is incorrect.']}
+    }
+  }),
 
-// Sign Out
-router.delete('/', (request, response) => {
-  request.signOut()
-  response.json({})
-})
+  del('/session', function *() {
+    this.signOut()
+    this.body = {}
+  }),
 
-// Reset
-router.get('/reset/:tokenId', findToken, (request, response) => {
-  response.react(json.reset, {token: request.token})
-})
+  get('/session/reset/:id', function *(id) {
+    const token = yield findToken(id)
+    const state = {}
+    if (token) {
+      state.token = token.id
+      state.email = token.user.email
+    }
+    this.react(state)
+  }),
 
-router.post('/reset/:tokenId', findToken, (request, response) => {
-  if (!request.token) {
-    return response.status(422).json({
-      password: ['Sorry! That token is expired.']
-    })
-  }
+  post('/session/reset/:id', function *(id) {
+    const token = yield findToken(id)
+    const {password} = this.request.body
 
-  if (!request.body.password) {
-    return response.status(422).json({
-      password: ['You must provide a password.']
-    })
-  }
+    if (!token) {
+      this.status = 422
+      this.body = {password: ['Sorry! That token is expired.']}
+      return
+    }
 
-  const {user} = request.token
+    if (!password) {
+      this.status = 422
+      this.body = {password: ['You must provide a password.']}
+      return
+    }
 
-  user.update(request.permit('password')).then(() => {
-    request.signIn(user)
-    response.json({})
-  }).catch(response.error)
-})
+    yield token.user.update(this.permit('password'))
+    this.signIn(token.user)
+    this.body = {}
+  }),
 
-// Forgot
-router.post('/forgot', findUser, (request, response) => {
-  const expiresAt = new Date()
-  expiresAt.setDate(expiresAt.getDate() + 7)
+  post('/session/forgot', function *() {
+    const {email} = this.request.body
+    const user = yield findUser(email)
 
-  if (!request.user) {
-    return response.status(422).json({
-      email: ['Sorry! We don’t recognize that email.']
-    })
-  }
+    if (!user) {
+      this.status = 422
+      this.body = {email: ['Sorry! We don’t recognize that email.']}
+      return
+    }
 
-  Token.create({expiresAt, userId: request.user.id}).then((token) => (
-    request.mail(forgotMail, {
-      to: [request.user.email],
+    const expiresAt = new Date()
+    expiresAt.setDate(expiresAt.getDate() + 7)
+
+    const token = yield Token.create({expiresAt, userId: user.id})
+
+    yield this.mail(forgotMail, {
+      to: [user.email],
       subject: `${process.env.NAME}: Password Reset`,
-      url: `http://${request.get('host')}/session/reset/${token.id}`
+      url: `http://${this.host}/session/reset/${token.id}`
     })
-  )).then(() => {
-    response.json({})
-  }).catch(response.error)
-})
+
+    this.body = {}
+  })
+
+]

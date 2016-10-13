@@ -6,37 +6,28 @@ const ses = new aws.SES({
   region: 'us-east-1'
 })
 
-module.exports = (request, response, next) => {
-  request.mail = (mail, locals) => {
-    locals = Object.assign({}, request.app.locals, response.locals, locals)
+module.exports = {
+
+  mail (mail, state) {
+    state = Object.assign({}, this.state, state)
+
     const options = {
       Destination: {
-        ToAddresses: locals.to,
-        CcAddresses: locals.cc || [],
-        BccAddresses: locals.bcc || []
+        ToAddresses: state.to,
+        CcAddresses: state.cc || [],
+        BccAddresses: state.bcc || []
       },
       Message: {
-        Subject: {
-          Data: locals.subject,
-          Charset: 'utf-8'
-        },
+        Subject: {Data: state.subject, Charset: 'utf-8'},
         Body: {
-          Html: {
-            Data: mail.html(locals),
-            Charset: 'utf-8'
-          },
-          Text: {
-            Data: mail.text(locals),
-            Charset: 'utf-8'
-          }
+          Html: {Data: mail.html(state), Charset: 'utf-8'},
+          Text: {Data: mail.text(state), Charset: 'utf-8'}
         }
       },
       Source: process.env.SOURCE_EMAIL
     }
 
-    if (process.env.NODE_ENV === 'test' || locals.send === false) {
-      return options
-    }
+    if (this.app.env === 'test') return Promise.resolve(options)
 
     return new Promise((resolve, reject) => {
       ses.sendEmail(options, (error, result) => (
@@ -44,5 +35,5 @@ module.exports = (request, response, next) => {
       ))
     })
   }
-  next()
+
 }

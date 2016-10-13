@@ -1,39 +1,51 @@
 'use strict'
 
-const app = require('../')()
 const test = require('./test')
 const User = require('../user')
-const request = require('supertest')
-
-app.set('user', User)
-
-app.post('/signin', (request, response) => {
-  User.find(1).then((user) => {
-    request.signIn(user)
-    response.end()
-  }).catch(response.error)
-})
-
-app.get('/user/id', (request, response) => {
-  response.json({id: request.currentUser && request.currentUser.id})
-})
 
 test('no user', (t) => {
-  request(app)
-  .get('/user/id')
-  .expect(200, {})
-  .end(t.end)
+  t.app.context.User = User
+  t.app.use(function *() {
+    const {admin, currentUser} = this.state
+    t.is(admin, false)
+    t.is(currentUser, null)
+    this.status = 200
+  })
+  t.agent.get('/').end(t.end)
 })
 
 test('fetch a user', (t) => {
-  const agent = request.agent(app)
-  agent.post('/signin')
+  t.app.context.User = User
+  t.app.use(function *() {
+    const {admin, currentUser} = this.state
+    t.is(admin, true)
+    t.is(currentUser.id, 1)
+    this.status = 200
+  })
+
+  t.agent.post('/session')
+  .send({email: 'brad@example.com', password: 'password'})
   .expect(200)
   .end((error) => {
     if (error) return t.end(error)
-    agent.get('/user/id')
-    .set('Accept', 'application/json')
-    .expect(200, {id: 1})
-    .end(t.end)
+    t.agent.get('/').end(t.end)
+  })
+})
+
+test('fetch a non-admin user', (t) => {
+  t.app.context.User = User
+  t.app.use(function *() {
+    const {admin, currentUser} = this.state
+    t.is(admin, false)
+    t.is(currentUser.id, 3)
+    this.status = 200
+  })
+
+  t.agent.post('/session')
+  .send({email: 'jd@example.com', password: 'password'})
+  .expect(200)
+  .end((error) => {
+    if (error) return t.end(error)
+    t.agent.get('/').end(t.end)
   })
 })

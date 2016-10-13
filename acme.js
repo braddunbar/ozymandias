@@ -1,8 +1,9 @@
 'use strict'
 
-const router = module.exports = require('express').Router()
+const {ACME} = process.env
+const {get} = require('koa-route')
 
-router.get('*', (request, response) => {
-  response.set('Content-Type', 'text/plain')
-  response.send(process.env.ACME || '')
+module.exports = get('/.well-known/acme-challenge', function *(next) {
+  this.type = 'text'
+  this.body = ACME || ''
 })

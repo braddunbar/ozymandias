@@ -1,17 +1,21 @@
 'use strict'
 
-const app = require('./')()
+const ozy = require('./')
+const http = require('http')
 const db = require('./db/instance')
 const tape = require('tape')
 const query = db.query
 const request = require('supertest')
 
-app.set('component', () => null)
-app.use('/session', require('./session'))
-
 module.exports = function (name, test) {
   tape(name, (t) => {
-    t.agent = request.agent(app)
+    const app = t.app = ozy()
+
+    // Default client.
+    app.context.client = () => null
+
+    // Supertest!
+    t.agent = request.agent(http.createServer(app.callback()))
 
     // Set up transactions.
     const transaction = db.transaction()

@@ -1,11 +1,8 @@
 'use strict'
 
-module.exports = function (request, response, next) {
-  const id = request.session.userId
-  if (!id) return next()
-  request.app.get('user').find(id).then((user) => {
-    request.currentUser = response.locals.currentUser = user
-    request.admin = response.locals.admin = user && !!user.isAdmin
-    next()
-  }).catch(response.error)
+module.exports = function *(next) {
+  const id = this.session.userId
+  const user = this.state.currentUser = id ? yield this.User.find(id) : null
+  this.state.admin = !!(user && user.isAdmin)
+  yield next
 }

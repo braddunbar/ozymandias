@@ -1,71 +1,61 @@
 'use strict'
 
 const ms = require('ms')
-const body = require('body-parser')
-const express = require('express')
-const session = require('cookie-session')
-const compression = require('compression')
+const koa = require('koa')
+const body = require('koa-bodyparser')
+const _static = require('koa-static')
+const session = require('koa-session')
+const compress = require('koa-compress')
 
 // Wrap up an express app.
 const ozymandias = module.exports = function () {
-  const app = express()
+  const app = koa()
 
-  // No x-powered-by header.
-  app.disable('x-powered-by')
+  // Secrets!
+  app.keys = [process.env.SECRET]
 
-  // Are we in production?
-  const production = app.get('env') === 'production'
-
-  // Use a secure connection?
-  const secure = process.env.SECURE === '1'
+  // Handle errors.
+  app.use(require('./errors'))
 
   // Require a secure connection.
-  if (secure) app.use(require('./secure'))
+  app.use(require('./secure'))
 
   // Compress responses by default.
-  app.use(compression())
+  app.use(compress())
 
   // Static Assets
-  app.use(express.static('public', {
-    etag: false,
-    lastModified: false,
-    maxAge: '1y'
-  }))
+  app.use(_static('public', {maxAge: ms('1y')}))
 
   // S3 Assets
-  app.use('/assets', require('./assets/proxy'))
+  app.use(require('./assets/proxy'))
 
   // Acme Challenge
-  app.use('/.well-known/acme-challenge', require('./acme'))
+  app.use(require('./acme'))
 
   // Parse the request body.
-  app.use(body.json())
-  app.use(body.urlencoded({extended: false}))
+  app.use(body())
 
   // Cookie Session
-  app.use(session({
-    signed: production,
-    secureProxy: secure,
-    name: process.env.ID,
-    secret: process.env.SECRET,
+  app.use(session(app, {
+    key: process.env.ID,
     maxAge: ms('30d')
   }))
 
-  app.use(require('./helpers'))
-  app.use(require('./render'))
-  app.use(require('./mail'))
-  app.use(require('./json'))
-  app.use(require('./react'))
+  // Extend context.
+  Object.assign(app.context,
+    require('./helpers'),
+    require('./mail'),
+    require('./react')
+  )
+
+  // Who's the user?
   app.use(require('./current-user'))
+
+  // Session handlers.
+  for (const handler of require('./session')) app.use(handler)
 
   return app
 }
 
-// Assign some express properties for convenience.
-Object.assign(ozymandias, express)
-
 // DB instance
 ozymandias.db = require('./db/instance')
-
-// Router extensions
-ozymandias.Router.find = require('./find')
