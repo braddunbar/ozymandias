@@ -14,7 +14,7 @@ test('render state as json', (t) => {
   .expect(200, {
     x: 1,
     path: '/',
-    statusCode: 404,
+    statusCode: 200,
     url: '/?x=1',
     version: '99914b932bd37a50b983c5e7c90ae93b'
   })
@@ -29,7 +29,7 @@ test('render state as HTML', (t) => {
     t.deepEqual(this.state.state, {
       x: 1,
       path: '/',
-      statusCode: 404,
+      statusCode: 200,
       url: '/?x=1',
       version: '99914b932bd37a50b983c5e7c90ae93b'
     })
@@ -38,7 +38,7 @@ test('render state as HTML', (t) => {
   t.agent
   .get('/?x=1')
   .set('Accept', 'text/html')
-  .expect(`<div id='root'><em data-reactroot="" data-reactid="1" data-react-checksum="1647120041">1</em></div>`)
+  .expect(200, `<div id='root'><em data-reactroot="" data-reactid="1" data-react-checksum="1647120041">1</em></div>`)
   .end(t.end)
 })
 
@@ -64,4 +64,13 @@ test('toJSON', (t) => {
   })
 
   t.agent.get('/').expect(200).end(t.end)
+})
+
+test('explicit 404 status', (t) => {
+  t.app.use(function *() {
+    this.status = 404
+    this.react()
+    t.is(this.state.state.statusCode, 404)
+  })
+  t.agent.get('/').expect(404).end(t.end)
 })

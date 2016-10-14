@@ -11,7 +11,7 @@ module.exports = {
   react (state = {}) {
     Object.assign(state, {
       path: url.parse(this.originalUrl).pathname,
-      statusCode: this.status,
+      statusCode: this.response._explicitStatus ? this.status : 200,
       url: this.originalUrl,
       version: version
     })
