@@ -48,6 +48,12 @@ const ozymandias = module.exports = function () {
     require('./react')
   )
 
+  // Client state!
+  app.use(function *(next) {
+    this.state.client = {}
+    yield next
+  })
+
   // Who's the user?
   app.use(require('./current-user'))
 
