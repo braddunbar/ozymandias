@@ -59,6 +59,12 @@ test('use a setter', (t) => {
   t.end()
 })
 
+test('toJSON is an empty object by default', (t) => {
+  const user = new User({email: 'brad@example.com'})
+  t.is(JSON.stringify(user), '{}')
+  t.end()
+})
+
 test('find a user', (t) => {
   User.find(1).then((user) => {
     t.is(user.id, 1)

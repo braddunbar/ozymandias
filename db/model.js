@@ -68,6 +68,10 @@ class Model {
     return error
   }
 
+  toJSON () {
+    return {}
+  }
+
   static get table () {
     if (!this._table) {
       this._table = sql.define({
