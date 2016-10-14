@@ -6,6 +6,18 @@ const User = require('./user')
 const Post = require('./post')
 const Comment = require('./comment')
 
+test('child tables must be distinct', (t) => {
+  class Child extends User {}
+  t.ok(User.table !== Child.table)
+  t.end()
+})
+
+test('child relations must be distinct', (t) => {
+  class Child extends User {}
+  t.ok(User.relations !== Child.relations)
+  t.end()
+})
+
 test('connection closed on error', (t) => {
   db.query('this is not valid syntax').then(() => {
     t.end('this should fail')
