@@ -37,7 +37,6 @@
     "pg": "6.1.0",
     "react": "*",
     "react-dom": "*",
-    "request": "2.75.0",
     "resolve": "1.1.7",
     "rimraf": "2.5.4",
     "rollup": "0.36.1",
