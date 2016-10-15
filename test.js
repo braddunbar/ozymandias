@@ -1,5 +1,6 @@
 'use strict'
 
+const co = require('co')
 const ozy = require('./')
 const http = require('http')
 const db = require('./db/instance')
@@ -32,6 +33,6 @@ module.exports = function (name, test) {
       db.query = query
     }
 
-    test(t)
+    co(test, t)
   })
 }

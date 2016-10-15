@@ -3,13 +3,17 @@
 const test = require('./test')
 const User = require('../user')
 
-test('authenticate a user', (t) => {
+test('authenticate a user', function *(t) {
   const hash = '$2a$04$GSyRKrbgj9PWCc.cHQsFJO3nSc0dz.JO..SZBIFBuyPTnquf3OswG'
   const user = new User({password: hash})
-  Promise.all([
-    user.authenticate('secret').then((match) => t.ok(match)),
-    user.authenticate('wrong').then((match) => t.ok(!match))
-  ]).then(() => t.end()).catch(t.end)
+  const [right, wrong] = yield Promise.all([
+    user.authenticate('secret'),
+    user.authenticate('wrong')
+  ])
+
+  t.ok(right)
+  t.ok(!wrong)
+  t.end()
 })
 
 test('email is trimmed', (t) => {
@@ -20,37 +24,29 @@ test('email is trimmed', (t) => {
   t.end()
 })
 
-test('creating a user hashes the password', (t) => {
-  User.create({
+test('creating a user hashes the password', function *(t) {
+  const user = yield User.create({
     email: 'user@example.com',
     password: 'password'
-  }).then((user) => (
-    user.authenticate('password').then((match) => {
-      t.ok(match)
-      t.end()
-    })
-  )).catch(t.end)
+  })
+  t.ok(yield user.authenticate('password'))
+  t.end()
 })
 
-test('updating a user hashes the password', (t) => {
+test('updating a user hashes the password', function *(t) {
   const user = new User({id: 1})
-  user.update({
+  yield user.update({
     email: 'user@example.com',
     password: 'new password'
-  }).then(() => (
-    user.authenticate('new password').then((match) => {
-      t.ok(match)
-      t.end()
-    })
-  )).catch(t.end)
+  })
+  t.ok(yield user.authenticate('new password'))
+  t.end()
 })
 
-test('authenticate a user without a password', (t) => {
+test('authenticate a user without a password', function *(t) {
   const user = new User({id: 1, password: null})
-  user.authenticate('password').then((match) => {
-    t.ok(!match)
-    t.end()
-  }).catch(t.end)
+  t.ok(!(yield user.authenticate('password')))
+  t.end()
 })
 
 test('validate email', (t) => {
@@ -78,27 +74,27 @@ test('validate email', (t) => {
   t.end()
 })
 
-test('validate password on create', (t) => {
-  User.create({password: 'asdf'}).then(() => {
+test('validate password on create', function *(t) {
+  try {
+    yield User.create({password: 'asdf'})
     t.end('password was not validated')
-  })
-  .catch(({message, model}) => {
+  } catch ({message, model}) {
     t.is(message, 'invalid')
     t.deepEqual(model.errors.password, ['Password must be at least eight characters long'])
     t.end()
-  })
+  }
 })
 
-test('validate password on update', (t) => {
-  User.find(1).then((user) => {
-    user.update({password: 'asdf'}).then(() => {
-      t.end('password was not validated')
-    }).catch(({message, model}) => {
-      t.is(message, 'invalid')
-      t.deepEqual(model.errors.password, ['Password must be at least eight characters long'])
-      t.end()
-    })
-  }).catch(t.end)
+test('validate password on update', function *(t) {
+  const user = yield User.find(1)
+  try {
+    yield user.update({password: 'asdf'})
+    t.end('password was not validated')
+  } catch ({message, model}) {
+    t.is(message, 'invalid')
+    t.deepEqual(model.errors.password, ['Password must be at least eight characters long'])
+    t.end()
+  }
 })
 
 test('User#isAdmin accepts falsy/truthy strings', (t) => {

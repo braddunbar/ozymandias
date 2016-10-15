@@ -45,6 +45,7 @@
     "uglify-js": "2.7.3"
   },
   "devDependencies": {
+    "co": "4.6.0",
     "standard": "8.3.0",
     "supertest": "braddunbar/supertest#ipv6",
     "tape": "4.6.2"
