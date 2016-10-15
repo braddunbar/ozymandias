@@ -41,6 +41,12 @@ const ozymandias = module.exports = function () {
     maxAge: ms('30d')
   }))
 
+  // Vary
+  app.use(function *(next) {
+    this.vary('Accept')
+    yield next
+  })
+
   // Extend context.
   Object.assign(app.context,
     require('./helpers'),
