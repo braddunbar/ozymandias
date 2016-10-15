@@ -14,5 +14,7 @@ module.exports = get('/assets/*', function *(next) {
   }
 
   const path = process.env.BUCKET + this.url.replace(/^\/assets/, '')
-  this.body = yield fetch(`https://s3.amazonaws.com/${path}`)
+  const asset = yield fetch(`https://s3.amazonaws.com/${path}`)
+  this.set(asset.headers)
+  this.body = asset
 })
