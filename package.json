@@ -8,6 +8,10 @@
   "author": "Brad Dunbar <dunbarb2@gmail.com> (http://braddunbar.net/)",
   "license": "ISC",
   "description": "Look on my works, ye mighty, and despair!",
+  "engines": {
+    "node": "6.7.0",
+    "npm": "3.10.9"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/braddunbar/ozymandias.git"
