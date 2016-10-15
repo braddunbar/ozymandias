@@ -11,6 +11,8 @@ module.exports = function (name, test) {
   tape(name, (t) => {
     const app = t.app = ozy()
 
+    for (const route of require('./session')) app.use(route)
+
     // Default client.
     app.context.client = () => null
 

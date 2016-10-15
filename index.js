@@ -63,9 +63,6 @@ const ozymandias = module.exports = function () {
   // Who's the user?
   app.use(require('./current-user'))
 
-  // Session handlers.
-  for (const handler of require('./session')) app.use(handler)
-
   return app
 }
 

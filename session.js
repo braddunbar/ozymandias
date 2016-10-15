@@ -44,12 +44,10 @@ module.exports = [
 
   get('/session/reset/:id', function *(id) {
     const token = yield findToken(id)
-    const state = {}
-    if (token) {
-      state.token = token.id
-      state.email = token.user.email
-    }
-    this.react(state)
+    this.react({
+      token: token && token.id,
+      email: token && token.user.email
+    })
   }),
 
   post('/session/reset/:id', function *(id) {
