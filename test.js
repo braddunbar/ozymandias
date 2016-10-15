@@ -33,6 +33,8 @@ module.exports = function (name, test) {
       db.query = query
     }
 
-    co(test, t)
+    co(test, t).catch((error) => {
+      t.end(error)
+    })
   })
 }
