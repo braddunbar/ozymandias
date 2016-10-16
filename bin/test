@@ -7,4 +7,4 @@ standard --fix
 ./bin/ozy.js reset > /dev/null
 
 # Kick the tires.
-tape test/index.js
+tape test/index.js | faucet
