@@ -63,6 +63,12 @@ export default (url, options = {}) => new Promise((resolve, reject) => {
   })
 })
 .catch((error) => {
-  if (error.status !== 422) window.Bugsnag.notifyException(error)
+  if (error.status !== 422) {
+    window.Bugsnag.notifyException(error, 'XHR Error', {
+      response: error.response,
+      status: error.status,
+      url: error.url
+    })
+  }
   throw error
 })
