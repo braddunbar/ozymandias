@@ -3,47 +3,55 @@
 const test = require('./test')
 const {SECURE} = process.env
 
-test('redirect from http to https when enabled', function (t) {
+test('redirect from http to https when enabled', function *(t, {client}) {
   process.env.SECURE = '1'
   t.app.use(function *() { this.status = 200 })
 
-  t.agent.get('/')
-  .set('x-forwarded-proto', 'http')
-  .expect(302)
-  .end(t.end)
+  const response = yield client
+    .get('/')
+    .set('x-forwarded-proto', 'http')
+    .send()
+  response.expect(302)
+  t.end()
 })
 
-test('pass through https to next handler when enabled', function (t) {
+test('pass through https to next handler when enabled', function *(t, {client}) {
   process.env.SECURE = '1'
   t.app.use(function *() { this.status = 200 })
 
-  t.agent.get('/')
-  .set('x-forwarded-proto', 'https')
-  .expect(200)
-  .end(t.end)
+  const response = yield client
+    .get('/')
+    .set('x-forwarded-proto', 'https')
+    .send()
+  response.expect(200)
+  t.end()
 })
 
-test('pass through http when disabled', function (t) {
+test('pass through http when disabled', function *(t, {client}) {
   process.env.SECURE = null
   t.app.use(function *() { this.status = 200 })
 
-  t.agent.get('/')
-  .set('x-forwarded-proto', 'http')
-  .expect(200)
-  .end(t.end)
+  const response = yield client
+    .get('/')
+    .set('x-forwarded-proto', 'http')
+    .send()
+  response.expect(200)
+  t.end()
 })
 
-test('pass through https when disabled', function (t) {
+test('pass through https when disabled', function *(t, {client}) {
   process.env.SECURE = null
   t.app.use(function *() { this.status = 200 })
 
-  t.agent.get('/')
-  .set('x-forwarded-proto', 'https')
-  .expect(200)
-  .end(t.end)
+  const response = yield client
+    .get('/')
+    .set('x-forwarded-proto', 'https')
+    .send()
+  response.expect(200)
+  t.end()
 })
 
-test('Be sure to restore SECURE', function (t) {
+test('Be sure to restore SECURE', function *(t) {
   process.env.SECURE = SECURE
   t.end()
 })

@@ -2,8 +2,8 @@
 
 const test = require('./test')
 
-test('send mail', (t) => {
-  t.app.use(function *() {
+test('send mail', function *(t, {app, client}) {
+  app.use(function *() {
     const options = yield this.mail({
       html: () => '<h1>test</h1>',
       text: () => 'test'
@@ -33,5 +33,7 @@ test('send mail', (t) => {
     this.status = 200
   })
 
-  t.agent.get('/').expect(200).end(t.end)
+  const response = yield client.get('/').send()
+  response.expect(200)
+  t.end()
 })

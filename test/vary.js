@@ -2,11 +2,11 @@
 
 const test = require('./test')
 
-test('all requests include vary header', (t) => {
-  t.app.use(function *() { this.body = {} })
+test('all requests include vary header', function *(t, {app, client}) {
+  app.use(function *() { this.body = {} })
 
-  t.agent.get('/')
-  .expect('vary', /Accept(,|$)/)
-  .expect(200)
-  .end(t.end)
+  const response = yield client.get('/').send()
+  response.expect('vary', /Accept(,|$)/)
+  response.expect(200)
+  t.end()
 })
