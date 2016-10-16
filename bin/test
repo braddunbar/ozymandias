@@ -1,7 +1,7 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 # Lint!
-standard
+standard --fix
 
 # Reset state.
 ./bin/ozy.js reset > /dev/null

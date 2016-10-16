@@ -7,6 +7,7 @@ const db = require('./db/instance')
 const tape = require('tape')
 const query = db.query
 const request = require('supertest')
+const Client = require('test-client')
 
 module.exports = function (name, test) {
   tape(name, (t) => {
@@ -33,7 +34,9 @@ module.exports = function (name, test) {
       db.query = query
     }
 
-    co(test, t).catch((error) => {
+    const client = new Client(app)
+
+    co(test, t, {app, client}).catch((error) => {
       t.end(error)
     })
   })
