@@ -1,7 +1,7 @@
 'use strict'
 
 const fs = require('fs')
-const test = require('tape')
+const test = require('./test')
 const crypto = require('crypto')
 const mkdirp = require('mkdirp')
 const rimraf = require('rimraf')
@@ -14,12 +14,11 @@ const TWO = hash('2')
 const THREE = hash('3')
 const FOUR = hash('4')
 
-test('set up', (t) => {
+test('set up', function *(t) {
   mkdirp.sync('test/public')
-  t.end()
 })
 
-test('hash files and return the asset path', (t) => {
+test('hash files and return the asset path', function *(t) {
   rimraf.sync('test/public/**/*')
   fs.writeFileSync('test/public/test', '1')
   t.deepEqual(manifest('test/public'), {
@@ -27,10 +26,9 @@ test('hash files and return the asset path', (t) => {
     files: {[`assets/test-${ONE}`]: {age: 0, asset: 'test'}}
   })
   t.is(fs.readFileSync(`test/public/assets/test-${ONE}`).toString(), '1')
-  t.end()
 })
 
-test('do not bump age on multiple runs', (t) => {
+test('do not bump age on multiple runs', function *(t) {
   rimraf.sync('test/public/**/*')
   fs.writeFileSync('test/public/test', '1')
   manifest('test/public')
@@ -42,10 +40,9 @@ test('do not bump age on multiple runs', (t) => {
     files: {[`assets/test-${ONE}`]: {age: 0, asset: 'test'}}
   })
   t.is(fs.readFileSync(`test/public/assets/test-${ONE}`).toString(), '1')
-  t.end()
 })
 
-test('write out .manifest.json', (t) => {
+test('write out .manifest.json', function *(t) {
   rimraf.sync('test/public/**/*')
   fs.writeFileSync('test/public/test', '1')
   manifest('test/public')
@@ -54,10 +51,9 @@ test('write out .manifest.json', (t) => {
     assets: {test: `assets/test-${ONE}`},
     files: {[`assets/test-${ONE}`]: {age: 0, asset: 'test'}}
   })
-  t.end()
 })
 
-test('handle file extensions correctly', (t) => {
+test('handle file extensions correctly', function *(t) {
   rimraf.sync('test/public/**/*')
   fs.writeFileSync('test/public/test.txt', '1')
   t.deepEqual(manifest('test/public'), {
@@ -65,10 +61,9 @@ test('handle file extensions correctly', (t) => {
     files: {[`assets/test-${ONE}.txt`]: {age: 0, asset: 'test.txt'}}
   })
   t.is(fs.readFileSync(`test/public/assets/test-${ONE}.txt`).toString(), '1')
-  t.end()
 })
 
-test('handle directories correctly', (t) => {
+test('handle directories correctly', function *(t) {
   rimraf.sync('test/public/**/*')
   mkdirp.sync('test/public/test')
   fs.writeFileSync('test/public/test/test', '1')
@@ -77,18 +72,16 @@ test('handle directories correctly', (t) => {
     files: {[`assets/test/test-${ONE}`]: {age: 0, asset: 'test/test'}}
   })
   t.is(fs.readFileSync(`test/public/assets/test/test-${ONE}`).toString(), '1')
-  t.end()
 })
 
-test('ignore files and directories in public/assets/', (t) => {
+test('ignore files and directories in public/assets/', function *(t) {
   rimraf.sync('test/public/**/*')
   mkdirp.sync('test/public/assets/test/test')
   fs.writeFileSync('test/public/assets/test/test/test', '1')
   t.deepEqual(manifest('test/public'), {assets: {}, files: {}})
-  t.end()
 })
 
-test('read existing manifest', (t) => {
+test('read existing manifest', function *(t) {
   rimraf.sync('test/public/**/*')
   fs.writeFileSync('test/public/test', '1')
   manifest('test/public')
@@ -102,10 +95,9 @@ test('read existing manifest', (t) => {
   })
   t.is(fs.readFileSync(`test/public/assets/test-${ONE}`).toString(), '1')
   t.is(fs.readFileSync(`test/public/assets/test-${TWO}`).toString(), '2')
-  t.end()
 })
 
-test('only keep three versions', (t) => {
+test('only keep three versions', function *(t) {
   rimraf.sync('test/public/**/*')
   fs.writeFileSync('test/public/test', '1')
   manifest('test/public')
@@ -126,10 +118,9 @@ test('only keep three versions', (t) => {
   t.is(fs.readFileSync(`test/public/assets/test-${TWO}`).toString(), '2')
   t.is(fs.readFileSync(`test/public/assets/test-${THREE}`).toString(), '3')
   t.is(fs.readFileSync(`test/public/assets/test-${FOUR}`).toString(), '4')
-  t.end()
 })
 
-test('remove empty directories', (t) => {
+test('remove empty directories', function *(t) {
   rimraf.sync('test/public/**/*')
   mkdirp.sync('test/public/dir')
   fs.writeFileSync('test/public/dir/test', '1')
@@ -145,10 +136,8 @@ test('remove empty directories', (t) => {
   })
   t.ok(!fs.existsSync(`test/public/assets/dir`))
   t.is(fs.readFileSync(`test/public/assets/test-${ONE}`).toString(), '1')
-  t.end()
 })
 
-test('clean up', (t) => {
+test('clean up', function *(t) {
   rimraf.sync('test/public')
-  t.end()
 })

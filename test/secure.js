@@ -12,7 +12,6 @@ test('redirect from http to https when enabled', function *(t, {client}) {
     .set('x-forwarded-proto', 'http')
     .send()
   response.expect(302)
-  t.end()
 })
 
 test('pass through https to next handler when enabled', function *(t, {client}) {
@@ -24,7 +23,6 @@ test('pass through https to next handler when enabled', function *(t, {client}) 
     .set('x-forwarded-proto', 'https')
     .send()
   response.expect(200)
-  t.end()
 })
 
 test('pass through http when disabled', function *(t, {client}) {
@@ -36,7 +34,6 @@ test('pass through http when disabled', function *(t, {client}) {
     .set('x-forwarded-proto', 'http')
     .send()
   response.expect(200)
-  t.end()
 })
 
 test('pass through https when disabled', function *(t, {client}) {
@@ -48,10 +45,8 @@ test('pass through https when disabled', function *(t, {client}) {
     .set('x-forwarded-proto', 'https')
     .send()
   response.expect(200)
-  t.end()
 })
 
 test('Be sure to restore SECURE', function *(t) {
   process.env.SECURE = SECURE
-  t.end()
 })

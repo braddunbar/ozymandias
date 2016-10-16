@@ -20,7 +20,6 @@ test('render state as json', function *(t, {app, client}) {
     url: '/?x=1',
     version: '99914b932bd37a50b983c5e7c90ae93b'
   })
-  t.end()
 })
 
 test('render state as HTML', function *(t, {app, client}) {
@@ -42,7 +41,6 @@ test('render state as HTML', function *(t, {app, client}) {
     .set('Accept', 'text/html')
     .send()
   response.expect(200, `<div id='root'><em data-reactroot="" data-reactid="1" data-react-checksum="1647120041">1</em></div>`)
-  t.end()
 })
 
 test('return html for browser accept value', function *(t, {app, client}) {
@@ -53,7 +51,6 @@ test('return html for browser accept value', function *(t, {app, client}) {
     .set('accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
     .send()
   response.expect(200).expect('content-type', /html/)
-  t.end()
 })
 
 test('toJSON', function *(t, {app, client}) {
@@ -69,7 +66,6 @@ test('toJSON', function *(t, {app, client}) {
 
   const response = yield client.get('/').send()
   response.expect(200)
-  t.end()
 })
 
 test('explicit 404 status', function *(t, {app, client}) {
@@ -80,7 +76,6 @@ test('explicit 404 status', function *(t, {app, client}) {
   })
   const response = yield client.get('/').send()
   response.expect(404)
-  t.end()
 })
 
 test('use context.state.client', function *(t, {app, client}) {
@@ -100,5 +95,4 @@ test('use context.state.client', function *(t, {app, client}) {
     version: '99914b932bd37a50b983c5e7c90ae93b',
     x: 1
   })
-  t.end()
 })

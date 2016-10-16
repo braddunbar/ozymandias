@@ -13,15 +13,13 @@ test('authenticate a user', function *(t) {
 
   t.ok(right)
   t.ok(!wrong)
-  t.end()
 })
 
-test('email is trimmed', (t) => {
+test('email is trimmed', function *(t) {
   const user = new User({email: ' user@example.com '})
   t.is(user.email, 'user@example.com')
   user.email = ' user@example.com '
   t.is(user.email, 'user@example.com')
-  t.end()
 })
 
 test('creating a user hashes the password', function *(t) {
@@ -30,7 +28,6 @@ test('creating a user hashes the password', function *(t) {
     password: 'password'
   })
   t.ok(yield user.authenticate('password'))
-  t.end()
 })
 
 test('updating a user hashes the password', function *(t) {
@@ -40,16 +37,14 @@ test('updating a user hashes the password', function *(t) {
     password: 'new password'
   })
   t.ok(yield user.authenticate('new password'))
-  t.end()
 })
 
 test('authenticate a user without a password', function *(t) {
   const user = new User({id: 1, password: null})
   t.ok(!(yield user.authenticate('password')))
-  t.end()
 })
 
-test('validate email', (t) => {
+test('validate email', function *(t) {
   const user = new User({email: 'invalid'})
 
   user.validate()
@@ -70,18 +65,15 @@ test('validate email', (t) => {
   user.email = 'valid@subdomain.example.com'
   user.validate()
   t.is(user.errors.email, undefined)
-
-  t.end()
 })
 
 test('validate password on create', function *(t) {
   try {
     yield User.create({password: 'asdf'})
-    t.end('password was not validated')
+    t.fail('password was not validated')
   } catch ({message, model}) {
     t.is(message, 'invalid')
     t.deepEqual(model.errors.password, ['Password must be at least eight characters long'])
-    t.end()
   }
 })
 
@@ -89,15 +81,14 @@ test('validate password on update', function *(t) {
   const user = yield User.find(1)
   try {
     yield user.update({password: 'asdf'})
-    t.end('password was not validated')
+    t.fail('password was not validated')
   } catch ({message, model}) {
     t.is(message, 'invalid')
     t.deepEqual(model.errors.password, ['Password must be at least eight characters long'])
-    t.end()
   }
 })
 
-test('User#isAdmin accepts falsy/truthy strings', (t) => {
+test('User#isAdmin accepts falsy/truthy strings', function *(t) {
   const user = new User({isAdmin: 0})
   t.is(user.isAdmin, false)
   user.isAdmin = 1
@@ -110,5 +101,4 @@ test('User#isAdmin accepts falsy/truthy strings', (t) => {
   t.is(user.isAdmin, true)
   user.isAdmin = false
   t.is(user.isAdmin, false)
-  t.end()
 })

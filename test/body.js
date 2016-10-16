@@ -15,7 +15,6 @@ test('parse json bodies', function *(t, {app, client}) {
     .send(values)
 
   response.expect(values)
-  t.end()
 })
 
 test('parse urlencoded bodies', function *(t, {app, client}) {
@@ -29,5 +28,4 @@ test('parse urlencoded bodies', function *(t, {app, client}) {
     .send('x=1&y=2&z=3')
 
   response.expect({x: '1', y: '2', z: '3'})
-  t.end()
 })

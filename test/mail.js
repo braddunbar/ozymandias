@@ -35,5 +35,4 @@ test('send mail', function *(t, {app, client}) {
 
   const response = yield client.get('/').send()
   response.expect(200)
-  t.end()
 })

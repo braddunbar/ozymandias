@@ -8,5 +8,4 @@ test('all requests include vary header', function *(t, {app, client}) {
   const response = yield client.get('/').send()
   response.expect('vary', /Accept(,|$)/)
   response.expect(200)
-  t.end()
 })

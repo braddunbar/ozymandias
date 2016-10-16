@@ -6,7 +6,6 @@ test('500', function *(t, {app, client}) {
   app.use(function *() { this.error(new Error('test')) })
   const response = yield client.get('/').send()
   response.expect(500)
-  t.end()
 })
 
 test('422', function *(t, {app, client}) {
@@ -18,7 +17,6 @@ test('422', function *(t, {app, client}) {
 
   const response = yield client.get('/422').send()
   response.expect(422, {x: 1})
-  t.end()
 })
 
 test('permit', function *(t, {app, client}) {
@@ -35,7 +33,6 @@ test('permit', function *(t, {app, client}) {
     .set('accept', 'application/json')
     .send({id: 1, name: 'test', count: 25})
   response.expect(200)
-  t.end()
 })
 
 test('permit allows explicitly null values', function *(t, {app, client}) {
@@ -49,7 +46,6 @@ test('permit allows explicitly null values', function *(t, {app, client}) {
     .set('accept', 'application/json')
     .send({street: null})
   response.expect(200)
-  t.end()
 })
 
 test('json', function *(t, {app, client}) {
@@ -58,7 +54,6 @@ test('json', function *(t, {app, client}) {
   })
   const response = yield client.get('/').send()
   response.expect(200, `<script type='application/json' id='id'>"</<!-<\\u0021--<\\/script<\\u0021--<\\/script"</script>`)
-  t.end()
 })
 
 test('json handles undefined', function *(t, {app, client}) {
@@ -67,7 +62,6 @@ test('json handles undefined', function *(t, {app, client}) {
   })
   const response = yield client.get('/').send()
   response.expect(200, `<script type='application/json' id='id'>null</script>`)
-  t.end()
 })
 
 test('signIn/signOut', function *(t, {app, client}) {
@@ -82,5 +76,4 @@ test('signIn/signOut', function *(t, {app, client}) {
   })
   const response = yield client.get('/').send()
   response.expect(200)
-  t.end()
 })

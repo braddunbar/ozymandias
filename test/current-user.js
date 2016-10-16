@@ -13,7 +13,6 @@ test('no user', function *(t, {app, client}) {
   })
   const response = yield client.get('/').send()
   response.expect(200)
-  t.end()
 })
 
 test('fetch a user', function *(t, {app, client}) {
@@ -32,7 +31,6 @@ test('fetch a user', function *(t, {app, client}) {
 
   const response = yield client.get('/').send()
   response.expect(200)
-  t.end()
 })
 
 test('fetch a non-admin user', function *(t, {app, client}) {
@@ -50,5 +48,4 @@ test('fetch a non-admin user', function *(t, {app, client}) {
   signin.expect(200)
   const response = yield client.get('/').send()
   response.expect(200)
-  t.end()
 })

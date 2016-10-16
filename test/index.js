@@ -1,7 +1,7 @@
 'use strict'
 
 const db = require('../db/instance')
-const tape = require('tape')
+const test = require('./test')
 
 require('./body')
 require('./current-user')
@@ -17,7 +17,6 @@ require('./react')
 require('./session')
 require('./vary')
 
-tape('teardown', (t) => {
+test('teardown', function *(t) {
   db.close()
-  t.end()
 })
