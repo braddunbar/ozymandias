@@ -51,7 +51,7 @@
   "devDependencies": {
     "co": "4.6.0",
     "faucet": "0.0.1",
-    "standard": "8.3.0",
+    "standard": "8.4.0",
     "tape": "4.6.2",
     "test-client": "0.3.1"
   }
