@@ -17,8 +17,8 @@ const ozymandias = module.exports = function () {
   // Handle errors.
   app.use(require('./errors'))
 
-  // Require a secure connection.
-  app.use(require('./secure'))
+  // Security headers
+  app.use(require('./security'))
 
   // Compress responses by default.
   app.use(compress())
