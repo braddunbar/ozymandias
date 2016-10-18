@@ -13,7 +13,7 @@ module.exports = function *(next) {
   this.set('x-content-type-options', 'nosniff')
 
   // Content Security Policy
-  this.set('content-security-policy', "default-src 'self' https://www.google-analytics.com")
+  this.set('content-security-policy', "default-src 'self' https://www.google-analytics.com https://checkout.stripe.com")
 
   if (this.app.env !== 'production') return yield next
 
