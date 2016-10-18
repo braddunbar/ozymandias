@@ -15,7 +15,7 @@ module.exports = function *(next) {
   if (this.app.env !== 'production') return yield next
 
   // HSTS Headers
-  this.set('strict-transport-security', `max-age: ${ms('1d')}; includeSubdomains`)
+  this.set('strict-transport-security', `max-age: ${ms('1d')}; includeSubDomains`)
 
   // Redirect http to https
   if (this.get('x-forwarded-proto') !== 'https') {

@@ -37,5 +37,5 @@ test('security headers', function *(assert, {app, client}) {
     .expect('x-frame-options', 'SAMEORIGIN')
     .expect('x-xss-protection', '1; mode=block')
     .expect('x-content-type-options', 'nosniff')
-    .expect('strict-transport-security', 'max-age: 86400000; includeSubdomains')
+    .expect('strict-transport-security', 'max-age: 86400000; includeSubDomains')
 })
