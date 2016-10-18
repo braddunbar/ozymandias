@@ -3,24 +3,24 @@
 const test = require('./test')
 const User = require('../user')
 
-test('no user', function *(t, {app, client}) {
+test('no user', function *(assert, {app, client}) {
   app.context.User = User
   app.use(function *() {
     const {admin, currentUser} = this.state
-    t.is(admin, false)
-    t.is(currentUser, null)
+    assert.is(admin, false)
+    assert.is(currentUser, null)
     this.status = 200
   })
   const response = yield client.get('/').send()
   response.expect(200)
 })
 
-test('fetch a user', function *(t, {app, client}) {
+test('fetch a user', function *(assert, {app, client}) {
   app.context.User = User
   app.use(function *() {
     const {admin, currentUser} = this.state
-    t.is(admin, true)
-    t.is(currentUser.id, 1)
+    assert.is(admin, true)
+    assert.is(currentUser.id, 1)
     this.status = 200
   })
 
@@ -33,12 +33,12 @@ test('fetch a user', function *(t, {app, client}) {
   response.expect(200)
 })
 
-test('fetch a non-admin user', function *(t, {app, client}) {
+test('fetch a non-admin user', function *(assert, {app, client}) {
   app.context.User = User
   app.use(function *() {
     const {admin, currentUser} = this.state
-    t.is(admin, false)
-    t.is(currentUser.id, 3)
+    assert.is(admin, false)
+    assert.is(currentUser.id, 3)
     this.status = 200
   })
 

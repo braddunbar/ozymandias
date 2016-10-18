@@ -14,7 +14,7 @@ test('parse json bodies', function *(t, {app, client}) {
     .set('content-type', 'application/json')
     .send(values)
 
-  response.expect(values)
+  response.expect(200, values)
 })
 
 test('parse urlencoded bodies', function *(t, {app, client}) {
@@ -27,5 +27,5 @@ test('parse urlencoded bodies', function *(t, {app, client}) {
     .set('content-type', 'application/x-www-form-urlencoded')
     .send('x=1&y=2&z=3')
 
-  response.expect({x: '1', y: '2', z: '3'})
+  response.expect(200, {x: '1', y: '2', z: '3'})
 })
