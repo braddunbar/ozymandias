@@ -6,9 +6,12 @@ const User = require('../user')
 test('no user', function *(assert, {app, client}) {
   app.context.User = User
   app.use(function *() {
-    const {admin, currentUser} = this.state
-    assert.is(admin, false)
-    assert.is(currentUser, null)
+    assert.is(this.state.admin, false)
+    assert.is(this.state.currentUser, null)
+
+    assert.is(this.state.client.admin, false)
+    assert.is(this.state.client.currentUser, null)
+
     this.status = 200
   })
   const response = yield client.get('/').send()
@@ -18,9 +21,12 @@ test('no user', function *(assert, {app, client}) {
 test('fetch a user', function *(assert, {app, client}) {
   app.context.User = User
   app.use(function *() {
-    const {admin, currentUser} = this.state
-    assert.is(admin, true)
-    assert.is(currentUser.id, 1)
+    assert.is(this.state.admin, true)
+    assert.is(this.state.currentUser.id, 1)
+
+    assert.is(this.state.client.admin, true)
+    assert.is(this.state.client.currentUser.id, 1)
+
     this.status = 200
   })
 
@@ -36,9 +42,12 @@ test('fetch a user', function *(assert, {app, client}) {
 test('fetch a non-admin user', function *(assert, {app, client}) {
   app.context.User = User
   app.use(function *() {
-    const {admin, currentUser} = this.state
-    assert.is(admin, false)
-    assert.is(currentUser.id, 3)
+    assert.is(this.state.admin, false)
+    assert.is(this.state.currentUser.id, 3)
+
+    assert.is(this.state.client.admin, false)
+    assert.is(this.state.client.currentUser.id, 3)
+
     this.status = 200
   })
 

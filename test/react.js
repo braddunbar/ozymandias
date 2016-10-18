@@ -14,6 +14,8 @@ test('render state as json', function *(t, {app, client}) {
     .send()
 
   response.expect(200, {
+    currentUser: null,
+    admin: false,
     x: 1,
     path: '/',
     statusCode: 200,
@@ -28,6 +30,8 @@ test('render state as HTML', function *(t, {app, client}) {
   app.use(function *() {
     this.react({x: 1})
     t.deepEqual(this.state.client, {
+      currentUser: null,
+      admin: false,
       x: 1,
       path: '/',
       statusCode: 200,
@@ -89,6 +93,8 @@ test('use context.state.client', function *(t, {app, client}) {
     .send()
 
   response.expect(200, {
+    currentUser: null,
+    admin: false,
     path: '/',
     statusCode: 200,
     url: '/',
