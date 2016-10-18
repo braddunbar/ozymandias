@@ -12,10 +12,13 @@ module.exports = function *(next) {
   // Content type
   this.set('x-content-type-options', 'nosniff')
 
+  // Content Security Policy
+  this.set('content-security-policy', "default-src 'self' https://www.google-analytics.com")
+
   if (this.app.env !== 'production') return yield next
 
   // HSTS Headers
-  this.set('strict-transport-security', `max-age: ${ms('1d')}; includeSubDomains`)
+  this.set('strict-transport-security', `max-age=${ms('30d') / 1000}; includeSubDomains`)
 
   // Redirect http to https
   if (this.get('x-forwarded-proto') !== 'https') {
