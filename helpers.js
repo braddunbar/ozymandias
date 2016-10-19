@@ -55,6 +55,14 @@ module.exports = {
   json (id, value) {
     const json = escapeJson(JSON.stringify(value || null))
     return `<script type='application/json' id='${id}'>${json}</script>`
+  },
+
+  csp (directive, value) {
+    const key = 'content-security-policy'
+    const pattern = new RegExp(`(^|;)${directive}[^;]*|$`)
+    this.set(key, (this.response.get(key) || '').replace(pattern, (match) => (
+      match ? `${match} ${value}` : `${directive} ${value};`
+    )))
   }
 
 }

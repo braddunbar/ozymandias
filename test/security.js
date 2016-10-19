@@ -38,5 +38,6 @@ test('security headers', function *(assert, {app, client}) {
     .expect('x-xss-protection', '1; mode=block')
     .expect('x-content-type-options', 'nosniff')
     .expect('strict-transport-security', 'max-age=2592000; includeSubDomains')
-    .expect('content-security-policy', "default-src 'self' https://www.google-analytics.com")
+    .expect('content-security-policy', /default-src[^;]+'self'/)
+    .expect('content-security-policy', /default-src[^;]+https:\/\/www.google-analytics.com/)
 })

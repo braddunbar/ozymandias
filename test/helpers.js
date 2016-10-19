@@ -77,3 +77,17 @@ test('signIn/signOut', function *(t, {app, client}) {
   const response = yield client.get('/').send()
   response.expect(200)
 })
+
+test('csp', function *(t, {app, client}) {
+  app.use(function *() {
+    this.csp('script-src', 'x.net')
+    this.csp('script-src', 'y.org')
+    this.csp('style-src', 'z.com')
+    this.status = 200
+  })
+  const response = yield client.get('/').send()
+  response
+    .expect(200)
+    .expect('content-security-policy', /script-src x.net y.org;/)
+    .expect('content-security-policy', /style-src z.com;/)
+})
