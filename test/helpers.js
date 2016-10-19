@@ -88,6 +88,6 @@ test('csp', function *(t, {app, client}) {
   const response = yield client.get('/').send()
   response
     .expect(200)
-    .expect('content-security-policy', /script-src x.net y.org;/)
-    .expect('content-security-policy', /style-src z.com;/)
+    .expect('content-security-policy', /script-src[^;]+x.net y.org;/)
+    .expect('content-security-policy', /style-src[^;]+z.com;/)
 })

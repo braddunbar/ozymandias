@@ -13,7 +13,10 @@ module.exports = function *(next) {
   this.set('x-content-type-options', 'nosniff')
 
   // Content Security Policy
-  this.csp('default-src', "'self' https://www.google-analytics.com")
+  this.csp('style-src', "'self'")
+  this.csp('default-src', "'self'")
+  this.csp('img-src', "'self' https://www.google-analytics.com")
+  this.csp('script-src', "'self' https://www.google-analytics.com")
 
   if (this.app.env !== 'production') return yield next
 
