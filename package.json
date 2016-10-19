@@ -9,7 +9,7 @@
   "license": "ISC",
   "description": "Look on my works, ye mighty, and despair!",
   "engines": {
-    "node": "6.7.0",
+    "node": "6.9.0",
     "npm": "3.10.9"
   },
   "repository": {
