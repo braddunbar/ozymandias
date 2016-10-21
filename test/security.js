@@ -26,30 +26,30 @@ test('pass through https to next handler', function *(assert, {app, client}) {
   response.expect(200)
 })
 
-test('HSTS headers regardless of content type', function *(assert, {app, client}) {
+test('HSTS headers for HTML response', function *(assert, {app, client}) {
   app.env = 'production'
-  app.use(function *() {
-    this.status = 200
-    this.body = this.accepts('html') ? '' : {}
-  })
+  app.use(function *() { this.body = '' })
 
-  const html = yield client
+  const response = yield client
     .get('/')
     .set('x-forwarded-proto', 'https')
-    .accept('text/html')
     .send()
 
-  html
+  response
     .expect(200)
     .expect('strict-transport-security', 'max-age=2592000; includeSubDomains')
+})
 
-  const json = yield client
+test('HSTS headers for JSON response', function *(assert, {app, client}) {
+  app.env = 'production'
+  app.use(function *() { this.body = {} })
+
+  const response = yield client
     .get('/')
     .set('x-forwarded-proto', 'https')
-    .accept('application/json')
     .send()
 
-  json
+  response
     .expect(200)
     .expect('strict-transport-security', 'max-age=2592000; includeSubDomains')
 })
