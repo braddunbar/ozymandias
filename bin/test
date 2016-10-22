@@ -8,3 +8,7 @@ standard --fix
 
 # Kick the tires.
 tape test/index.js | faucet
+
+# Client tests.
+./bin/ozy.js rollup test/client/index.js > test/client.js
+tape test/client.js | faucet
