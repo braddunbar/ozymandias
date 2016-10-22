@@ -11,7 +11,7 @@ test('redirect from http to https', function *(assert, {app, client}) {
     .set('x-forwarded-proto', 'http')
     .send()
 
-  response.expect(302).expect('location', 'https://localhost/')
+  response.assert(302).assert('location', 'https://localhost/')
 })
 
 test('pass through https to next handler', function *(assert, {app, client}) {
@@ -23,7 +23,7 @@ test('pass through https to next handler', function *(assert, {app, client}) {
     .set('x-forwarded-proto', 'https')
     .send()
 
-  response.expect(200)
+  response.assert(200)
 })
 
 test('HSTS headers for HTML response', function *(assert, {app, client}) {
@@ -36,8 +36,8 @@ test('HSTS headers for HTML response', function *(assert, {app, client}) {
     .send()
 
   response
-    .expect(200)
-    .expect('strict-transport-security', 'max-age=2592000; includeSubDomains')
+    .assert(200)
+    .assert('strict-transport-security', 'max-age=2592000; includeSubDomains')
 })
 
 test('HSTS headers for JSON response', function *(assert, {app, client}) {
@@ -50,25 +50,37 @@ test('HSTS headers for JSON response', function *(assert, {app, client}) {
     .send()
 
   response
-    .expect(200)
-    .expect('strict-transport-security', 'max-age=2592000; includeSubDomains')
+    .assert(200)
+    .assert('strict-transport-security', 'max-age=2592000; includeSubDomains')
 })
 
-test('security headers', function *(assert, {app, client}) {
-  app.use(function *() { this.status = 200 })
+test('security headers for HTML response', function *(assert, {app, client}) {
+  app.use(function *() { this.body = '<!doctype html>' })
 
   const response = yield client.get('/').send()
   response
-    .expect(200)
-    .expect('x-frame-options', 'SAMEORIGIN')
-    .expect('x-xss-protection', '1; mode=block')
-    .expect('x-content-type-options', 'nosniff')
-    .expect('content-security-policy', /img-src[^;]+'self'/)
-    .expect('content-security-policy', /frame-src[^;]+'self'/)
-    .expect('content-security-policy', /style-src[^;]+'self'/)
-    .expect('content-security-policy', /script-src[^;]+'self'/)
-    .expect('content-security-policy', /connect-src[^;]+'self'/)
-    .expect('content-security-policy', /default-src[^;]+'self'/)
-    .expect('content-security-policy', /img-src[^;]+https:\/\/www.google-analytics.com/)
-    .expect('content-security-policy', /script-src[^;]+https:\/\/www.google-analytics.com/)
+    .assert(200)
+    .assert('x-frame-options', 'SAMEORIGIN')
+    .assert('x-xss-protection', '1; mode=block')
+    .assert('x-content-type-options', 'nosniff')
+    .assert('content-security-policy', /img-src[^;]+'self'/)
+    .assert('content-security-policy', /frame-src[^;]+'self'/)
+    .assert('content-security-policy', /style-src[^;]+'self'/)
+    .assert('content-security-policy', /script-src[^;]+'self'/)
+    .assert('content-security-policy', /connect-src[^;]+'self'/)
+    .assert('content-security-policy', /default-src[^;]+'self'/)
+    .assert('content-security-policy', /img-src[^;]+https:\/\/www.google-analytics.com/)
+    .assert('content-security-policy', /script-src[^;]+https:\/\/www.google-analytics.com/)
+})
+
+test('security headers for JSON response', function *(assert, {app, client}) {
+  app.use(function *() { this.body = {} })
+
+  const response = yield client.get('/').send()
+  response
+    .assert(200)
+    .assert('x-frame-options', undefined)
+    .assert('x-xss-protection', undefined)
+    .assert('x-content-type-options', undefined)
+    .assert('content-security-policy', undefined)
 })

@@ -5,7 +5,7 @@ const test = require('./test')
 test('500', function *(t, {app, client}) {
   app.use(function *() { this.error(new Error('test')) })
   const response = yield client.get('/').send()
-  response.expect(500)
+  response.assert(500)
 })
 
 test('422', function *(t, {app, client}) {
@@ -16,7 +16,7 @@ test('422', function *(t, {app, client}) {
   })
 
   const response = yield client.get('/422').send()
-  response.expect(422, {x: 1})
+  response.assert(422, {x: 1})
 })
 
 test('permit', function *(t, {app, client}) {
@@ -32,7 +32,7 @@ test('permit', function *(t, {app, client}) {
     .post('/')
     .set('accept', 'application/json')
     .send({id: 1, name: 'test', count: 25})
-  response.expect(200)
+  response.assert(200)
 })
 
 test('permit allows explicitly null values', function *(t, {app, client}) {
@@ -45,7 +45,7 @@ test('permit allows explicitly null values', function *(t, {app, client}) {
     .post('/')
     .set('accept', 'application/json')
     .send({street: null})
-  response.expect(200)
+  response.assert(200)
 })
 
 test('json', function *(t, {app, client}) {
@@ -53,7 +53,7 @@ test('json', function *(t, {app, client}) {
     this.body = this.json('id', '</<!-<!--</script<!--</script')
   })
   const response = yield client.get('/').send()
-  response.expect(200, `<script type='application/json' id='id'>"</<!-<\\u0021--<\\/script<\\u0021--<\\/script"</script>`)
+  response.assert(200, `<script type='application/json' id='id'>"</<!-<\\u0021--<\\/script<\\u0021--<\\/script"</script>`)
 })
 
 test('json handles undefined', function *(t, {app, client}) {
@@ -61,7 +61,7 @@ test('json handles undefined', function *(t, {app, client}) {
     this.body = this.json('id', null)
   })
   const response = yield client.get('/').send()
-  response.expect(200, `<script type='application/json' id='id'>null</script>`)
+  response.assert(200, `<script type='application/json' id='id'>null</script>`)
 })
 
 test('signIn/signOut', function *(t, {app, client}) {
@@ -75,7 +75,7 @@ test('signIn/signOut', function *(t, {app, client}) {
     this.status = 200
   })
   const response = yield client.get('/').send()
-  response.expect(200)
+  response.assert(200)
 })
 
 test('csp', function *(t, {app, client}) {
@@ -87,7 +87,7 @@ test('csp', function *(t, {app, client}) {
   })
   const response = yield client.get('/').send()
   response
-    .expect(200)
-    .expect('content-security-policy', /script-src[^;]+x.net y.org;/)
-    .expect('content-security-policy', /style-src[^;]+z.com;/)
+    .assert(200)
+    .assert('content-security-policy', /script-src[^;]+x.net y.org;/)
+    .assert('content-security-policy', /style-src[^;]+z.com;/)
 })

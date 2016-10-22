@@ -15,7 +15,7 @@ test('no user', function *(assert, {app, client}) {
     this.status = 200
   })
   const response = yield client.get('/').send()
-  response.expect(200)
+  response.assert(200)
 })
 
 test('fetch a user', function *(assert, {app, client}) {
@@ -33,10 +33,10 @@ test('fetch a user', function *(assert, {app, client}) {
   const signin = yield client
     .post('/session')
     .send({email: 'brad@example.com', password: 'password'})
-  signin.expect(200)
+  signin.assert(200)
 
   const response = yield client.get('/').send()
-  response.expect(200)
+  response.assert(200)
 })
 
 test('fetch a non-admin user', function *(assert, {app, client}) {
@@ -54,7 +54,7 @@ test('fetch a non-admin user', function *(assert, {app, client}) {
   const signin = yield client
     .post('/session')
     .send({email: 'jd@example.com', password: 'password'})
-  signin.expect(200)
+  signin.assert(200)
   const response = yield client.get('/').send()
-  response.expect(200)
+  response.assert(200)
 })

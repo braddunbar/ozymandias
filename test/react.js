@@ -13,7 +13,7 @@ test('render state as json', function *(t, {app, client}) {
     .set('accept', 'application/json')
     .send()
 
-  response.expect(200, {
+  response.assert(200, {
     currentUser: null,
     admin: false,
     x: 1,
@@ -44,7 +44,7 @@ test('render state as HTML', function *(t, {app, client}) {
     .get('/?x=1')
     .set('Accept', 'text/html')
     .send()
-  response.expect(200, `<div id='root'><em data-reactroot="" data-reactid="1" data-react-checksum="1647120041">1</em></div>`)
+  response.assert(200, `<div id='root'><em data-reactroot="" data-reactid="1" data-react-checksum="1647120041">1</em></div>`)
 })
 
 test('return html for browser accept value', function *(t, {app, client}) {
@@ -54,7 +54,7 @@ test('return html for browser accept value', function *(t, {app, client}) {
     .get('/')
     .set('accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8')
     .send()
-  response.expect(200).expect('content-type', /html/)
+  response.assert(200).assert('content-type', /html/)
 })
 
 test('toJSON', function *(t, {app, client}) {
@@ -69,7 +69,7 @@ test('toJSON', function *(t, {app, client}) {
   })
 
   const response = yield client.get('/').send()
-  response.expect(200)
+  response.assert(200)
 })
 
 test('explicit 404 status', function *(t, {app, client}) {
@@ -79,7 +79,7 @@ test('explicit 404 status', function *(t, {app, client}) {
     t.is(this.state.client.statusCode, 404)
   })
   const response = yield client.get('/').send()
-  response.expect(404)
+  response.assert(404)
 })
 
 test('use context.state.client', function *(t, {app, client}) {
@@ -92,7 +92,7 @@ test('use context.state.client', function *(t, {app, client}) {
     .set('accept', 'application/json')
     .send()
 
-  response.expect(200, {
+  response.assert(200, {
     currentUser: null,
     admin: false,
     path: '/',
