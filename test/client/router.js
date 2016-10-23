@@ -1,8 +1,8 @@
-import tape from 'tape'
+import test from 'tape'
 import React from 'react'
 import Router, {Route} from '../../client/router'
 
-tape('one router component', (assert) => {
+test('one router component', (assert) => {
   const state = {path: '/'}
   const Index = () => {}
   const element = Router({
@@ -13,7 +13,7 @@ tape('one router component', (assert) => {
   assert.end()
 })
 
-tape('two children', (assert) => {
+test('two children', (assert) => {
   const state = {path: '/one'}
   const One = () => {}
   const Two = () => {}
@@ -28,7 +28,7 @@ tape('two children', (assert) => {
   assert.end()
 })
 
-tape('two children with wrapper', (assert) => {
+test('two children with wrapper', (assert) => {
   const state = {path: '/one'}
   const App = () => {}
   const One = () => {}
@@ -44,7 +44,7 @@ tape('two children with wrapper', (assert) => {
   assert.end()
 })
 
-tape('params', (assert) => {
+test('params', (assert) => {
   const state = {path: '/users/1'}
   const Index = () => {}
   const element = Router({
@@ -55,7 +55,7 @@ tape('params', (assert) => {
   assert.end()
 })
 
-tape('return null on no match', (assert) => {
+test('return null on no match', (assert) => {
   const state = {path: '/x'}
   const Index = () => {}
   const element = Router({
@@ -66,7 +66,7 @@ tape('return null on no match', (assert) => {
   assert.end()
 })
 
-tape('return null on no child match', (assert) => {
+test('return null on no child match', (assert) => {
   const state = {path: '/x'}
   const App = () => {}
   const Index = () => {}
