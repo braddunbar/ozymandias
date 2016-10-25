@@ -1,1 +1,2 @@
+import './reducers'
 import './router'

@@ -42,6 +42,7 @@
     "pg": "6.1.0",
     "react": "*",
     "react-dom": "*",
+    "redux": "*",
     "resolve": "1.1.7",
     "rimraf": "2.5.4",
     "rollup": "0.36.3",
@@ -51,6 +52,7 @@
   },
   "devDependencies": {
     "co": "4.6.0",
+    "deep-freeze": "0.0.1",
     "faucet": "0.0.1",
     "standard": "8.4.0",
     "tape": "4.6.2",
