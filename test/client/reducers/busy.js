@@ -2,23 +2,23 @@ import test from 'tape'
 import {BUSY, DONE} from '../../../client/actions'
 import {busy} from '../../../client/reducers'
 
-test('busy', (t) => {
+test('busy', (assert) => {
   const state = false
   const next = busy(state, {type: BUSY})
-  t.is(next, true)
-  t.end()
+  assert.is(next, true)
+  assert.end()
 })
 
-test('done', (t) => {
+test('done', (assert) => {
   const state = true
   const next = busy(state, {type: DONE})
-  t.is(next, false)
-  t.end()
+  assert.is(next, false)
+  assert.end()
 })
 
-test('empty', (t) => {
+test('empty', (assert) => {
   const state = null
   const next = busy(state, {})
-  t.is(next, false)
-  t.end()
+  assert.is(next, false)
+  assert.end()
 })
