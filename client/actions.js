@@ -32,3 +32,9 @@ export const clearMessage = () => {
   clearTimeout(messageTimer)
   store.dispatch({type: CLEAR_MESSAGE})
 }
+
+// Errors
+
+export const SET_ERRORS = 'SET_ERRORS'
+
+export const setErrors = (errors) => store.dispatch({type: SET_ERRORS, errors})
