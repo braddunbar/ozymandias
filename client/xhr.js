@@ -1,19 +1,8 @@
-export default (url, options = {}) => new Promise((resolve, reject) => {
-  let {body} = options
+export default (method = 'get', url, body, headers = {}) => new Promise((resolve, reject) => {
   const request = new window.XMLHttpRequest()
-  const headers = options.headers || {}
-
-  // Stringify the body if necessary.
-  if (typeof body === 'object' && !(body instanceof window.FormData)) {
-    body = JSON.stringify(body)
-    headers['content-type'] = 'application/json'
-  }
-
-  // Set accept header.
-  headers.accept = 'application/json'
 
   // Open the request.
-  request.open(options.method || 'get', url)
+  request.open(method, url)
 
   // Include credentials (must be after open for IE11 and below).
   request.withCredentials = true
