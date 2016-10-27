@@ -1,3 +1,4 @@
+import {get} from './json'
 import store from './store'
 
 // Busy?
@@ -38,3 +39,38 @@ export const clearMessage = () => {
 export const SET_ERRORS = 'SET_ERRORS'
 
 export const setErrors = (errors) => store.dispatch({type: SET_ERRORS, errors})
+
+// Navigate
+
+export const REPLACE = 'REPLACE'
+
+export const navigate = (url, {push} = {}) => {
+  busy()
+
+  // No pushState? No problem.
+  if (!window.history || !window.history.pushState) {
+    window.location = url
+    return
+  }
+
+  // Change the url.
+  if (push !== false) {
+    window.history.pushState(null, document.title, url)
+  }
+
+  // Fetch the page state and render the page.
+  return get(url).then((state) => {
+    // If the version has changed, reload the whole page.
+    if (store.getState().version !== state.version) {
+      window.location = url
+      return
+    }
+
+    store.dispatch({type: REPLACE, state})
+    window.scrollTo(0, 0)
+    done()
+  }).catch(({state}) => {
+    if (state) store.dispatch({type: REPLACE, state})
+    done()
+  })
+}
