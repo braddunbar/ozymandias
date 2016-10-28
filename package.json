@@ -49,7 +49,7 @@
     "rollup": "0.36.3",
     "rollup-plugin-buble": "0.14.0",
     "sql": "0.72.0",
-    "uglify-js": "2.7.3"
+    "uglify-js": "2.7.4"
   },
   "devDependencies": {
     "co": "4.6.0",
