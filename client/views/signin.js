@@ -31,7 +31,7 @@ export default ({busy, errors, returnTo}) => {
     </div>
     <Errors errors={errors} />
     <div className='text-xs-right'>
-      <Link href='/signin/forgot'>Forgot Password</Link>
+      <Link href='/session/forgot'>Forgot Password</Link>
       {' '}
       <button className='btn btn-primary' disabled={busy}>
         Sign In

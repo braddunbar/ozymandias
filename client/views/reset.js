@@ -19,7 +19,7 @@ export default ({busy, email, errors, expired, token, returnTo}) => {
       ? <div>
         <h3>Sorry! That token is expired.</h3>
         <p>
-          Would you like us to <Link href='/signin/forgot'>send you another one</Link>?
+          Would you like us to <Link href='/session/forgot'>send you another one</Link>?
         </p>
       </div>
       : <div className='form-group'>
