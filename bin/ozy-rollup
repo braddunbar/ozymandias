@@ -9,6 +9,7 @@ const crypto = require('crypto')
 const resolve = require('resolve')
 const {rollup} = require('rollup')
 const buble = require('rollup-plugin-buble')
+const {STATIC_ORIGIN} = process.env
 
 // Insert assets into rollup bundle directly.
 const assets = {
@@ -23,7 +24,7 @@ const assets = {
     const dir = path.relative('public', path.dirname(file))
     const ext = path.extname(file)
     const base = path.basename(file, ext)
-    const code = `export default "/assets/${dir}/${base}-${hash + ext}"`
+    const code = `export default "${STATIC_ORIGIN || ''}/assets/${dir}/${base}-${hash + ext}"`
 
     const ast = {
       body: [],

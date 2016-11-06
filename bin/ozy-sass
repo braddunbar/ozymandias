@@ -6,6 +6,7 @@ const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
 const sass = require('node-sass')
+const {STATIC_ORIGIN} = process.env
 
 console.log(sass.renderSync({
   file: process.argv[2],
@@ -21,7 +22,7 @@ console.log(sass.renderSync({
       const hash = crypto.createHash('md5').update(buffer).digest('hex')
       const url = path.join('/assets', dir, `${base}-${hash + ext}`)
 
-      return new sass.types.String(`url('${url}')`)
+      return new sass.types.String(`url('${STATIC_ORIGIN || ''}${url}')`)
     }
   }
 }).css.toString())
