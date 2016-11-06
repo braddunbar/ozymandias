@@ -42,6 +42,14 @@ module.exports = [
     this.body = {}
   }),
 
+  get('/session/signin', function *() {
+    this.react()
+  }),
+
+  get('/session/forgot', function *() {
+    this.react()
+  }),
+
   get('/session/reset/:id', function *(id) {
     const token = yield findToken(id)
     this.react({
