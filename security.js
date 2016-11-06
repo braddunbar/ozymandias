@@ -1,6 +1,7 @@
 'use strict'
 
 const ms = require('ms')
+const {STATIC_ORIGIN} = process.env
 
 module.exports = function *(next) {
   // Enforce https
@@ -35,5 +36,11 @@ module.exports = function *(next) {
     this.csp('default-src', "'self'")
     this.csp('img-src', "'self' https://www.google-analytics.com")
     this.csp('script-src', "'self' https://www.google-analytics.com")
+
+    if (STATIC_ORIGIN) {
+      this.csp('img-src', STATIC_ORIGIN)
+      this.csp('script-src', STATIC_ORIGIN)
+      this.csp('style-src', STATIC_ORIGIN)
+    }
   }
 }

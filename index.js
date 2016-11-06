@@ -29,9 +29,6 @@ const ozymandias = module.exports = function () {
   // S3 Assets
   app.use(require('./assets/proxy'))
 
-  // Acme Challenge
-  app.use(require('./acme'))
-
   // Parse the request body.
   app.use(body())
 

@@ -4,9 +4,9 @@ const ms = require('ms')
 const gm = require('gm').subClass({imageMagick: true})
 const aws = require('aws-sdk')
 const Busboy = require('busboy')
-const BUCKET = process.env.BUCKET
 const s3 = new aws.S3({apiVersion: '2006-03-01'})
 const assets = require('./assets')
+const {BUCKET, STATIC_ORIGIN} = process.env
 
 // Strip an image stream and write it out.
 const strip = (file) => gm(file).strip().stream()
@@ -97,7 +97,7 @@ exports.hasImage = function ({defaults, name, sizes}) {
       const updatedAt = this[`${name}UpdatedAt`]
       if (updatedAt) {
         const key = this[`${name}Key`](size)
-        return `/assets/${key}?${+updatedAt}`
+        return `${STATIC_ORIGIN || '/s3'}/${key}?${+updatedAt}`
       }
       if (defaults) return assets.path(defaults[this.id % defaults.length])
     }
