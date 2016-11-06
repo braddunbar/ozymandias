@@ -74,3 +74,14 @@ export const navigate = (url, {push} = {}) => {
     done()
   })
 }
+
+// Navigate on popstate.
+if (typeof window !== 'undefined') {
+  window.addEventListener('popstate', () => {
+    // The popstate event is also fired on hashchange, so make sure the path
+    // has actually changed!
+    if (store.getState().path !== window.location.pathname) {
+      navigate(window.location.href, {push: false})
+    }
+  })
+}
