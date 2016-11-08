@@ -30,17 +30,13 @@ module.exports = function *(next) {
     this.set('x-content-type-options', 'nosniff')
 
     // Content Security Policy
+    this.csp('img-src', STATIC_ORIGIN || "'self'")
+    this.csp('script-src', STATIC_ORIGIN || "'self'")
+    this.csp('style-src', STATIC_ORIGIN || "'self'")
     this.csp('frame-src', "'self'")
-    this.csp('style-src', "'self'")
     this.csp('connect-src', "'self'")
     this.csp('default-src', "'self'")
-    this.csp('img-src', "'self' https://www.google-analytics.com")
-    this.csp('script-src', "'self' https://www.google-analytics.com")
-
-    if (STATIC_ORIGIN) {
-      this.csp('img-src', STATIC_ORIGIN)
-      this.csp('script-src', STATIC_ORIGIN)
-      this.csp('style-src', STATIC_ORIGIN)
-    }
+    this.csp('img-src', 'data: https://www.google-analytics.com')
+    this.csp('script-src', 'https://www.google-analytics.com')
   }
 }
