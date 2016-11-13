@@ -86,11 +86,18 @@ if (typeof window !== 'undefined') {
   })
 }
 
-// Signin
+// Session
 
 export const signin = (values) => {
   busy()
   return post('/session', values).then(done).catch(done)
+}
+
+// Signout
+
+export const signout = () => {
+  busy()
+  return del('/session').then(done).catch(done)
 }
 
 export const forgot = (values) => {
