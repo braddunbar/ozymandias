@@ -1,4 +1,4 @@
-import {get, post} from './json'
+import {del, get, post} from './json'
 import store from './store'
 
 // Busy?
