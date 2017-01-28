@@ -13,7 +13,7 @@ module.exports = {
       path: url.parse(this.originalUrl).pathname,
       statusCode: this.response._explicitStatus ? this.status : 200,
       url: this.originalUrl,
-      version: version
+      version
     })
 
     switch (this.accepts('html', 'json')) {
