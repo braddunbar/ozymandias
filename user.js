@@ -4,14 +4,6 @@ const {Model} = require('./db/instance')
 const bcrypt = require('bcrypt')
 const ROUNDS = process.env.NODE_ENV === 'production' ? 12 : 1
 
-const hash = (password) => (
-  new Promise((resolve, reject) => (
-    bcrypt.hash(password, ROUNDS, (error, hash) => (
-      error ? reject(error) : resolve(hash)
-    ))
-  ))
-)
-
 class User extends Model {
 
   static get tableName () {
@@ -47,11 +39,7 @@ class User extends Model {
 
   authenticate (password) {
     if (this.password == null) return Promise.resolve(false)
-    return new Promise((resolve, reject) => {
-      bcrypt.compare(password, this.password, (error, match) => (
-        error ? reject(error) : resolve(match)
-      ))
-    })
+    return bcrypt.compare(password, this.password)
   }
 
   update (values) {
@@ -66,7 +54,7 @@ class User extends Model {
     }
 
     // Hash the password before updating.
-    return hash(values.password).then((hash) => {
+    return bcrypt.hash(values.password, ROUNDS).then((hash) => {
       values.password = hash
       return super.update(values)
     })
@@ -85,7 +73,7 @@ class User extends Model {
     }
 
     // Hash the password before creation.
-    return hash(values.password).then((hash) => {
+    return bcrypt.hash(values.password, ROUNDS).then((hash) => {
       values.password = hash
       return super.create(values)
     })
