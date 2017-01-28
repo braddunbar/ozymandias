@@ -56,6 +56,14 @@ test('json', function *(t, {app, client}) {
   response.assert(200, `<script type='application/json' id='id'>"</<!-<\\u0021--<\\/script<\\u0021--<\\/script"</script>`)
 })
 
+test('json handles mixed case', function *(t, {app, client}) {
+  app.use(function *() {
+    this.body = this.json('id', '</sCrIpT')
+  })
+  const response = yield client.get('/').send()
+  response.assert(200, `<script type='application/json' id='id'>"<\\/sCrIpT"</script>`)
+})
+
 test('json handles undefined', function *(t, {app, client}) {
   app.use(function *() {
     this.body = this.json('id', null)

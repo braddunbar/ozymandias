@@ -1,12 +1,16 @@
 'use strict'
 
 // Prevent XSS attacks in embedded JSON.
-const escapeJson = (json) => json.replace(/<\/script|<!--/g, (match) => {
-  switch (match) {
-    case '<!--': return '<\\u0021--'
-    case '</script': return '<\\/script'
-  }
-})
+const escaper = /<\/(?=script)|<!(?=--)/ig
+
+const escapes = {
+  '<!': '<\\u0021',
+  '</': '<\\/'
+}
+
+const escape = (match) => escapes[match]
+
+const escapeJson = (json) => json.replace(escaper, escape)
 
 module.exports = {
 
