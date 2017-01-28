@@ -57,7 +57,7 @@
     "deep-freeze": "0.0.1",
     "faucet": "0.0.1",
     "standard": "8.6.0",
-    "tape": "4.6.2",
+    "tape": "4.6.3",
     "test-client": "1.0.1"
   }
 }
