@@ -36,7 +36,7 @@ const ozymandias = module.exports = function () {
   app.use(session(app, {
     key: process.env.ID,
     maxAge: ms('30d'),
-    secure: true
+    secure: app.env === 'production'
   }))
 
   // Vary
