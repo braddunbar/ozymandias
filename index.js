@@ -35,7 +35,8 @@ const ozymandias = module.exports = function () {
   // Cookie Session
   app.use(session(app, {
     key: process.env.ID,
-    maxAge: ms('30d')
+    maxAge: ms('30d'),
+    secure: true
   }))
 
   // Vary
