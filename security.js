@@ -7,7 +7,7 @@ module.exports = function *(next) {
   // Enforce https
   if (this.app.env === 'production') {
     // HSTS Headers
-    this.set('strict-transport-security', `max-age=${ms('30d') / 1000}; includeSubDomains`)
+    this.set('strict-transport-security', `max-age=${ms('1y') / 1000}; includeSubDomains`)
 
     // Redirect http to https
     if (this.get('x-forwarded-proto') !== 'https') {
