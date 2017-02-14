@@ -84,3 +84,15 @@ test('security headers for JSON response', function *(assert, {app, client}) {
     .assert('x-content-type-options', undefined)
     .assert('content-security-policy', undefined)
 })
+
+test('secure cookies for https responses', function *(assert, {app, client}) {
+  app.use(function *() {
+    this.cookies.set('x', 'y')
+    this.body = ''
+  })
+
+  const response = yield client.get('/').set('x-forwarded-proto', 'https').send()
+  response
+    .assert(200)
+    .assert('set-cookie', /secure/)
+})

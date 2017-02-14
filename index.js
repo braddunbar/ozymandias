@@ -14,6 +14,9 @@ const ozymandias = module.exports = function () {
   // Secrets!
   app.keys = [process.env.SECRET]
 
+  // Trust proxy headers.
+  app.proxy = true
+
   // Handle errors.
   app.use(require('./errors'))
 
@@ -35,8 +38,7 @@ const ozymandias = module.exports = function () {
   // Cookie Session
   app.use(session(app, {
     key: process.env.ID,
-    maxAge: ms('30d'),
-    secure: app.env === 'production'
+    maxAge: ms('30d')
   }))
 
   // Vary
