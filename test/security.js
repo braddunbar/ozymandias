@@ -37,7 +37,7 @@ test('HSTS headers for HTML response', function *(assert, {app, client}) {
 
   response
     .assert(200)
-    .assert('strict-transport-security', 'max-age=31557600; includeSubDomains')
+    .assert('strict-transport-security', 'max-age=31557600; includeSubDomains; preload')
 })
 
 test('HSTS headers for JSON response', function *(assert, {app, client}) {
@@ -51,7 +51,7 @@ test('HSTS headers for JSON response', function *(assert, {app, client}) {
 
   response
     .assert(200)
-    .assert('strict-transport-security', 'max-age=31557600; includeSubDomains')
+    .assert('strict-transport-security', 'max-age=31557600; includeSubDomains; preload')
 })
 
 test('security headers for HTML response', function *(assert, {app, client}) {

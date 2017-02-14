@@ -13,7 +13,7 @@ module.exports = function *(next) {
     }
 
     // HSTS Headers
-    this.set('strict-transport-security', `max-age=${ms('1y') / 1000}; includeSubDomains`)
+    this.set('strict-transport-security', `max-age=${ms('1y') / 1000}; includeSubDomains; preload`)
   }
 
   yield next
