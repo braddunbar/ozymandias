@@ -20,7 +20,7 @@ test('render state as json', function *(t, {app, client}) {
     path: '/',
     statusCode: 200,
     url: '/?x=1',
-    version: '99914b932bd37a50b983c5e7c90ae93b'
+    version: '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a'
   })
 })
 
@@ -36,7 +36,7 @@ test('render state as HTML', function *(t, {app, client}) {
       path: '/',
       statusCode: 200,
       url: '/?x=1',
-      version: '99914b932bd37a50b983c5e7c90ae93b'
+      version: '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a'
     })
   })
 
@@ -98,7 +98,7 @@ test('use context.state.client', function *(t, {app, client}) {
     path: '/',
     statusCode: 200,
     url: '/',
-    version: '99914b932bd37a50b983c5e7c90ae93b',
+    version: '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a',
     x: 1
   })
 })

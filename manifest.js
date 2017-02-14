@@ -17,6 +17,7 @@ module.exports = (publicPath) => {
 
   // asset paths
   const assets = manifest.assets = {}
+  const integrity = manifest.integrity = {}
   const files = manifest.files || (manifest.files = {})
 
   // Bump ages
@@ -30,14 +31,18 @@ module.exports = (publicPath) => {
 
   for (const asset of publicAssets) {
     const buffer = fs.readFileSync(path.join(publicPath, asset))
-    const hash = crypto.createHash('md5').update(buffer).digest('hex')
+    const hex = crypto.createHash('sha256').update(buffer).digest('hex')
+    const base64 = crypto.createHash('sha256').update(buffer).digest('base64')
     const dir = path.dirname(asset)
     const ext = path.extname(asset)
     const base = path.basename(asset, ext)
-    const file = path.join('assets', dir, `${base}-${hash + ext}`)
+    const file = path.join('assets', dir, `${base}-${hex + ext}`)
 
     // Add to assets.
     assets[asset] = file
+
+    // Add to integrity.
+    if (ext === '.js' || ext === '.css') integrity[asset] = `sha256-${base64}`
 
     // Add to files and reset age.
     if (!files[file]) files[file] = {age: 0, asset}
