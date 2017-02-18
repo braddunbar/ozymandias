@@ -13,7 +13,7 @@ console.log(sass.renderSync({
   functions: {
     'asset-path($file)': (file) => {
       const url = digestPath(file.getValue())
-      return new sass.types.String(`url('${(STATIC_ORIGIN || '/') + url}')`)
+      return new sass.types.String(`url('${STATIC_ORIGIN || ''}/${url}')`)
     }
   }
 }).css.toString())

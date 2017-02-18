@@ -14,7 +14,7 @@ try {
   integrity = manifest.integrity
 } catch (error) { }
 
-exports.path = (asset) => (STATIC_ORIGIN || '/') + (assets[asset] || asset)
+exports.path = (asset) => `${STATIC_ORIGIN || ''}/${assets[asset] || asset}`
 
 exports.integrity = (path) => integrity[path] || ''
 
