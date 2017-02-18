@@ -2,13 +2,12 @@
 
 'use strict'
 
-const fs = require('fs')
 const path = require('path')
 const util = require('util')
-const crypto = require('crypto')
 const resolve = require('resolve')
 const {rollup} = require('rollup')
 const buble = require('rollup-plugin-buble')
+const {digestPath} = require('../assets')
 const {STATIC_ORIGIN} = process.env
 
 // Insert assets into rollup bundle directly.
@@ -19,12 +18,8 @@ const assets = {
   load (id) {
     const file = path.relative(process.cwd(), id)
     if (!/^public\//.test(file)) return null
-    const buffer = fs.readFileSync(file)
-    const hash = crypto.createHash('sha256').update(buffer).digest('hex')
-    const dir = path.relative('public', path.dirname(file))
-    const ext = path.extname(file)
-    const base = path.basename(file, ext)
-    const code = `export default "${STATIC_ORIGIN || ''}/assets/${dir}/${base}-${hash + ext}"`
+    const url = digestPath(path.relative('public', file))
+    const code = `export default ${util.inspect(path.join(STATIC_ORIGIN || '/', url))}`
 
     const ast = {
       body: [],

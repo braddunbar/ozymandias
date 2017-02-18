@@ -2,4 +2,4 @@
 
 'use strict'
 
-require('../manifest')('public')
+require('../manifest')()

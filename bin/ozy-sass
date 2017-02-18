@@ -2,10 +2,9 @@
 
 'use strict'
 
-const fs = require('fs')
 const path = require('path')
-const crypto = require('crypto')
 const sass = require('node-sass')
+const {digestPath} = require('../assets')
 const {STATIC_ORIGIN} = process.env
 
 console.log(sass.renderSync({
@@ -13,16 +12,8 @@ console.log(sass.renderSync({
   outputStyle: 'compressed',
   functions: {
     'asset-path($file)': (file) => {
-      file = file.getValue()
-
-      const dir = path.dirname(file)
-      const ext = path.extname(file)
-      const base = path.basename(file, ext)
-      const buffer = fs.readFileSync(path.join('public', file))
-      const hash = crypto.createHash('sha256').update(buffer).digest('hex')
-      const url = path.join('/assets', dir, `${base}-${hash + ext}`)
-
-      return new sass.types.String(`url('${STATIC_ORIGIN || ''}${url}')`)
+      const url = digestPath(file.getValue())
+      return new sass.types.String(`url('${path.join(STATIC_ORIGIN || '/', url)}')`)
     }
   }
 }).css.toString())

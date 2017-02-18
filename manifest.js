@@ -5,10 +5,11 @@ const glob = require('glob')
 const path = require('path')
 const crypto = require('crypto')
 const mkdirp = require('mkdirp')
+const {digestPath} = require('./assets')
 
-module.exports = (publicPath) => {
+module.exports = () => {
   let manifest = {}
-  const assetPath = path.join(publicPath, 'assets')
+  const assetPath = 'public/assets'
   const manifestPath = path.join(assetPath, '.manifest.json')
 
   try {
@@ -24,19 +25,17 @@ module.exports = (publicPath) => {
   for (const file of Object.keys(files)) files[file].age += 1
 
   // All public files not in assets.
-  const publicAssets = glob.sync(path.join(publicPath, '**/*'), {
+  const publicAssets = glob.sync(path.join('public/**/*'), {
     ignore: path.join(assetPath, '**/*'),
     nodir: true
-  }).map((file) => path.relative(publicPath, file))
+  }).map((file) => path.relative('public', file))
 
   for (const asset of publicAssets) {
-    const buffer = fs.readFileSync(path.join(publicPath, asset))
-    const hex = crypto.createHash('sha256').update(buffer).digest('hex')
+    const buffer = fs.readFileSync(path.join('public', asset))
     const base64 = crypto.createHash('sha256').update(buffer).digest('base64')
     const dir = path.dirname(asset)
     const ext = path.extname(asset)
-    const base = path.basename(asset, ext)
-    const file = path.join('assets', dir, `${base}-${hex + ext}`)
+    const file = digestPath(asset)
 
     // Add to assets.
     assets[asset] = file
@@ -52,7 +51,7 @@ module.exports = (publicPath) => {
     mkdirp.sync(path.join(assetPath, dir))
 
     // Write to public/assets/dir/file-<hash>.ext
-    fs.writeFileSync(path.join(publicPath, file), buffer)
+    fs.writeFileSync(path.join('public', file), buffer)
   }
 
   // Remove old files from manifest.
@@ -62,7 +61,7 @@ module.exports = (publicPath) => {
 
   // Delete old files.
   for (let file of glob.sync(path.join(assetPath, '**/*'), {nodir: true})) {
-    if (!files[path.relative(publicPath, file)]) fs.unlinkSync(file)
+    if (!files[path.relative('public', file)]) fs.unlinkSync(file)
   }
 
   // Delete empty directories.
