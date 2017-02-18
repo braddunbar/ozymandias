@@ -1,5 +1,7 @@
 'use strict'
 
+const assets = require('./assets')
+
 // Prevent XSS attacks in embedded JSON.
 const escaper = /<\/(?=script)|<!(?=--)/ig
 
@@ -67,6 +69,18 @@ module.exports = {
     this.set(key, (this.response.get(key) || '').replace(pattern, (match) => (
       match ? `${match} ${value}` : `${directive} ${value};`
     )))
+  },
+
+  script (asset) {
+    const path = assets.path(asset)
+    const integrity = assets.integrity(asset)
+    return `<script defer src='${path}' integrity='${integrity}' crossorigin='anonymous'></script>`
+  },
+
+  styles (asset) {
+    const path = assets.path(asset)
+    const integrity = assets.integrity(asset)
+    return `<link rel='stylesheet' href='${path}' integrity='${integrity}' crossorigin='anonymous'>`
   }
 
 }
