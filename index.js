@@ -26,6 +26,9 @@ const ozymandias = module.exports = function () {
   // Compress responses by default.
   app.use(compress())
 
+  // Add CORS headers to assets for subresource integrity check.
+  app.use(require('./assets/cors'))
+
   // Static Assets
   app.use(_static('public', {maxAge: ms('1y')}))
 

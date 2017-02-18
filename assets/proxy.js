@@ -8,7 +8,7 @@ const fetch = (url) => new Promise((resolve, reject) => {
   https.get(url, resolve).on('error', reject)
 })
 
-module.exports = get('/s3/*', function *(next) {
+module.exports = get('/s3/*', function *() {
   if (!BUCKET) {
     this.status = 404
     return
