@@ -3,7 +3,7 @@
 const fs = require('fs')
 const path = require('path')
 const crypto = require('crypto')
-const {STATIC_ORIGIN} = process.env
+const {ASSET_VERSION, STATIC_ORIGIN} = process.env
 
 let assets = {}
 let integrity = {}
@@ -26,6 +26,8 @@ exports.version = crypto
 exports.digestPath = (asset) => {
   const {dir, name, ext} = path.parse(asset)
   const buffer = fs.readFileSync(path.join('public', asset))
-  const digest = crypto.createHash('sha256').update(buffer).digest('hex')
+  const hash = crypto.createHash('sha256').update(buffer)
+  if (ASSET_VERSION) hash.update(ASSET_VERSION)
+  const digest = hash.digest('hex')
   return path.join('assets', dir, `${name}-${digest + ext}`)
 }
