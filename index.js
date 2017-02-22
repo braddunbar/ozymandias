@@ -1,7 +1,7 @@
 'use strict'
 
 const ms = require('ms')
-const koa = require('koa')
+const Koa = require('koa')
 const body = require('koa-bodyparser')
 const _static = require('koa-static')
 const session = require('koa-session')
@@ -9,7 +9,7 @@ const compress = require('koa-compress')
 
 // Wrap up an express app.
 const ozymandias = module.exports = function () {
-  const app = koa()
+  const app = new Koa()
 
   // Secrets!
   app.keys = [process.env.SECRET]
