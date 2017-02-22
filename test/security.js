@@ -103,5 +103,5 @@ test('include a referrer policy in HTML responses', function *(assert, {app, cli
   const response = yield client.get('/').send()
   response
     .assert(200)
-    .assert('referrer-policy', 'strict-origin-when-cross-origin')
+    .assert('referrer-policy', 'origin-when-cross-origin')
 })
