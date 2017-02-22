@@ -21,7 +21,7 @@ module.exports = function *(next) {
   // HTML responses only
   if (this.response.is('html')) {
     // Referrer Policy
-    this.set('referrer-policy', 'origin-when-cross-origin')
+    this.set('referrer-policy', 'no-referrer')
 
     // Frame Options
     this.set('x-frame-options', 'SAMEORIGIN')
