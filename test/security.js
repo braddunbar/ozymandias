@@ -96,3 +96,12 @@ test('secure cookies for https responses', function *(assert, {app, client}) {
     .assert(200)
     .assert('set-cookie', /secure/)
 })
+
+test('include a referrer policy in HTML responses', function *(assert, {app, client}) {
+  app.use(function *() { this.body = '<!doctype html>' })
+
+  const response = yield client.get('/').send()
+  response
+    .assert(200)
+    .assert('referrer-policy', 'strict-origin-when-cross-origin')
+})
