@@ -3,10 +3,10 @@
 const test = require('./test')
 const User = require('../user')
 
-test('authenticate a user', function *(t) {
+test('authenticate a user', async (t) => {
   const hash = '$2a$04$GSyRKrbgj9PWCc.cHQsFJO3nSc0dz.JO..SZBIFBuyPTnquf3OswG'
   const user = new User({password: hash})
-  const [right, wrong] = yield Promise.all([
+  const [right, wrong] = await Promise.all([
     user.authenticate('secret'),
     user.authenticate('wrong')
   ])
@@ -15,36 +15,36 @@ test('authenticate a user', function *(t) {
   t.ok(!wrong)
 })
 
-test('email is trimmed', function *(t) {
+test('email is trimmed', async (t) => {
   const user = new User({email: ' user@example.com '})
   t.is(user.email, 'user@example.com')
   user.email = ' user@example.com '
   t.is(user.email, 'user@example.com')
 })
 
-test('creating a user hashes the password', function *(t) {
-  const user = yield User.create({
+test('creating a user hashes the password', async (t) => {
+  const user = await User.create({
     email: 'user@example.com',
     password: 'password'
   })
-  t.ok(yield user.authenticate('password'))
+  t.ok(await user.authenticate('password'))
 })
 
-test('updating a user hashes the password', function *(t) {
+test('updating a user hashes the password', async (t) => {
   const user = new User({id: 1})
-  yield user.update({
+  await user.update({
     email: 'user@example.com',
     password: 'new password'
   })
-  t.ok(yield user.authenticate('new password'))
+  t.ok(await user.authenticate('new password'))
 })
 
-test('authenticate a user without a password', function *(t) {
+test('authenticate a user without a password', async (t) => {
   const user = new User({id: 1, password: null})
-  t.ok(!(yield user.authenticate('password')))
+  t.ok(!(await user.authenticate('password')))
 })
 
-test('validate email', function *(t) {
+test('validate email', async (t) => {
   const user = new User({email: 'invalid'})
 
   user.validate()
@@ -67,9 +67,9 @@ test('validate email', function *(t) {
   t.is(user.errors.email, undefined)
 })
 
-test('validate password on create', function *(t) {
+test('validate password on create', async (t) => {
   try {
-    yield User.create({password: 'asdf'})
+    await User.create({password: 'asdf'})
     t.fail('password was not validated')
   } catch ({message, model}) {
     t.is(message, 'invalid')
@@ -77,10 +77,10 @@ test('validate password on create', function *(t) {
   }
 })
 
-test('validate password on update', function *(t) {
-  const user = yield User.find(1)
+test('validate password on update', async (t) => {
+  const user = await User.find(1)
   try {
-    yield user.update({password: 'asdf'})
+    await user.update({password: 'asdf'})
     t.fail('password was not validated')
   } catch ({message, model}) {
     t.is(message, 'invalid')
@@ -88,7 +88,7 @@ test('validate password on update', function *(t) {
   }
 })
 
-test('User#isAdmin accepts falsy/truthy strings', function *(t) {
+test('User#isAdmin accepts falsy/truthy strings', async (t) => {
   const user = new User({isAdmin: 0})
   t.is(user.isAdmin, false)
   user.isAdmin = 1

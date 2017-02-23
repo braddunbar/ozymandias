@@ -2,9 +2,9 @@
 
 const test = require('./test')
 
-test('send mail', function *(t, {app, client}) {
-  app.use(function *() {
-    const options = yield this.mail({
+test('send mail', async (t, {app, client}) => {
+  app.use(async (_) => {
+    const options = await _.mail({
       html: () => '<h1>test</h1>',
       text: () => 'test'
     }, {
@@ -30,9 +30,9 @@ test('send mail', function *(t, {app, client}) {
       Source: 'source@example.com'
     })
 
-    this.status = 200
+    _.status = 200
   })
 
-  const response = yield client.get('/').send()
+  const response = await client.get('/').send()
   response.assert(200)
 })

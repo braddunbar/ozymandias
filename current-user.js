@@ -1,9 +1,9 @@
 'use strict'
 
-module.exports = function *(next) {
-  const id = this.session.userId
-  const user = id ? yield this.User.find(id) : null
-  this.state.currentUser = this.state.client.currentUser = user
-  this.state.admin = this.state.client.admin = !!(user && user.isAdmin)
-  yield next
+module.exports = async (_, next) => {
+  const id = _.session.userId
+  const user = id ? await _.User.find(id) : null
+  _.state.currentUser = _.state.client.currentUser = user
+  _.state.admin = _.state.client.admin = !!(user && user.isAdmin)
+  await next()
 }

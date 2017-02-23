@@ -2,11 +2,11 @@
 
 const bugsnag = require('bugsnag').register(process.env.BUGSNAG_KEY)
 
-module.exports = function *(next) {
+module.exports = async (_, next) => {
   try {
-    yield next
+    await next()
   } catch (error) {
-    this.error(error)
+    _.error(error)
     bugsnag.notify(error)
   }
 }

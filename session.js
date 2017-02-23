@@ -18,89 +18,89 @@ const findToken = (id) => (
 module.exports = [
 
   // Sign In
-  post('/session', function *() {
-    const {email, password} = this.request.body
-    const user = yield findUser(email)
+  post('/session', async (_) => {
+    const {email, password} = _.request.body
+    const user = await findUser(email)
 
     if (!user) {
-      this.status = 422
-      this.body = {email: ['Sorry! We don’t recognize that email.']}
+      _.status = 422
+      _.body = {email: ['Sorry! We don’t recognize that email.']}
       return
     }
 
-    if (yield user.authenticate(password)) {
-      this.signIn(user)
-      this.body = {}
+    if (await user.authenticate(password)) {
+      _.signIn(user)
+      _.body = {}
     } else {
-      this.status = 422
-      this.body = {password: ['Sorry! That password is incorrect.']}
+      _.status = 422
+      _.body = {password: ['Sorry! That password is incorrect.']}
     }
   }),
 
-  del('/session', function *() {
-    this.signOut()
-    this.body = {}
+  del('/session', async (_) => {
+    _.signOut()
+    _.body = {}
   }),
 
-  get('/session/signin', function *() {
-    this.react()
+  get('/session/signin', async (_) => {
+    _.react()
   }),
 
-  get('/session/forgot', function *() {
-    this.react()
+  get('/session/forgot', async (_) => {
+    _.react()
   }),
 
-  get('/session/reset/:id', function *(id) {
-    const token = yield findToken(id)
-    this.react({
+  get('/session/reset/:id', async (_, id) => {
+    const token = await findToken(id)
+    _.react({
       token: token && token.id,
       email: token && token.user.email
     })
   }),
 
-  post('/session/reset/:id', function *(id) {
-    const token = yield findToken(id)
-    const {password} = this.request.body
+  post('/session/reset/:id', async (_, id) => {
+    const token = await findToken(id)
+    const {password} = _.request.body
 
     if (!token) {
-      this.status = 422
-      this.body = {password: ['Sorry! That token is expired.']}
+      _.status = 422
+      _.body = {password: ['Sorry! That token is expired.']}
       return
     }
 
     if (!password) {
-      this.status = 422
-      this.body = {password: ['You must provide a password.']}
+      _.status = 422
+      _.body = {password: ['You must provide a password.']}
       return
     }
 
-    yield token.user.update(this.permit('password'))
-    this.signIn(token.user)
-    this.body = {}
+    await token.user.update(_.permit('password'))
+    _.signIn(token.user)
+    _.body = {}
   }),
 
-  post('/session/forgot', function *() {
-    const {email} = this.request.body
-    const user = yield findUser(email)
+  post('/session/forgot', async (_) => {
+    const {email} = _.request.body
+    const user = await findUser(email)
 
     if (!user) {
-      this.status = 422
-      this.body = {email: ['Sorry! We don’t recognize that email.']}
+      _.status = 422
+      _.body = {email: ['Sorry! We don’t recognize that email.']}
       return
     }
 
     const expiresAt = new Date()
     expiresAt.setDate(expiresAt.getDate() + 7)
 
-    const token = yield Token.create({expiresAt, userId: user.id})
+    const token = await Token.create({expiresAt, userId: user.id})
 
-    yield this.mail(forgotMail, {
+    await _.mail(forgotMail, {
       to: [user.email],
       subject: `${process.env.NAME}: Password Reset`,
-      url: `http://${this.host}/session/reset/${token.id}`
+      url: `http://${_.host}/session/reset/${token.id}`
     })
 
-    this.body = {}
+    _.body = {}
   })
 
 ]

@@ -3,13 +3,13 @@
 const test = require('./test')
 const {post} = require('koa-route')
 
-test('parse json bodies', function *(t, {app, client}) {
-  app.use(post('/json', function *() {
-    this.body = this.request.body
+test('parse json bodies', async (t, {app, client}) => {
+  app.use(post('/json', async (_) => {
+    _.body = _.request.body
   }))
 
   const values = {x: 1, y: 2, z: 3}
-  const response = yield client
+  const response = await client
     .post('/json')
     .set('content-type', 'application/json')
     .send(values)
@@ -17,12 +17,12 @@ test('parse json bodies', function *(t, {app, client}) {
   response.assert(200, values)
 })
 
-test('parse urlencoded bodies', function *(t, {app, client}) {
-  app.use(post('/urlencoded', function *() {
-    this.body = this.request.body
+test('parse urlencoded bodies', async (t, {app, client}) => {
+  app.use(post('/urlencoded', async (_) => {
+    _.body = _.request.body
   }))
 
-  const response = yield client
+  const response = await client
     .post('/urlencoded')
     .set('content-type', 'application/x-www-form-urlencoded')
     .send('x=1&y=2&z=3')

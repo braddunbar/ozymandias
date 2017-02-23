@@ -2,7 +2,7 @@
 
 const {get} = require('koa-route')
 
-module.exports = get('/assets/*', function *(path, next) {
-  this.set('access-control-allow-origin', '*')
-  yield next
+module.exports = get('/assets/*', async (_, path, next) => {
+  _.set('access-control-allow-origin', '*')
+  await next()
 })

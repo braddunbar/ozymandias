@@ -17,6 +17,6 @@ require('./react')
 require('./session')
 require('./vary')
 
-test('teardown', function *(t) {
+test('teardown', async (t) => {
   db.close()
 })

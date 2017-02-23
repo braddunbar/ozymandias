@@ -2,11 +2,11 @@
 
 const test = require('./test')
 
-test('redirect from http to https', function *(assert, {app, client}) {
+test('redirect from http to https', async (assert, {app, client}) => {
   app.env = 'production'
-  app.use(function *() { this.status = 200 })
+  app.use(async (_) => { _.status = 200 })
 
-  const response = yield client
+  const response = await client
     .get('/')
     .set('x-forwarded-proto', 'http')
     .send()
@@ -14,11 +14,11 @@ test('redirect from http to https', function *(assert, {app, client}) {
   response.assert(302).assert('location', 'https://localhost/')
 })
 
-test('pass through https to next handler', function *(assert, {app, client}) {
+test('pass through https to next handler', async (assert, {app, client}) => {
   app.env = 'production'
-  app.use(function *() { this.status = 200 })
+  app.use(async (_) => { _.status = 200 })
 
-  const response = yield client
+  const response = await client
     .get('/')
     .set('x-forwarded-proto', 'https')
     .send()
@@ -26,11 +26,11 @@ test('pass through https to next handler', function *(assert, {app, client}) {
   response.assert(200)
 })
 
-test('HSTS headers for HTML response', function *(assert, {app, client}) {
+test('HSTS headers for HTML response', async (assert, {app, client}) => {
   app.env = 'production'
-  app.use(function *() { this.body = '' })
+  app.use(async (_) => { _.body = '' })
 
-  const response = yield client
+  const response = await client
     .get('/')
     .set('x-forwarded-proto', 'https')
     .send()
@@ -40,11 +40,11 @@ test('HSTS headers for HTML response', function *(assert, {app, client}) {
     .assert('strict-transport-security', 'max-age=31557600; includeSubDomains; preload')
 })
 
-test('HSTS headers for JSON response', function *(assert, {app, client}) {
+test('HSTS headers for JSON response', async (assert, {app, client}) => {
   app.env = 'production'
-  app.use(function *() { this.body = {} })
+  app.use(async (_) => { _.body = {} })
 
-  const response = yield client
+  const response = await client
     .get('/')
     .set('x-forwarded-proto', 'https')
     .send()
@@ -54,10 +54,10 @@ test('HSTS headers for JSON response', function *(assert, {app, client}) {
     .assert('strict-transport-security', 'max-age=31557600; includeSubDomains; preload')
 })
 
-test('security headers for HTML response', function *(assert, {app, client}) {
-  app.use(function *() { this.body = '<!doctype html>' })
+test('security headers for HTML response', async (assert, {app, client}) => {
+  app.use(async (_) => { _.body = '<!doctype html>' })
 
-  const response = yield client.get('/').send()
+  const response = await client.get('/').send()
   response
     .assert(200)
     .assert('x-frame-options', 'SAMEORIGIN')
@@ -73,10 +73,10 @@ test('security headers for HTML response', function *(assert, {app, client}) {
     .assert('content-security-policy', /script-src[^;]+https:\/\/www.google-analytics.com/)
 })
 
-test('security headers for JSON response', function *(assert, {app, client}) {
-  app.use(function *() { this.body = {} })
+test('security headers for JSON response', async (assert, {app, client}) => {
+  app.use(async (_) => { _.body = {} })
 
-  const response = yield client.get('/').send()
+  const response = await client.get('/').send()
   response
     .assert(200)
     .assert('x-frame-options', undefined)
@@ -85,22 +85,22 @@ test('security headers for JSON response', function *(assert, {app, client}) {
     .assert('content-security-policy', undefined)
 })
 
-test('secure cookies for https responses', function *(assert, {app, client}) {
-  app.use(function *() {
-    this.cookies.set('x', 'y')
-    this.body = ''
+test('secure cookies for https responses', async (assert, {app, client}) => {
+  app.use(async (_) => {
+    _.cookies.set('x', 'y')
+    _.body = ''
   })
 
-  const response = yield client.get('/').set('x-forwarded-proto', 'https').send()
+  const response = await client.get('/').set('x-forwarded-proto', 'https').send()
   response
     .assert(200)
     .assert('set-cookie', /secure/)
 })
 
-test('include a referrer policy in HTML responses', function *(assert, {app, client}) {
-  app.use(function *() { this.body = '<!doctype html>' })
+test('include a referrer policy in HTML responses', async (assert, {app, client}) => {
+  app.use(async (_) => { _.body = '<!doctype html>' })
 
-  const response = yield client.get('/').send()
+  const response = await client.get('/').send()
   response
     .assert(200)
     .assert('referrer-policy', 'no-referrer')

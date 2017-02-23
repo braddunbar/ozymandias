@@ -3,58 +3,58 @@
 const test = require('./test')
 const User = require('../user')
 
-test('no user', function *(assert, {app, client}) {
+test('no user', async (assert, {app, client}) => {
   app.context.User = User
-  app.use(function *() {
-    assert.is(this.state.admin, false)
-    assert.is(this.state.currentUser, null)
+  app.use(async (_) => {
+    assert.is(_.state.admin, false)
+    assert.is(_.state.currentUser, null)
 
-    assert.is(this.state.client.admin, false)
-    assert.is(this.state.client.currentUser, null)
+    assert.is(_.state.client.admin, false)
+    assert.is(_.state.client.currentUser, null)
 
-    this.status = 200
+    _.status = 200
   })
-  const response = yield client.get('/').send()
+  const response = await client.get('/').send()
   response.assert(200)
 })
 
-test('fetch a user', function *(assert, {app, client}) {
+test('fetch a user', async (assert, {app, client}) => {
   app.context.User = User
-  app.use(function *() {
-    assert.is(this.state.admin, true)
-    assert.is(this.state.currentUser.id, 1)
+  app.use(async (_) => {
+    assert.is(_.state.admin, true)
+    assert.is(_.state.currentUser.id, 1)
 
-    assert.is(this.state.client.admin, true)
-    assert.is(this.state.client.currentUser.id, 1)
+    assert.is(_.state.client.admin, true)
+    assert.is(_.state.client.currentUser.id, 1)
 
-    this.status = 200
+    _.status = 200
   })
 
-  const signin = yield client
+  const signin = await client
     .post('/session')
     .send({email: 'brad@example.com', password: 'password'})
   signin.assert(200)
 
-  const response = yield client.get('/').send()
+  const response = await client.get('/').send()
   response.assert(200)
 })
 
-test('fetch a non-admin user', function *(assert, {app, client}) {
+test('fetch a non-admin user', async (assert, {app, client}) => {
   app.context.User = User
-  app.use(function *() {
-    assert.is(this.state.admin, false)
-    assert.is(this.state.currentUser.id, 3)
+  app.use(async (_) => {
+    assert.is(_.state.admin, false)
+    assert.is(_.state.currentUser.id, 3)
 
-    assert.is(this.state.client.admin, false)
-    assert.is(this.state.client.currentUser.id, 3)
+    assert.is(_.state.client.admin, false)
+    assert.is(_.state.client.currentUser.id, 3)
 
-    this.status = 200
+    _.status = 200
   })
 
-  const signin = yield client
+  const signin = await client
     .post('/session')
     .send({email: 'jd@example.com', password: 'password'})
   signin.assert(200)
-  const response = yield client.get('/').send()
+  const response = await client.get('/').send()
   response.assert(200)
 })

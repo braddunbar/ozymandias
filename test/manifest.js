@@ -15,11 +15,11 @@ const base64 = (value) => (
   crypto.createHash('sha256').update(value).digest('base64')
 )
 
-test('set up', function *(t) {
+test('set up', async (t) => {
   mkdirp.sync('public')
 })
 
-test('hash files and return the asset path', function *(t) {
+test('hash files and return the asset path', async (t) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test', '1')
   t.deepEqual(manifest(), {
@@ -30,7 +30,7 @@ test('hash files and return the asset path', function *(t) {
   t.is(fs.readFileSync(`public/assets/test-${hex('1')}`).toString(), '1')
 })
 
-test('js files are added to integrity', function *(t) {
+test('js files are added to integrity', async (t) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test.js', '1')
   t.deepEqual(manifest(), {
@@ -41,7 +41,7 @@ test('js files are added to integrity', function *(t) {
   t.is(fs.readFileSync(`public/assets/test-${hex('1')}.js`).toString(), '1')
 })
 
-test('css files are added to integrity', function *(t) {
+test('css files are added to integrity', async (t) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test.css', '1')
   t.deepEqual(manifest(), {
@@ -52,7 +52,7 @@ test('css files are added to integrity', function *(t) {
   t.is(fs.readFileSync(`public/assets/test-${hex('1')}.css`).toString(), '1')
 })
 
-test('do not bump age on multiple runs', function *(t) {
+test('do not bump age on multiple runs', async (t) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test', '1')
   manifest()
@@ -67,7 +67,7 @@ test('do not bump age on multiple runs', function *(t) {
   t.is(fs.readFileSync(`public/assets/test-${hex('1')}`).toString(), '1')
 })
 
-test('write out .manifest.json', function *(t) {
+test('write out .manifest.json', async (t) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test', '1')
   manifest()
@@ -79,7 +79,7 @@ test('write out .manifest.json', function *(t) {
   })
 })
 
-test('handle file extensions correctly', function *(t) {
+test('handle file extensions correctly', async (t) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test.txt', '1')
   t.deepEqual(manifest(), {
@@ -90,7 +90,7 @@ test('handle file extensions correctly', function *(t) {
   t.is(fs.readFileSync(`public/assets/test-${hex('1')}.txt`).toString(), '1')
 })
 
-test('handle directories correctly', function *(t) {
+test('handle directories correctly', async (t) => {
   rimraf.sync('public/**/*')
   mkdirp.sync('public/test')
   fs.writeFileSync('public/test/test', '1')
@@ -102,14 +102,14 @@ test('handle directories correctly', function *(t) {
   t.is(fs.readFileSync(`public/assets/test/test-${hex('1')}`).toString(), '1')
 })
 
-test('ignore files and directories in public/assets/', function *(t) {
+test('ignore files and directories in public/assets/', async (t) => {
   rimraf.sync('public/**/*')
   mkdirp.sync('public/assets/test/test')
   fs.writeFileSync('public/assets/test/test/test', '1')
   t.deepEqual(manifest(), {assets: {}, files: {}, integrity: {}})
 })
 
-test('read existing manifest', function *(t) {
+test('read existing manifest', async (t) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test', '1')
   manifest()
@@ -126,7 +126,7 @@ test('read existing manifest', function *(t) {
   t.is(fs.readFileSync(`public/assets/test-${hex('2')}`).toString(), '2')
 })
 
-test('only keep three versions', function *(t) {
+test('only keep three versions', async (t) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test', '1')
   manifest()
@@ -150,7 +150,7 @@ test('only keep three versions', function *(t) {
   t.is(fs.readFileSync(`public/assets/test-${hex('4')}`).toString(), '4')
 })
 
-test('remove empty directories', function *(t) {
+test('remove empty directories', async (t) => {
   rimraf.sync('public/**/*')
   mkdirp.sync('public/dir')
   fs.writeFileSync('public/dir/test', '1')
@@ -169,6 +169,6 @@ test('remove empty directories', function *(t) {
   t.is(fs.readFileSync(`public/assets/test-${hex('1')}`).toString(), '1')
 })
 
-test('clean up', function *(t) {
+test('clean up', async (t) => {
   rimraf.sync('public')
 })

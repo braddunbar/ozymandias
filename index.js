@@ -45,9 +45,9 @@ const ozymandias = module.exports = function () {
   }))
 
   // Vary
-  app.use(function *(next) {
-    this.vary('Accept')
-    yield next
+  app.use(async (_, next) => {
+    _.vary('Accept')
+    await next()
   })
 
   // Extend context.
@@ -58,9 +58,9 @@ const ozymandias = module.exports = function () {
   )
 
   // Client state!
-  app.use(function *(next) {
-    this.state.client = {}
-    yield next
+  app.use(async (_, next) => {
+    _.state.client = {}
+    await next()
   })
 
   // Who's the user?
