@@ -4,7 +4,6 @@ const crypto = require('crypto')
 const {Model} = require('./db/instance')
 
 class Token extends Model {
-
   static get tableName () {
     return 'tokens'
   }
@@ -21,7 +20,6 @@ class Token extends Model {
     if (!values.id) values.id = crypto.randomBytes(20).toString('hex')
     return super.create(values)
   }
-
 }
 
 module.exports = Token

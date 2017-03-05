@@ -9,7 +9,6 @@ const snakeCase = (value) => (
 )
 
 class Model {
-
   constructor (data) {
     Object.assign(this, data)
   }
@@ -107,7 +106,6 @@ class Model {
     options.many = false
     this.relations[name] = options
   }
-
 }
 
 // Attach Query methods to Model

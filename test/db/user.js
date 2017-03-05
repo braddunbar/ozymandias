@@ -3,7 +3,6 @@
 const db = require('../../db/instance')
 
 class User extends db.Model {
-
   static get tableName () {
     return 'users'
   }
@@ -24,7 +23,6 @@ class User extends db.Model {
     this.errors = {}
     if (!this.email) this.errors.email = ['Email cannot be blank']
   }
-
 }
 
 module.exports = User

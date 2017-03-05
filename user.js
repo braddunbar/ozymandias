@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt')
 const ROUNDS = process.env.NODE_ENV === 'production' ? 12 : 1
 
 class User extends Model {
-
   static get tableName () {
     return 'users'
   }

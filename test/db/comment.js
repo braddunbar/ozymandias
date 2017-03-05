@@ -3,7 +3,6 @@
 const db = require('../../db/instance')
 
 class Comment extends db.Model {
-
   static get tableName () {
     return 'comments'
   }
@@ -16,7 +15,6 @@ class Comment extends db.Model {
       'userId'
     ]
   }
-
 }
 
 module.exports = Comment

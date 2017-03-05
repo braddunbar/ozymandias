@@ -21,7 +21,6 @@ const escape = (value) => {
 
 // Raw Values
 class Raw {
-
   constructor (value) {
     this.value = value
   }
@@ -29,7 +28,6 @@ class Raw {
   toString () {
     return this.value
   }
-
 }
 
 exports.raw = value => new Raw(value)

@@ -1,7 +1,6 @@
 'use strict'
 
 class Transaction {
-
   constructor (db) {
     this.db = db
   }
@@ -43,7 +42,6 @@ class Transaction {
   rollback () {
     return this.close('rollback')
   }
-
 }
 
 module.exports = Transaction

@@ -9,7 +9,6 @@ const Transaction = require('./transaction')
 require('./sql')
 
 class DB {
-
   constructor (url) {
     const db = this
     this.pool = new Pool({connectionString: url})
@@ -38,7 +37,6 @@ class DB {
   transaction () {
     return new Transaction(this)
   }
-
 }
 
 module.exports = DB

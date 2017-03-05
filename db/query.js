@@ -4,7 +4,6 @@ const Raw = require('./raw')
 const Column = require('sql/lib/column')
 
 class Query {
-
   uniq (array) {
     return Array.from(new Set(array))
   }
@@ -244,7 +243,6 @@ class Query {
       text.split(/\s+/g).map((term) => `${term}:*`).join(' & ')
     )
   }
-
 }
 
 module.exports = Query

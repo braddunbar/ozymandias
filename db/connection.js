@@ -1,7 +1,6 @@
 'use strict'
 
 class Connection {
-
   constructor (db, client) {
     this.db = db
     this.client = client
@@ -23,7 +22,6 @@ class Connection {
   static create (db) {
     return db.pool.connect().then((client) => new Connection(db, client))
   }
-
 }
 
 module.exports = Connection

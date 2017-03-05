@@ -3,7 +3,6 @@
 const db = require('../../db/instance')
 
 class Post extends db.Model {
-
   static get tableName () {
     return 'posts'
   }
@@ -17,7 +16,6 @@ class Post extends db.Model {
       'search'
     ]
   }
-
 }
 
 module.exports = Post
