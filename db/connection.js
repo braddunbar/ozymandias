@@ -19,8 +19,8 @@ class Connection {
     })
   }
 
-  static create (db) {
-    return db.pool.connect().then((client) => new Connection(db, client))
+  static async create (db) {
+    return new Connection(db, await db.pool.connect())
   }
 }
 
