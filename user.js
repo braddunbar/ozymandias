@@ -41,7 +41,7 @@ class User extends Model {
     return bcrypt.compare(password, this.password)
   }
 
-  update (values) {
+  async update (values) {
     if (!values.password) return super.update(values)
 
     // Validate the password.
@@ -53,13 +53,11 @@ class User extends Model {
     }
 
     // Hash the password before updating.
-    return bcrypt.hash(values.password, ROUNDS).then((hash) => {
-      values.password = hash
-      return super.update(values)
-    })
+    values.password = await bcrypt.hash(values.password, ROUNDS)
+    return super.update(values)
   }
 
-  static create (values) {
+  static async create (values) {
     if (!values.password) return super.create(values)
 
     // Validate the password.
@@ -72,10 +70,8 @@ class User extends Model {
     }
 
     // Hash the password before creation.
-    return bcrypt.hash(values.password, ROUNDS).then((hash) => {
-      values.password = hash
-      return super.create(values)
-    })
+    values.password = await bcrypt.hash(values.password, ROUNDS)
+    return super.create(values)
   }
 
   validate () {
