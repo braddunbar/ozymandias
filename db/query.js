@@ -51,18 +51,12 @@ class Query {
     // Load includes
     await Promise.all(Object.keys(this.includes).map(async (name) => {
       const relation = Model.relations[name]
-      const conditions = {}
       const {key, many} = relation
 
-      conditions[many ? key : 'id'] = this.uniq(models.map((model) => (
-        model[many ? 'id' : key]
-      )))
-
       // Attach includes
-      const includes = await relation.model
-        .where(conditions)
-        .include(this.includes[name])
-        .all()
+      const includes = await relation.model.where({
+        [many ? key : 'id']: this.uniq(models.map((model) => model[many ? 'id' : key]))
+      }).include(this.includes[name]).all()
 
       const byId = {}
       if (many) {
