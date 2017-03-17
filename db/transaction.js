@@ -21,18 +21,15 @@ class Transaction {
     return this.connect().then((connection) => connection.query(query, values))
   }
 
-  close (query) {
+  async close (query) {
     this.closed = true
-    if (!this.started) return Promise.resolve()
-    return this.connect().then((connection) => (
-      connection.query(query).then((value) => {
-        connection.close()
-        return value
-      }).catch((error) => {
-        connection.close()
-        throw error
-      })
-    ))
+    if (!this.started) return
+    const connection = await this.connect()
+    try {
+      return await connection.query(query)
+    } finally {
+      connection.close()
+    }
   }
 
   commit () {
