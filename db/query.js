@@ -59,24 +59,24 @@ class Query {
       )))
 
       // Attach includes
-      return relation.model
-      .where(conditions)
-      .include(this.includes[name])
-      .all().then((includes) => {
-        const byId = {}
-        if (many) {
-          for (const model of models) {
-            model[name] = []
-            byId[model.id] = model
-          }
-          for (const include of includes) {
-            byId[include[key]][name].push(include)
-          }
-        } else {
-          for (const include of includes) byId[include.id] = include
-          for (const model of models) model[name] = byId[model[key]]
+      const includes = await relation.model
+        .where(conditions)
+        .include(this.includes[name])
+        .all()
+
+      const byId = {}
+      if (many) {
+        for (const model of models) {
+          model[name] = []
+          byId[model.id] = model
         }
-      })
+        for (const include of includes) {
+          byId[include[key]][name].push(include)
+        }
+      } else {
+        for (const include of includes) byId[include.id] = include
+        for (const model of models) model[name] = byId[model[key]]
+      }
     }))
 
     return models
