@@ -13,9 +13,9 @@ class Transaction {
     return this.connection
   }
 
-  query (query, values) {
+  async query (query, values) {
     if (this.closed) throw new Error('cannot query a closed transaction')
-    return this.connect().then((connection) => connection.query(query, values))
+    return (await this.connect()).query(query, values)
   }
 
   async close (query) {
