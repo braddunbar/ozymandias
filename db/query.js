@@ -90,13 +90,11 @@ class Query {
     return models.length ? models[0] : null
   }
 
-  paginate (page, count) {
-    return this.offset((page - 1) * count).limit(count + 1).all()
-    .then((models) => {
-      const more = models.more = models.length > count
-      if (more) models.pop()
-      return models
-    })
+  async paginate (page, count) {
+    const models = await this.offset((page - 1) * count).limit(count + 1).all()
+    models.more = models.length > count
+    if (models.more) models.pop()
+    return models
   }
 
   not (values) {
