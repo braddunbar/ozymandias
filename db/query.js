@@ -84,11 +84,10 @@ class Query {
     })
   }
 
-  find (id) {
+  async find (id) {
     if (id != null) return this.where({id: id}).find()
-    return this.limit(1).all().then((models) => (
-      models.length ? models[0] : null
-    ))
+    const models = await this.limit(1).all()
+    return models.length ? models[0] : null
   }
 
   paginate (page, count) {
