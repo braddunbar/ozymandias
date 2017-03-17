@@ -90,11 +90,11 @@ class Model {
     return this._relations
   }
 
-  static create (values) {
+  static async create (values) {
     const model = new this(values)
     if (!model.valid) return Promise.reject(model.invalidError())
     for (const key of Object.keys(values)) values[key] = model[key]
-    return this.insert(values).then((values) => Object.assign(model, values))
+    return Object.assign(model, await this.insert(values))
   }
 
   static hasMany (name, options) {
