@@ -34,9 +34,9 @@ class Query {
     return this.send()
   }
 
-  count () {
+  async count () {
     this.query = this.query.select('count(*) as count').from(this.from)
-    return this.send().then(({rows: [{count}]}) => +count)
+    return +(await this.send()).rows[0].count
   }
 
   all () {
