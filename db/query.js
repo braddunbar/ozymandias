@@ -39,7 +39,7 @@ class Query {
     return +(await this.send()).rows[0].count
   }
 
-  all () {
+  async all () {
     const Model = this.model
     const includes = this.includes
 
@@ -47,41 +47,40 @@ class Query {
     this.query = this.query.select(this.table.star()).from(this.from)
 
     // Load models
-    return this.send().then(({rows}) => {
-      // Construct some models
-      const models = rows.map((row) => new Model(row))
+    const models = (await this.send()).rows.map((row) => new Model(row))
 
-      // Load includes
-      return Promise.all(Object.keys(includes).map((name) => {
-        const relation = Model.relations[name]
-        const conditions = {}
-        const {key, many} = relation
+    // Load includes
+    await Promise.all(Object.keys(includes).map((name) => {
+      const relation = Model.relations[name]
+      const conditions = {}
+      const {key, many} = relation
 
-        conditions[many ? key : 'id'] = this.uniq(models.map((model) => (
-          model[many ? 'id' : key]
-        )))
+      conditions[many ? key : 'id'] = this.uniq(models.map((model) => (
+        model[many ? 'id' : key]
+      )))
 
-        // Attach includes
-        return relation.model
-        .where(conditions)
-        .include(includes[name])
-        .all().then((includes) => {
-          const byId = {}
-          if (many) {
-            for (const model of models) {
-              model[name] = []
-              byId[model.id] = model
-            }
-            for (const include of includes) {
-              byId[include[key]][name].push(include)
-            }
-          } else {
-            for (const include of includes) byId[include.id] = include
-            for (const model of models) model[name] = byId[model[key]]
+      // Attach includes
+      return relation.model
+      .where(conditions)
+      .include(includes[name])
+      .all().then((includes) => {
+        const byId = {}
+        if (many) {
+          for (const model of models) {
+            model[name] = []
+            byId[model.id] = model
           }
-        })
-      })).then(() => models)
-    })
+          for (const include of includes) {
+            byId[include[key]][name].push(include)
+          }
+        } else {
+          for (const include of includes) byId[include.id] = include
+          for (const model of models) model[name] = byId[model[key]]
+        }
+      })
+    }))
+
+    return models
   }
 
   async find (id) {
