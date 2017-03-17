@@ -19,9 +19,9 @@ class Query {
     return this.db.query(this.query.toQuery())
   }
 
-  insert (values) {
+  async insert (values) {
     this.query = this.query.insert(values).returning(this.table.star())
-    return this.send().then(({rows}) => rows[0])
+    return (await this.send()).rows[0]
   }
 
   update (values) {
