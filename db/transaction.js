@@ -5,13 +5,10 @@ class Transaction {
     this.db = db
   }
 
-  connect () {
+  async connect () {
     this.started = true
     if (!this.connection) {
-      this.connection = this.db.connect().then((connection) => {
-        connection.query('begin')
-        return connection
-      })
+      (this.connection = await this.db.connect()).query('begin')
     }
     return this.connection
   }
