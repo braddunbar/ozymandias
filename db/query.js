@@ -41,7 +41,6 @@ class Query {
 
   async all () {
     const Model = this.model
-    const includes = this.includes
 
     // Use aliases
     this.query = this.query.select(this.table.star()).from(this.from)
@@ -50,7 +49,7 @@ class Query {
     const models = (await this.send()).rows.map((row) => new Model(row))
 
     // Load includes
-    await Promise.all(Object.keys(includes).map((name) => {
+    await Promise.all(Object.keys(this.includes).map(async (name) => {
       const relation = Model.relations[name]
       const conditions = {}
       const {key, many} = relation
@@ -62,7 +61,7 @@ class Query {
       // Attach includes
       return relation.model
       .where(conditions)
-      .include(includes[name])
+      .include(this.includes[name])
       .all().then((includes) => {
         const byId = {}
         if (many) {
