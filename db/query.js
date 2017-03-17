@@ -3,11 +3,9 @@
 const Raw = require('./raw')
 const Column = require('sql/lib/column')
 
-class Query {
-  uniq (array) {
-    return Array.from(new Set(array))
-  }
+const uniq = (array) => Array.from(new Set(array))
 
+class Query {
   constructor (model) {
     this.includes = {}
     this.db = model.db
@@ -55,7 +53,7 @@ class Query {
 
       // Attach includes
       const includes = await relation.model.where({
-        [many ? key : 'id']: this.uniq(models.map((model) => model[many ? 'id' : key]))
+        [many ? key : 'id']: uniq(models.map((model) => model[many ? 'id' : key]))
       }).include(this.includes[name]).all()
 
       const byId = {}
