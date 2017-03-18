@@ -44,9 +44,13 @@ const ozymandias = module.exports = function () {
     maxAge: ms('30d')
   }))
 
-  // Vary
   app.use(async (_, next) => {
+    // Vary on the accept header
     _.vary('accept')
+
+    // No caching by default
+    _.set('cache-control', 'private, no-store, no-cache, max-age=0, must-revalidate')
+
     await next()
   })
 
