@@ -46,7 +46,7 @@ const ozymandias = module.exports = function () {
 
   // Vary
   app.use(async (_, next) => {
-    _.vary('Accept')
+    _.vary('accept')
     await next()
   })
 
