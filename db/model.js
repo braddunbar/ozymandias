@@ -39,12 +39,12 @@ class Model {
     return result
   }
 
-  update (values) {
+  async update (values) {
     for (const key in values) {
       this[key] = values[key]
       values[key] = this[key]
     }
-    if (!this.valid) return Promise.reject(this.invalidError())
+    if (!this.valid) throw this.invalidError()
     const query = this.constructor.where({id: this.id})
     return query.update(this.slice(...Object.keys(values)))
   }
@@ -92,7 +92,7 @@ class Model {
 
   static async create (values) {
     const model = new this(values)
-    if (!model.valid) return Promise.reject(model.invalidError())
+    if (!model.valid) throw model.invalidError()
     for (const key of Object.keys(values)) values[key] = model[key]
     return Object.assign(model, await this.insert(values))
   }

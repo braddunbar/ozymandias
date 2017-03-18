@@ -36,8 +36,8 @@ class User extends Model {
     this._isAdmin = !!+value || false
   }
 
-  authenticate (password) {
-    if (this.password == null) return Promise.resolve(false)
+  async authenticate (password) {
+    if (this.password == null) return false
     return bcrypt.compare(password, this.password)
   }
 
@@ -49,7 +49,7 @@ class User extends Model {
       this.errors = {
         password: ['Password must be at least eight characters long']
       }
-      return Promise.reject(this.invalidError())
+      throw this.invalidError()
     }
 
     // Hash the password before updating.
@@ -66,7 +66,7 @@ class User extends Model {
       model.errors = {
         password: ['Password must be at least eight characters long']
       }
-      return Promise.reject(model.invalidError())
+      throw model.invalidError()
     }
 
     // Hash the password before creation.
