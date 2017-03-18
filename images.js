@@ -25,16 +25,14 @@ const convert = (file, size) => (
 )
 
 // Upload an image to s3.
-const put = (key, body, contentType) => (
-  new Promise((resolve, reject) => s3.upload({
-    ACL: 'public-read',
-    Body: body,
-    Bucket: BUCKET,
-    CacheControl: `max-age=${ms('1y')},public`,
-    ContentType: contentType,
-    Key: key
-  }, (error) => error ? reject(error) : resolve()))
-)
+const put = (key, body, contentType) => s3.upload({
+  ACL: 'public-read',
+  Body: body,
+  Bucket: BUCKET,
+  CacheControl: `max-age=${ms('1y')},public`,
+  ContentType: contentType,
+  Key: key
+}).promise()
 
 exports.hasImage = function ({defaults, name, sizes}) {
   const Name = name[0].toUpperCase() + name.slice(1)

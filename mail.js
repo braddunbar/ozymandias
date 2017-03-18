@@ -8,7 +8,7 @@ const ses = new aws.SES({
 
 module.exports = {
 
-  mail (mail, state) {
+  async mail (mail, state) {
     state = Object.assign({}, this.state, state)
 
     const options = {
@@ -27,13 +27,9 @@ module.exports = {
       Source: process.env.SOURCE_EMAIL
     }
 
-    if (this.app.env === 'test') return Promise.resolve(options)
+    if (this.app.env === 'test') return options
 
-    return new Promise((resolve, reject) => {
-      ses.sendEmail(options, (error, result) => (
-        error ? reject(error) : resolve(result)
-      ))
-    })
+    return ses.sendEmail(options).promise()
   }
 
 }
