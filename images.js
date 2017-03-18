@@ -54,14 +54,15 @@ exports.hasImage = function ({defaults, name, sizes}) {
         let fileFound = false
         const busboy = new Busboy({headers: request.headers})
 
-        busboy.on('file', (fieldName, file, fileName, encoding, mime) => {
+        busboy.on('file', async (fieldName, file, fileName, encoding, mime) => {
           if (fileFound) return file.resume()
           fileFound = true
 
-          Promise.all([
+          await Promise.all([
             put(this[`${name}Key`]('original'), strip(file), mime),
             this[`convert${Name}`](file)
-          ]).then(() => resolve())
+          ])
+          resolve()
         })
 
         busboy.on('finish', () => { if (!fileFound) resolve() })
@@ -71,7 +72,7 @@ exports.hasImage = function ({defaults, name, sizes}) {
     },
 
     // convertImage
-    [`convert${Name}`] (file) {
+    async [`convert${Name}`] (file) {
       // Use the original by default.
       if (!file) {
         file = s3.getObject({
@@ -80,11 +81,10 @@ exports.hasImage = function ({defaults, name, sizes}) {
         }).createReadStream()
       }
 
-      return Promise.all(Object.keys(sizes).map((size) => (
+      await Promise.all(Object.keys(sizes).map((size) =>
         put(this[`${name}Key`](size), convert(file, sizes[size]), 'image/jpeg')
-      ))).then(() => (
-        this.update({[`${name}UpdatedAt`]: new Date()})
       ))
+      return this.update({[`${name}UpdatedAt`]: new Date()})
     },
 
     // imageKey
