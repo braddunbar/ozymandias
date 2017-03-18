@@ -12,11 +12,7 @@ class Connection {
 
   query (...args) {
     this.db.log(args)
-    return new Promise((resolve, reject) => {
-      this.client.query(...args, (error, result) => {
-        error ? reject(error) : resolve(result)
-      })
-    })
+    return this.client.query(...args)
   }
 
   static async create (db) {
