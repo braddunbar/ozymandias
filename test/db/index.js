@@ -7,7 +7,6 @@ const Post = require('./post')
 const Comment = require('./comment')
 
 test('connection closed on error', async (t) => {
-  // TODO: Remove this try…
   try {
     await db.query('this is not valid syntax')
     t.fail('this should fail')
