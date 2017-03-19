@@ -13,38 +13,36 @@ class Query {
     this.table = this.query = this.from = model.table
   }
 
-  send () {
-    return this.db.query(this.query.toQuery())
+  send (query) {
+    return this.db.query(query.toQuery())
   }
 
   async insert (values) {
-    this.query = this.query.insert(values).returning(this.table.star())
-    return (await this.send()).rows[0]
+    const query = this.query.insert(values).returning(this.table.star())
+    return (await this.send(query)).rows[0]
   }
 
   update (values) {
-    this.query = this.query.update(values)
-    return this.send()
+    return this.send(this.query.update(values))
   }
 
   ['delete'] () {
-    this.query = this.query.delete()
-    return this.send()
+    return this.send(this.query.delete())
   }
 
   async count () {
-    this.query = this.query.select('count(*) as count').from(this.from)
-    return +(await this.send()).rows[0].count
+    const query = this.query.select('count(*) as count').from(this.from)
+    return +(await this.send(query)).rows[0].count
   }
 
   async all () {
     const Model = this.model
 
     // Use aliases
-    this.query = this.query.select(this.table.star()).from(this.from)
+    const query = this.query.select(this.table.star()).from(this.from)
 
     // Load models
-    const models = (await this.send()).rows.map((row) => new Model(row))
+    const models = (await this.send(query)).rows.map((row) => new Model(row))
 
     // Load includes
     await Promise.all(Object.keys(this.includes).map(async (name) => {
