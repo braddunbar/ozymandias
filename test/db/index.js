@@ -477,3 +477,9 @@ test('left join', async (t) => {
     .all()
   t.deepEqual(users.map((user) => [user.id, user.post_count]), [[1, 2], [2, 2], [3, 0], [4, 0]])
 })
+
+test('search', async (t) => {
+  const posts = await Post.search('lorem').all()
+  t.is(posts.length, 1)
+  t.deepEqual(posts.map(({id}) => id), [1])
+})
