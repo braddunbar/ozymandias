@@ -223,10 +223,8 @@ class Query {
   }
 
   search (text) {
-    return this.where(
-      "search @@ to_tsquery('simple', ?)",
-      text.split(/\s+/g).map((term) => `"${term}":*`).join(' & ')
-    )
+    const query = text.split(/\s+/g).map((term) => `"${term}":*`).join(' & ')
+    return this.where("search @@ to_tsquery('simple', ?)", query)
   }
 }
 
