@@ -483,3 +483,9 @@ test('search', async (t) => {
   t.is(posts.length, 1)
   t.deepEqual(posts.map(({id}) => id), [1])
 })
+
+test('search with ampersand', async (t) => {
+  const posts = await Post.search('lorem & ipsum').all()
+  t.is(posts.length, 1)
+  t.deepEqual(posts.map(({id}) => id), [1])
+})
