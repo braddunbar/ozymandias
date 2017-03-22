@@ -36,18 +36,6 @@ module.exports = {
     this.session = null
   },
 
-  // Log an error and render a 500 page.
-  error (error) {
-    if (error.message === 'invalid' && error.model) {
-      this.status = 422
-      this.body = error.model.errors
-      return
-    }
-    console.log(error.stack)
-    this.status = 500
-    this.react()
-  },
-
   unauthorized () {
     this.status = 401
     this.react()

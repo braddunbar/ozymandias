@@ -3,7 +3,7 @@
 const test = require('./test')
 
 test('500', async (t, {app, client}) => {
-  app.use(async (_) => { _.error(new Error('test')) })
+  app.use(async (_) => { throw new Error('test') })
   const response = await client.get('/').send()
   response.assert(500)
 })
@@ -12,7 +12,7 @@ test('422', async (t, {app, client}) => {
   app.use(async (_) => {
     const error = new Error('invalid')
     error.model = {errors: {x: 1}}
-    _.error(error)
+    throw error
   })
 
   const response = await client.get('/422').send()
