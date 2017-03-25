@@ -19,7 +19,7 @@ module.exports = async (_, next) => {
     // Notify bugsnag
     const user = _.state.currentUser
     bugsnag.notify(error, {
-      req: Object.assign(_.req, {host: _.host, protocol: _.protocol}),
+      req: Object.assign(_.req, {host: _.hostname, protocol: _.protocol}),
       user: user && user.slice('email', 'id')
     })
 
