@@ -13,10 +13,14 @@ module.exports = async (_, next) => {
       return
     }
 
+    // Write the error to the console
+    console.error(error.stack)
+
     // Notify bugsnag
+    const user = _.state.currentUser
     bugsnag.notify(error, {
       req: _.req,
-      user: _.currentUser && _.currentUser.slice('id')
+      user: user && user.slice('email', 'id')
     })
 
     // Send back a 500
