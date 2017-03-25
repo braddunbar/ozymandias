@@ -159,9 +159,10 @@ test('order as array descending', async (assert) => {
 
 test('where null', async (assert) => {
   const users = await User.where({birthday: null}).all()
-  assert.is(users.length, 2)
-  assert.is(users[0].email, 'jd@example.com')
-  assert.is(users[1].email, 'test@example.com')
+  assert.deepEqual(users.map(({email}) => email), [
+    'jd@example.com',
+    'test@example.com'
+  ])
 })
 
 test('where string', async (assert) => {
@@ -259,18 +260,12 @@ test('include belongsTo', async (assert) => {
 test('include hasMany', async (assert) => {
   const user = await User.include('posts').find(1)
   assert.is(user.id, 1)
-  assert.is(user.posts.length, 2)
-  assert.is(user.posts[0].id, 1)
-  assert.is(user.posts[1].id, 3)
+  assert.deepEqual(user.posts.map(({id}) => id), [1, 3])
 })
 
 test('all belongsTo', async (assert) => {
   const posts = await Post.include('user').where({id: [1, 2, 3, 4]}).all()
-  assert.is(posts.length, 4)
-  assert.is(posts[0].user.id, 1)
-  assert.is(posts[1].user.id, 2)
-  assert.is(posts[2].user.id, 1)
-  assert.is(posts[3].user.id, 2)
+  assert.deepEqual(posts.map(({user}) => user.id), [1, 2, 1, 2])
 })
 
 test('all hasMany', async (assert) => {
