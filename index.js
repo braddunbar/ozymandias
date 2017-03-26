@@ -51,6 +51,9 @@ const ozymandias = module.exports = function () {
     // No caching by default
     _.set('cache-control', 'private, no-store, no-cache, max-age=0, must-revalidate')
 
+    // Client state!
+    _.state.client = {}
+
     await next()
   })
 
@@ -60,12 +63,6 @@ const ozymandias = module.exports = function () {
     require('./mail'),
     require('./react')
   )
-
-  // Client state!
-  app.use(async (_, next) => {
-    _.state.client = {}
-    await next()
-  })
 
   // Who's the user?
   app.use(require('./current-user'))
