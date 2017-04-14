@@ -55,7 +55,7 @@
   "devDependencies": {
     "deep-freeze": "0.0.1",
     "faucet": "0.0.1",
-    "standard": "9.0.2",
+    "standard": "10.0.1",
     "tape": "4.6.3",
     "test-client": "1.0.1"
   }
