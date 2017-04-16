@@ -4,8 +4,8 @@ const Postgres = require('sql/lib/dialect/postgres')
 const Parameter = require('sql/lib/node/parameter')
 const visit = Postgres.prototype.visit
 
-Postgres.prototype.visit = function (node) {
-  if (node.type !== 'RAW') return visit.apply(this, arguments)
+Postgres.prototype.visit = function (node, ...args) {
+  if (node.type !== 'RAW') return visit.call(this, node, ...args)
 
   let i = 0
   let result = ''
