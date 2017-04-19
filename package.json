@@ -22,7 +22,7 @@
   "dependencies": {
     "aws-sdk": "2.43.0",
     "bcrypt": "1.0.2",
-    "browserify": "14.1.0",
+    "browserify": "14.3.0",
     "bugsnag": "1.9.1",
     "bugsnag-js": "3.1.0",
     "busboy": "0.2.14",
