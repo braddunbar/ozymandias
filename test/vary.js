@@ -2,7 +2,7 @@
 
 const test = require('./test')
 
-test('all requests include vary header', async ({assert}, {app, client}) => {
+test('all requests include vary header', async ({assert, app, client}) => {
   app.use(async (_) => { _.body = {} })
 
   const response = await client.get('/').send()

@@ -20,7 +20,7 @@ module.exports = (name, test) => tape(name, async (assert) => {
   const client = new Client(app)
 
   try {
-    await test({assert}, {app, client})
+    await test({app, assert, client})
     assert.end()
   } catch (error) {
     assert.end(error)
