@@ -49,15 +49,15 @@
     "rimraf": "2.6.1",
     "rollup": "0.41.6",
     "rollup-plugin-buble": "0.15.0",
+    "selenium-webdriver": "3.4.0",
     "sql": "0.75.0",
+    "tape": "4.6.3",
+    "test-client": "1.0.2",
     "uglify-js": "2.8.22"
   },
   "devDependencies": {
     "deep-freeze": "0.0.1",
     "faucet": "0.0.1",
-    "selenium-webdriver": "3.4.0",
-    "standard": "10.0.2",
-    "tape": "4.6.3",
-    "test-client": "1.0.2"
+    "standard": "10.0.2"
   }
 }
