@@ -3,7 +3,7 @@
 const test = require('./test')
 const React = require('react')
 
-test('render state as json', async (t, {app, client}) => {
+test('render state as json', async (assert, {app, client}) => {
   app.use(async (_) => {
     _.react({x: 1})
   })
@@ -24,12 +24,12 @@ test('render state as json', async (t, {app, client}) => {
   })
 })
 
-test('render state as HTML', async (t, {app, client}) => {
+test('render state as HTML', async (assert, {app, client}) => {
   app.context.client = ({x}) => React.createElement('em', {}, x)
 
   app.use(async (_) => {
     _.react({x: 1})
-    t.deepEqual(_.state.client, {
+    assert.deepEqual(_.state.client, {
       currentUser: null,
       admin: false,
       x: 1,
@@ -47,7 +47,7 @@ test('render state as HTML', async (t, {app, client}) => {
   response.assert(200, `<div id='root'><em data-reactroot="" data-reactid="1" data-react-checksum="1647120041">1</em></div>`)
 })
 
-test('return html for browser accept value', async (t, {app, client}) => {
+test('return html for browser accept value', async (assert, {app, client}) => {
   app.use(async (_) => { _.react() })
 
   const response = await client
@@ -57,32 +57,32 @@ test('return html for browser accept value', async (t, {app, client}) => {
   response.assert(200).assert('content-type', /html/)
 })
 
-test('toJSON', async (t, {app, client}) => {
+test('toJSON', async (assert, {app, client}) => {
   app.context.client = ({x}) => {
-    t.is(x, 1)
+    assert.is(x, 1)
     return null
   }
 
   app.use(async (_) => {
     _.react({x: {toJSON () { return 1 }}})
-    t.is(_.state.client.x, 1)
+    assert.is(_.state.client.x, 1)
   })
 
   const response = await client.get('/').send()
   response.assert(200)
 })
 
-test('explicit 404 status', async (t, {app, client}) => {
+test('explicit 404 status', async (assert, {app, client}) => {
   app.use(async (_) => {
     _.status = 404
     _.react()
-    t.is(_.state.client.statusCode, 404)
+    assert.is(_.state.client.statusCode, 404)
   })
   const response = await client.get('/').send()
   response.assert(404)
 })
 
-test('use context.state.client', async (t, {app, client}) => {
+test('use context.state.client', async (assert, {app, client}) => {
   app.use(async (_) => {
     _.state.client.x = 1
     _.react()

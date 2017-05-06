@@ -2,13 +2,13 @@
 
 const test = require('./test')
 
-test('500', async (t, {app, client}) => {
+test('500', async (assert, {app, client}) => {
   app.use(async (_) => { throw new Error('test') })
   const response = await client.get('/').send()
   response.assert(500)
 })
 
-test('422', async (t, {app, client}) => {
+test('422', async (assert, {app, client}) => {
   app.use(async (_) => {
     const error = new Error('invalid')
     error.model = {errors: {x: 1}}
@@ -19,9 +19,9 @@ test('422', async (t, {app, client}) => {
   response.assert(422, {x: 1})
 })
 
-test('permit', async (t, {app, client}) => {
+test('permit', async (assert, {app, client}) => {
   app.use(async (_) => {
-    t.deepEqual(_.permit('name', 'count', 'missing'), {
+    assert.deepEqual(_.permit('name', 'count', 'missing'), {
       name: 'test',
       count: 25
     })
@@ -35,9 +35,9 @@ test('permit', async (t, {app, client}) => {
   response.assert(200)
 })
 
-test('permit allows explicitly null values', async (t, {app, client}) => {
+test('permit allows explicitly null values', async (assert, {app, client}) => {
   app.use(async (_) => {
-    t.deepEqual(_.permit('street'), {street: null})
+    assert.deepEqual(_.permit('street'), {street: null})
     _.status = 200
   })
 
@@ -48,7 +48,7 @@ test('permit allows explicitly null values', async (t, {app, client}) => {
   response.assert(200)
 })
 
-test('json', async (t, {app, client}) => {
+test('json', async (assert, {app, client}) => {
   app.use(async (_) => {
     _.body = _.json('id', '</<!-<!--</script<!--</script')
   })
@@ -56,7 +56,7 @@ test('json', async (t, {app, client}) => {
   response.assert(200, `<script type='application/json' id='id'>"</<!-<\\u0021--<\\/script<\\u0021--<\\/script"</script>`)
 })
 
-test('json handles mixed case', async (t, {app, client}) => {
+test('json handles mixed case', async (assert, {app, client}) => {
   app.use(async (_) => {
     _.body = _.json('id', '</sCrIpT')
   })
@@ -64,7 +64,7 @@ test('json handles mixed case', async (t, {app, client}) => {
   response.assert(200, `<script type='application/json' id='id'>"<\\/sCrIpT"</script>`)
 })
 
-test('json handles undefined', async (t, {app, client}) => {
+test('json handles undefined', async (assert, {app, client}) => {
   app.use(async (_) => {
     _.body = _.json('id', null)
   })
@@ -72,21 +72,21 @@ test('json handles undefined', async (t, {app, client}) => {
   response.assert(200, `<script type='application/json' id='id'>null</script>`)
 })
 
-test('signIn/signOut', async (t, {app, client}) => {
+test('signIn/signOut', async (assert, {app, client}) => {
   app.use(async (_) => {
     _.signIn(null)
-    t.is(_.session.userId, undefined)
+    assert.is(_.session.userId, undefined)
     _.signIn({id: 1})
-    t.is(_.session.userId, 1)
+    assert.is(_.session.userId, 1)
     _.signOut()
-    t.is(_.session, null)
+    assert.is(_.session, null)
     _.status = 200
   })
   const response = await client.get('/').send()
   response.assert(200)
 })
 
-test('csp', async (t, {app, client}) => {
+test('csp', async (assert, {app, client}) => {
   app.use(async (_) => {
     _.csp('script-src', 'x.net')
     _.csp('script-src', 'y.org')

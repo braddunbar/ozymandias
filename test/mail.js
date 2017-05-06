@@ -2,7 +2,7 @@
 
 const test = require('./test')
 
-test('send mail', async (t, {app, client}) => {
+test('send mail', async (assert, {app, client}) => {
   app.use(async (_) => {
     const options = await _.mail({
       html: () => '<h1>test</h1>',
@@ -14,7 +14,7 @@ test('send mail', async (t, {app, client}) => {
       subject: 'test email'
     })
 
-    t.deepEqual(options, {
+    assert.deepEqual(options, {
       Destination: {
         ToAddresses: ['to@example.com'],
         CcAddresses: ['cc@example.com'],

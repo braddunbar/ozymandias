@@ -18,6 +18,6 @@ require('./react')
 require('./session')
 require('./vary')
 
-test('teardown', async (t) => {
+test('teardown', async (assert) => {
   db.close()
 })
