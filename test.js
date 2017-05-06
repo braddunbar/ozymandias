@@ -7,8 +7,6 @@ const Client = require('test-client')
 module.exports = (App) => (name, test) => tape(name, async (assert) => {
   const app = App()
 
-  for (const route of require('./session')) app.use(route)
-
   // Default client.
   app.context.client = () => null
 

@@ -2,6 +2,7 @@
 
 const test = require('./test')
 const User = require('../user')
+const session = require('../session')
 
 test('no user', async ({assert, app, client}) => {
   app.context.User = User
@@ -19,6 +20,8 @@ test('no user', async ({assert, app, client}) => {
 })
 
 test('fetch a user', async ({assert, app, client}) => {
+  for (const route of session) app.use(route)
+
   app.context.User = User
   app.use(async (_) => {
     assert.is(_.state.admin, true)
@@ -40,6 +43,8 @@ test('fetch a user', async ({assert, app, client}) => {
 })
 
 test('fetch a non-admin user', async ({assert, app, client}) => {
+  for (const route of session) app.use(route)
+
   app.context.User = User
   app.use(async (_) => {
     assert.is(_.state.admin, false)
