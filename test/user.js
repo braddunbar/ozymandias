@@ -3,7 +3,7 @@
 const test = require('./test')
 const User = require('../user')
 
-test('authenticate a user', async (assert) => {
+test('authenticate a user', async ({assert}) => {
   const hash = '$2a$04$GSyRKrbgj9PWCc.cHQsFJO3nSc0dz.JO..SZBIFBuyPTnquf3OswG'
   const user = new User({password: hash})
   const [right, wrong] = await Promise.all([
@@ -15,14 +15,14 @@ test('authenticate a user', async (assert) => {
   assert.ok(!wrong)
 })
 
-test('email is trimmed', async (assert) => {
+test('email is trimmed', async ({assert}) => {
   const user = new User({email: ' user@example.com '})
   assert.is(user.email, 'user@example.com')
   user.email = ' user@example.com '
   assert.is(user.email, 'user@example.com')
 })
 
-test('creating a user hashes the password', async (assert) => {
+test('creating a user hashes the password', async ({assert}) => {
   const user = await User.create({
     email: 'user@example.com',
     password: 'password'
@@ -30,7 +30,7 @@ test('creating a user hashes the password', async (assert) => {
   assert.ok(await user.authenticate('password'))
 })
 
-test('updating a user hashes the password', async (assert) => {
+test('updating a user hashes the password', async ({assert}) => {
   const user = new User({id: 1})
   await user.update({
     email: 'user@example.com',
@@ -39,12 +39,12 @@ test('updating a user hashes the password', async (assert) => {
   assert.ok(await user.authenticate('new password'))
 })
 
-test('authenticate a user without a password', async (assert) => {
+test('authenticate a user without a password', async ({assert}) => {
   const user = new User({id: 1, password: null})
   assert.ok(!(await user.authenticate('password')))
 })
 
-test('validate email', async (assert) => {
+test('validate email', async ({assert}) => {
   const user = new User({email: 'invalid'})
 
   user.validate()
@@ -67,7 +67,7 @@ test('validate email', async (assert) => {
   assert.is(user.errors.email, undefined)
 })
 
-test('validate password on create', async (assert) => {
+test('validate password on create', async ({assert}) => {
   try {
     await User.create({password: 'asdf'})
     assert.fail('password was not validated')
@@ -77,7 +77,7 @@ test('validate password on create', async (assert) => {
   }
 })
 
-test('validate password on update', async (assert) => {
+test('validate password on update', async ({assert}) => {
   const user = await User.find(1)
   try {
     await user.update({password: 'asdf'})
@@ -88,7 +88,7 @@ test('validate password on update', async (assert) => {
   }
 })
 
-test('User#isAdmin accepts falsy/truthy strings', async (assert) => {
+test('User#isAdmin accepts falsy/truthy strings', async ({assert}) => {
   const user = new User({isAdmin: 0})
   assert.is(user.isAdmin, false)
   user.isAdmin = 1

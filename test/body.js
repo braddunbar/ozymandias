@@ -3,7 +3,7 @@
 const test = require('./test')
 const {post} = require('koa-route')
 
-test('parse json bodies', async (assert, {app, client}) => {
+test('parse json bodies', async ({assert}, {app, client}) => {
   app.use(post('/json', async (_) => {
     _.body = _.request.body
   }))
@@ -17,7 +17,7 @@ test('parse json bodies', async (assert, {app, client}) => {
   response.assert(200, values)
 })
 
-test('parse urlencoded bodies', async (assert, {app, client}) => {
+test('parse urlencoded bodies', async ({assert}, {app, client}) => {
   app.use(post('/urlencoded', async (_) => {
     _.body = _.request.body
   }))

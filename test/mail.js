@@ -2,7 +2,7 @@
 
 const test = require('./test')
 
-test('send mail', async (assert, {app, client}) => {
+test('send mail', async ({assert}, {app, client}) => {
   app.use(async (_) => {
     const options = await _.mail({
       html: () => '<h1>test</h1>',

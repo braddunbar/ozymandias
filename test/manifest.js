@@ -15,11 +15,11 @@ const base64 = (value) => (
   crypto.createHash('sha256').update(value).digest('base64')
 )
 
-test('set up', async (assert) => {
+test('set up', async ({assert}) => {
   mkdirp.sync('public')
 })
 
-test('hash files and return the asset path', async (assert) => {
+test('hash files and return the asset path', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test', '1')
   assert.deepEqual(manifest(), {
@@ -30,7 +30,7 @@ test('hash files and return the asset path', async (assert) => {
   assert.is(fs.readFileSync(`public/assets/test-${hex('1')}`).toString(), '1')
 })
 
-test('js files are added to integrity', async (assert) => {
+test('js files are added to integrity', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test.js', '1')
   assert.deepEqual(manifest(), {
@@ -41,7 +41,7 @@ test('js files are added to integrity', async (assert) => {
   assert.is(fs.readFileSync(`public/assets/test-${hex('1')}.js`).toString(), '1')
 })
 
-test('css files are added to integrity', async (assert) => {
+test('css files are added to integrity', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test.css', '1')
   assert.deepEqual(manifest(), {
@@ -52,7 +52,7 @@ test('css files are added to integrity', async (assert) => {
   assert.is(fs.readFileSync(`public/assets/test-${hex('1')}.css`).toString(), '1')
 })
 
-test('do not bump age on multiple runs', async (assert) => {
+test('do not bump age on multiple runs', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test', '1')
   manifest()
@@ -67,7 +67,7 @@ test('do not bump age on multiple runs', async (assert) => {
   assert.is(fs.readFileSync(`public/assets/test-${hex('1')}`).toString(), '1')
 })
 
-test('write out .manifest.json', async (assert) => {
+test('write out .manifest.json', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test', '1')
   manifest()
@@ -79,7 +79,7 @@ test('write out .manifest.json', async (assert) => {
   })
 })
 
-test('handle file extensions correctly', async (assert) => {
+test('handle file extensions correctly', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test.txt', '1')
   assert.deepEqual(manifest(), {
@@ -90,7 +90,7 @@ test('handle file extensions correctly', async (assert) => {
   assert.is(fs.readFileSync(`public/assets/test-${hex('1')}.txt`).toString(), '1')
 })
 
-test('handle directories correctly', async (assert) => {
+test('handle directories correctly', async ({assert}) => {
   rimraf.sync('public/**/*')
   mkdirp.sync('public/test')
   fs.writeFileSync('public/test/test', '1')
@@ -102,14 +102,14 @@ test('handle directories correctly', async (assert) => {
   assert.is(fs.readFileSync(`public/assets/test/test-${hex('1')}`).toString(), '1')
 })
 
-test('ignore files and directories in public/assets/', async (assert) => {
+test('ignore files and directories in public/assets/', async ({assert}) => {
   rimraf.sync('public/**/*')
   mkdirp.sync('public/assets/test/test')
   fs.writeFileSync('public/assets/test/test/test', '1')
   assert.deepEqual(manifest(), {assets: {}, files: {}, integrity: {}})
 })
 
-test('read existing manifest', async (assert) => {
+test('read existing manifest', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test', '1')
   manifest()
@@ -126,7 +126,7 @@ test('read existing manifest', async (assert) => {
   assert.is(fs.readFileSync(`public/assets/test-${hex('2')}`).toString(), '2')
 })
 
-test('only keep three versions', async (assert) => {
+test('only keep three versions', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test', '1')
   manifest()
@@ -150,7 +150,7 @@ test('only keep three versions', async (assert) => {
   assert.is(fs.readFileSync(`public/assets/test-${hex('4')}`).toString(), '4')
 })
 
-test('remove empty directories', async (assert) => {
+test('remove empty directories', async ({assert}) => {
   rimraf.sync('public/**/*')
   mkdirp.sync('public/dir')
   fs.writeFileSync('public/dir/test', '1')
@@ -169,6 +169,6 @@ test('remove empty directories', async (assert) => {
   assert.is(fs.readFileSync(`public/assets/test-${hex('1')}`).toString(), '1')
 })
 
-test('clean up', async (assert) => {
+test('clean up', async ({assert}) => {
   rimraf.sync('public')
 })

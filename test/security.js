@@ -2,7 +2,7 @@
 
 const test = require('./test')
 
-test('redirect from http to https', async (assert, {app, client}) => {
+test('redirect from http to https', async ({assert}, {app, client}) => {
   app.env = 'production'
   app.use(async (_) => { _.status = 200 })
 
@@ -14,7 +14,7 @@ test('redirect from http to https', async (assert, {app, client}) => {
   response.assert(302).assert('location', 'https://localhost/')
 })
 
-test('pass through https to next handler', async (assert, {app, client}) => {
+test('pass through https to next handler', async ({assert}, {app, client}) => {
   app.env = 'production'
   app.use(async (_) => { _.status = 200 })
 
@@ -26,7 +26,7 @@ test('pass through https to next handler', async (assert, {app, client}) => {
   response.assert(200)
 })
 
-test('HSTS headers for HTML response', async (assert, {app, client}) => {
+test('HSTS headers for HTML response', async ({assert}, {app, client}) => {
   app.env = 'production'
   app.use(async (_) => { _.body = '' })
 
@@ -40,7 +40,7 @@ test('HSTS headers for HTML response', async (assert, {app, client}) => {
     .assert('strict-transport-security', 'max-age=31557600; includeSubDomains; preload')
 })
 
-test('HSTS headers for JSON response', async (assert, {app, client}) => {
+test('HSTS headers for JSON response', async ({assert}, {app, client}) => {
   app.env = 'production'
   app.use(async (_) => { _.body = {} })
 
@@ -54,7 +54,7 @@ test('HSTS headers for JSON response', async (assert, {app, client}) => {
     .assert('strict-transport-security', 'max-age=31557600; includeSubDomains; preload')
 })
 
-test('security headers for HTML response', async (assert, {app, client}) => {
+test('security headers for HTML response', async ({assert}, {app, client}) => {
   app.use(async (_) => { _.body = '<!doctype html>' })
 
   const response = await client.get('/').send()
@@ -73,7 +73,7 @@ test('security headers for HTML response', async (assert, {app, client}) => {
     .assert('content-security-policy', /script-src[^;]+https:\/\/www.google-analytics.com/)
 })
 
-test('security headers for JSON response', async (assert, {app, client}) => {
+test('security headers for JSON response', async ({assert}, {app, client}) => {
   app.use(async (_) => { _.body = {} })
 
   const response = await client.get('/').send()
@@ -85,7 +85,7 @@ test('security headers for JSON response', async (assert, {app, client}) => {
     .assert('content-security-policy', undefined)
 })
 
-test('secure cookies for https responses', async (assert, {app, client}) => {
+test('secure cookies for https responses', async ({assert}, {app, client}) => {
   app.use(async (_) => {
     _.cookies.set('x', 'y')
     _.body = ''
@@ -97,7 +97,7 @@ test('secure cookies for https responses', async (assert, {app, client}) => {
     .assert('set-cookie', /secure/)
 })
 
-test('include a referrer policy in HTML responses', async (assert, {app, client}) => {
+test('include a referrer policy in HTML responses', async ({assert}, {app, client}) => {
   app.use(async (_) => { _.body = '<!doctype html>' })
 
   const response = await client.get('/').send()
