@@ -1,3 +1,6 @@
 'use strict'
 
-module.exports = require('../test')
+const ozy = require('../')
+const test = require('../test')
+
+module.exports = test(ozy)

@@ -1,12 +1,11 @@
 'use strict'
 
-const ozy = require('./')
 const db = require('./db/instance')
 const tape = require('tape')
 const Client = require('test-client')
 
-module.exports = (name, test) => tape(name, async (assert) => {
-  const app = ozy()
+module.exports = (App) => (name, test) => tape(name, async (assert) => {
+  const app = App()
 
   for (const route of require('./session')) app.use(route)
 
