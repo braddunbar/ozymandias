@@ -36,7 +36,7 @@ class Browser {
   }
 
   async close () {
-    (await this.server()).close()
+    if (this._server) (await this.server()).close()
   }
 
   quit () {
