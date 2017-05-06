@@ -7,9 +7,6 @@ const Client = require('test-client')
 module.exports = (App) => (name, test) => tape(name, async (assert) => {
   const app = App()
 
-  // Default client.
-  app.context.client = () => null
-
   // Set up transactions.
   const transaction = db.transaction()
   db.query = transaction.query.bind(transaction)

@@ -21,7 +21,8 @@ module.exports = {
         // Make sure the client/server state match.
         this.state.client = toJSON(this.state.client)
 
-        const element = React.createElement(this.client, this.state.client)
+        const Component = this.client || (() => null)
+        const element = React.createElement(Component, this.state.client)
         const html = ReactDOM.renderToString(element)
 
         this.body = `<div id='root'>${html}</div>`
