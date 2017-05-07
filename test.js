@@ -3,7 +3,7 @@
 const db = require('./db/instance')
 const tape = require('tape')
 const Client = require('test-client')
-const Browser = require('./test/browser')
+const Browser = require('./browser')
 
 module.exports = (App) => (name, test) => tape(name, async (assert) => {
   const app = App()

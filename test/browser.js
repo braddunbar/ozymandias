@@ -1,81 +1,118 @@
 'use strict'
 
-const {Builder, By, until} = require('selenium-webdriver')
-const driver = new Builder().forBrowser('chrome').build()
+const test = require('./test')
 
-const listen = (app) => new Promise((resolve, reject) => {
-  const server = app.listen()
-  server.on('listening', () => resolve(server))
-  server.on('error', reject)
-})
-
-// Have we visited a page since last deleting cookies?
-let visited = false
-
-class Browser {
-  constructor (app) {
-    this.app = app
-  }
-
-  server () {
-    return this._server || (this._server = listen(this.app))
-  }
-
-  async clear () {
-    if (visited) {
-      visited = false
-      await driver.manage().deleteAllCookies()
-    }
-  }
-
-  async visit (path) {
-    visited = true
-    const {port} = (await this.server()).address()
-    await driver.get(`http://localhost:${port}${path}`)
-    await driver.executeScript('window.scrollTo(0, 0)')
-  }
-
-  async close () {
-    if (this._server) (await this.server()).close()
-  }
-
-  quit () {
-    driver.quit()
-  }
-
-  $ (selector) {
-    return driver.findElement(By.css(selector))
-  }
-
-  wait (predicate) {
-    return driver.wait(predicate, 5000)
-  }
-
-  assert (selector) {
-    return this.wait(until.elementLocated(By.css(selector)))
-  }
-
-  refute (selector) {
-    return this.wait(async () => {
-      return !(await driver.findElements(By.css(selector))).length
-    })
-  }
-
-  getPath () {
-    return driver.executeScript('return window.location.pathname')
-  }
-
-  alert () {
-    return driver.switchTo().alert()
-  }
-
-  async signIn (email) {
-    await this.visit('/session/signin')
-    await this.$('#email').sendKeys(email)
-    await this.$('#password').sendKeys('secret')
-    await this.$('#password').submit()
-    await this.assert('#signout')
-  }
+const layout = async (_, next) => {
+  await next()
+  _.body = `
+    <!doctype html>
+    <html>
+    <head>
+      <meta charset='utf-8'>
+      <title>Browser Testing</title>
+    </head>
+    <body>
+    ${_.body}
+    </body>
+    </html>`
 }
 
-module.exports = Browser
+test('assertSelector', async ({app, assert, browser}) => {
+  app.use(layout)
+  app.use(async (_) => { _.body = '<div id="foo"></div>' })
+
+  await browser.visit('/')
+  await browser.assertSelector('div#foo')
+  try {
+    await browser.assertSelector('span#bar')
+    assert.fail()
+  } catch (error) {}
+})
+
+test('refuteSelector', async ({app, assert, browser}) => {
+  app.use(layout)
+  app.use(async (_) => { _.body = '<div id="foo"></div>' })
+
+  await browser.visit('/')
+  await browser.refuteSelector('span#bar')
+  try {
+    await browser.refuteSelector('div#foo')
+    assert.fail()
+  } catch (error) {}
+})
+
+test('assertUrl', async ({app, assert, browser}) => {
+  app.use(layout)
+  app.use(async (_) => { _.body = '' })
+
+  await browser.visit('/path?key=value')
+  await browser.assertUrl('/path?key=value')
+  try {
+    await browser.assertUrl('/wrong')
+    assert.fail()
+  } catch (error) {}
+})
+
+test('url', async ({app, assert, browser}) => {
+  app.use(layout)
+  app.use(async (_) => { _.body = '' })
+
+  await browser.visit('/path?key=value')
+  assert.is(await browser.url(), '/path?key=value')
+})
+
+test('find', async ({app, assert, browser}) => {
+  app.use(layout)
+  app.use(async (_) => { _.body = '<div id="foo"></div>' })
+
+  await browser.visit('/')
+  await browser.find('#foo')
+  try {
+    await browser.find('#bar')
+    assert.fail()
+  } catch (error) {}
+})
+
+test('assertSelector with text', async ({app, assert, browser}) => {
+  app.use(layout)
+  app.use(async (_) => { _.body = '<div>test</div>' })
+
+  await browser.visit('/')
+  await browser.assertSelector('body', {text: 'test'})
+  try {
+    await browser.assertSelector('body', {text: 'wrong'})
+    assert.fail()
+  } catch (error) {}
+})
+
+test('assertSelector with count', async ({app, assert, browser}) => {
+  app.use(layout)
+  app.use(async (_) => { _.body = '<div></div><div></div>' })
+
+  await browser.visit('/')
+  await browser.assertSelector('div', {count: 2})
+  try {
+    await browser.assertSelector('div', {count: 3})
+    assert.fail()
+  } catch (error) {}
+})
+
+test('assertSelector with text and count', async ({app, assert, browser}) => {
+  app.use(layout)
+  app.use(async (_) => { _.body = '<div>test</div><div>test</div><div></div>' })
+
+  await browser.visit('/')
+  await browser.assertSelector('div', {count: 2, text: 'test'})
+  try {
+    await browser.assertSelector('div', {count: 3, text: 'test'})
+    assert.fail()
+  } catch (error) {}
+})
+
+test('assertSelector with default count', async ({app, assert, browser}) => {
+  app.use(layout)
+  app.use(async (_) => { _.body = '<div>test</div><div>test</div>' })
+
+  await browser.visit('/')
+  await browser.assertSelector('div', {text: 'test'})
+})

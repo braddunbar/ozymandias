@@ -3,3 +3,4 @@ ID=ozymandias
 NODE_ENV=test
 SECRET=secret
 SOURCE_EMAIL=source@example.com
+WAIT=50

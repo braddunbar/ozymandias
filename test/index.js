@@ -4,6 +4,7 @@ const db = require('../db/instance')
 const test = require('./test')
 
 require('./body')
+require('./browser')
 require('./cache-control')
 require('./current-user')
 require('./db')
