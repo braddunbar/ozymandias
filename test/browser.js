@@ -116,3 +116,15 @@ test('assertSelector with default count', async ({app, assert, browser}) => {
   await browser.visit('/')
   await browser.assertSelector('div', {text: 'test'})
 })
+
+test('assertSelector with regex text', async ({app, assert, browser}) => {
+  app.use(layout)
+  app.use(async (_) => { _.body = '<div>testing</div>' })
+
+  await browser.visit('/')
+  await browser.assertSelector('div', {text: /test/})
+  try {
+    await browser.assertSelector('div', {text: /wrong/})
+    assert.fail()
+  } catch (error) {}
+})

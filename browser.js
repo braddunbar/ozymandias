@@ -59,10 +59,18 @@ class Browser {
     return this.wait(async () => {
       const elements = (await this.all(selector))
       for (const element of elements) {
-        if (text == null || (await element.getText()) === text) {
-          if (count == null) return true
-          --count
+        if (typeof text === 'string' && (await element.getText()) !== text) {
+          continue
         }
+
+        if (text instanceof RegExp && !text.test(await element.getText())) {
+          continue
+        }
+
+        // If we're not counting, just bail.
+        if (count == null) return true
+
+        --count
       }
       return count === 0
     })
