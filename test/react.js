@@ -4,7 +4,10 @@ const test = require('./test')
 const React = require('react')
 
 test('render state as json', async ({assert, app, client}) => {
+  let url
+
   app.use(async (_) => {
+    url = _.origin + _.originalUrl
     _.react({x: 1})
   })
 
@@ -19,7 +22,7 @@ test('render state as json', async ({assert, app, client}) => {
     x: 1,
     path: '/',
     statusCode: 200,
-    url: '/?x=1',
+    url,
     version: '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a'
   })
 })
@@ -35,7 +38,7 @@ test('render state as HTML', async ({assert, app, client}) => {
       x: 1,
       path: '/',
       statusCode: 200,
-      url: '/?x=1',
+      url: _.origin + _.originalUrl,
       version: '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a'
     })
   })
@@ -83,7 +86,10 @@ test('explicit 404 status', async ({assert, app, client}) => {
 })
 
 test('use context.state.client', async ({assert, app, client}) => {
+  let url
+
   app.use(async (_) => {
+    url = _.origin + _.originalUrl
     _.state.client.x = 1
     _.react()
   })
@@ -97,7 +103,7 @@ test('use context.state.client', async ({assert, app, client}) => {
     admin: false,
     path: '/',
     statusCode: 200,
-    url: '/',
+    url,
     version: '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a',
     x: 1
   })

@@ -4,15 +4,17 @@ const {version} = require('./assets')
 const React = require('react')
 const ReactDOM = require('react-dom/server')
 const toJSON = require('object-tojson')
-const url = require('url')
+const {URL} = require('url')
 
 module.exports = {
 
   react (state) {
+    const url = new URL(this.originalUrl, this.origin)
+
     Object.assign(this.state.client, state, {
-      path: url.parse(this.originalUrl).pathname,
+      path: url.pathname,
       statusCode: this.response._explicitStatus ? this.status : 200,
-      url: this.originalUrl,
+      url,
       version
     })
 
