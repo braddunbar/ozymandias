@@ -152,3 +152,37 @@ test('refuteSelector with regexp text', async ({app, assert, browser}) => {
     assert.fail()
   } catch (error) {}
 })
+
+test('assertText', async ({app, assert, browser}) => {
+  app.use(layout)
+  app.use(async (_) => { _.body = '<div>test</div>' })
+
+  await browser.visit('/')
+  await browser.assertText('test')
+  await browser.assertText(/test/)
+  try {
+    await browser.assertText('wrong')
+    assert.fail()
+  } catch (error) {}
+  try {
+    await browser.assertText(/wrong/)
+    assert.fail()
+  } catch (error) {}
+})
+
+test('refuteText', async ({app, assert, browser}) => {
+  app.use(layout)
+  app.use(async (_) => { _.body = '<div>test</div>' })
+
+  await browser.visit('/')
+  await browser.refuteText('wrong')
+  await browser.refuteText(/wrong/)
+  try {
+    await browser.refuteText('test')
+    assert.fail()
+  } catch (error) {}
+  try {
+    await browser.refuteText(/test/)
+    assert.fail()
+  } catch (error) {}
+})

@@ -93,6 +93,38 @@ class Browser {
     })
   }
 
+  assertText (text) {
+    return this.wait(async () => {
+      const body = this.find('body')
+
+      if (typeof text === 'string') {
+        return (await body.getText()).includes(text)
+      }
+
+      if (text instanceof RegExp) {
+        return text.test(await body.getText())
+      }
+
+      return false
+    })
+  }
+
+  refuteText (text) {
+    return this.wait(async () => {
+      const body = this.find('body')
+
+      if (typeof text === 'string') {
+        return !(await body.getText()).includes(text)
+      }
+
+      if (text instanceof RegExp) {
+        return !text.test(await body.getText())
+      }
+
+      return false
+    })
+  }
+
   assertUrl (url) {
     return this.wait(async () => (await this.url()) === url)
   }
