@@ -57,7 +57,7 @@ class Browser {
 
   assertSelector (selector, {count, text} = {}) {
     return this.wait(async () => {
-      const elements = (await this.all(selector))
+      const elements = await this.all(selector)
       for (const element of elements) {
         if (typeof text === 'string' && (await element.getText()) !== text) {
           continue
@@ -76,10 +76,21 @@ class Browser {
     })
   }
 
-  refuteSelector (selector) {
-    return this.wait(async () => (
-      !(await this.all(selector)).length
-    ))
+  refuteSelector (selector, {text} = {}) {
+    return this.wait(async () => {
+      const elements = await this.all(selector)
+      if (text == null) return !elements.length
+      for (const element of elements) {
+        if (typeof text === 'string' && (await element.getText()) === text) {
+          return false
+        }
+
+        if (text instanceof RegExp && text.test(await element.getText())) {
+          return false
+        }
+      }
+      return true
+    })
   }
 
   assertUrl (url) {
