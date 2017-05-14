@@ -1,7 +1,7 @@
 import qs from 'querystring'
 import assign from 'object-assign'
 
-export const set = (url, values) => {
+export const setParams = (url, values) => {
   const [path, search] = url.split('?')
   values = assign(qs.parse(search), values)
   Object.keys(values).forEach((key) => {
