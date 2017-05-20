@@ -1,21 +1,5 @@
-version: 2
-jobs:
-  build:
-    docker:
-      - image: node:7.10.0
-      - image: postgres:9.6.2
-    environment:
-      NODE_ENV: test
-      POSTGRES_DB: aikenorganics
-    steps:
-      - checkout
-      - run: npm install
-      - run:
-          name: psql
-          command: |
-            curl "https://www.postgresql.org/media/keys/ACCC4CF8.asc" | sudo apt-key add -
-            sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
-            sudo apt-get update
-            sudo apt-get install postgresql-client-9.6
-      - run: npm test
-    working_directory: ~/ozymandias
+machine:
+  environment:
+    NODE_ENV: test
+  node:
+    version: 7.10.0
