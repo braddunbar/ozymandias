@@ -53,7 +53,7 @@
     "sql": "0.75.0",
     "tape": "4.6.3",
     "test-client": "1.0.2",
-    "uglify-js": "3.0.5"
+    "uglify-js": "3.0.9"
   },
   "devDependencies": {
     "deep-freeze": "0.0.1",
