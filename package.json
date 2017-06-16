@@ -41,7 +41,7 @@
     "object-assign": "*",
     "object-tojson": "1.0.1",
     "path-to-regexp": "1.7.0",
-    "pg": "6.2.3",
+    "pg": "6.2.4",
     "react": "*",
     "react-dom": "*",
     "redux": "*",
