@@ -1,24 +1,18 @@
-#!/bin/bash -e
+#!/usr/bin/env node
 
-sql="
-set client_min_messages to warning;
+'use strict'
 
-create table if not exists migrations (
-  id varchar(255) primary key
-);
-"
+const db = require('../db/instance')
+const migrate = require('../migrate')
 
-for file in $(ls ./migrate); do
-  id=${file%.*}
-  sql+="
-  do \$\$
-  begin
-    if not exists(select 1 from migrations where id ='$id') then
-      insert into migrations (id) values ('$id');
-      $(cat ./migrate/$file)
-    end if;
-  end
-  \$\$;"
-done
-
-psql --quiet $DATABASE_URL <<< "$sql"
+;(async () => {
+  try {
+    const transaction = db.transaction()
+    db.query = transaction.query.bind(transaction)
+    await migrate('./migrate')
+    await transaction.commit()
+    db.close()
+  } catch (error) {
+    console.error(error.message)
+  }
+})()

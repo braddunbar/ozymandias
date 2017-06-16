@@ -155,7 +155,7 @@ test('remove empty directories', async ({assert}) => {
   mkdirp.sync('public/dir')
   fs.writeFileSync('public/dir/test', '1')
   manifest()
-  fs.rename('public/dir/test', 'public/test')
+  fs.renameSync('public/dir/test', 'public/test')
   manifest()
   manifest()
   assert.deepEqual(manifest(), {
