@@ -1,5 +1,6 @@
 'use strict'
 
+const ms = require('ms')
 const User = require('./user')
 const Token = require('./token')
 const forgotMail = require('./mail/forgot')
@@ -11,9 +12,13 @@ const findUser = (email) => (
 )
 
 // Find Token
-const findToken = (id) => (
-  Token.include('user').where('expires_at >= now()').find(id)
-)
+const findToken = async (id) => {
+  try {
+    return await Token.include('user').where('expires_at >= now()').find(id)
+  } catch (error) {
+    return null
+  }
+}
 
 module.exports = [
 
@@ -89,9 +94,7 @@ module.exports = [
       return
     }
 
-    const expiresAt = new Date()
-    expiresAt.setDate(expiresAt.getDate() + 7)
-
+    const expiresAt = new Date(+new Date() + ms('1d'))
     const token = await Token.create({expiresAt, userId: user.id})
 
     await _.mail(forgotMail, {

@@ -7,11 +7,9 @@ const User = require('../user')
 
 test('inserts into migration table', async ({assert}) => {
   await migrate('./test/migrate/success')
-  const migrations = await Migration.all()
-  assert.deepEqual(migrations.map(({id}) => id), [
-    '2017-01-01-1200-one',
-    '2017-01-02-1200-two'
-  ])
+  const ids = await Migration.pluck('id')
+  assert.ok(ids.includes('2017-01-01-1200-one'))
+  assert.ok(ids.includes('2017-01-02-1200-two'))
 })
 
 test('runs the migrations', async ({assert}) => {

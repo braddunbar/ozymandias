@@ -2,11 +2,12 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.4
--- Dumped by pg_dump version 9.5.4
+-- Dumped from database version 9.6.3
+-- Dumped by pg_dump version 9.6.3
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -25,6 +26,7 @@ CREATE DATABASE ozymandias WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLAT
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -43,6 +45,20 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+--
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
 SET search_path = public, pg_catalog;
@@ -83,6 +99,15 @@ ALTER SEQUENCE comments_id_seq OWNED BY comments.id;
 
 
 --
+-- Name: migrations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE migrations (
+    id character varying(255) NOT NULL
+);
+
+
+--
 -- Name: posts; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -119,8 +144,8 @@ ALTER SEQUENCE posts_id_seq OWNED BY posts.id;
 --
 
 CREATE TABLE tokens (
-    id character varying(255) NOT NULL,
-    expires_at timestamp with time zone NOT NULL,
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
+    expires_at timestamp without time zone NOT NULL,
     user_id integer NOT NULL
 );
 
@@ -162,21 +187,21 @@ ALTER SEQUENCE users_id_seq OWNED BY users.id;
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: comments id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY comments ALTER COLUMN id SET DEFAULT nextval('comments_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: posts id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY posts ALTER COLUMN id SET DEFAULT nextval('posts_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
@@ -197,6 +222,18 @@ COPY comments (id, post_id, user_id, body) FROM stdin;
 --
 
 SELECT pg_catalog.setval('comments_id_seq', 2, true);
+
+
+--
+-- Data for Name: migrations; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY migrations (id) FROM stdin;
+2017-06-17-0952-users
+2017-06-17-1031-tokens
+2017-06-17-1040-tokens-timestamp
+2017-06-17-1043-tokens-id
+\.
 
 
 --
@@ -246,7 +283,7 @@ SELECT pg_catalog.setval('users_id_seq', 4, true);
 
 
 --
--- Name: comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: comments comments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY comments
@@ -254,7 +291,15 @@ ALTER TABLE ONLY comments
 
 
 --
--- Name: posts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY migrations
+    ADD CONSTRAINT migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: posts posts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY posts
@@ -262,7 +307,7 @@ ALTER TABLE ONLY posts
 
 
 --
--- Name: tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: tokens tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY tokens
@@ -270,7 +315,7 @@ ALTER TABLE ONLY tokens
 
 
 --
--- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY users
@@ -285,14 +330,21 @@ CREATE INDEX post_search_index ON posts USING gin (search);
 
 
 --
--- Name: update_post_search; Type: TRIGGER; Schema: public; Owner: -
+-- Name: users_lower_case_email_index; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX users_lower_case_email_index ON users USING btree (lower((email)::text));
+
+
+--
+-- Name: posts update_post_search; Type: TRIGGER; Schema: public; Owner: -
 --
 
 CREATE TRIGGER update_post_search BEFORE INSERT OR UPDATE ON posts FOR EACH ROW EXECUTE PROCEDURE tsvector_update_trigger('search', 'pg_catalog.english', 'body');
 
 
 --
--- Name: comments_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: comments comments_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY comments
@@ -300,7 +352,7 @@ ALTER TABLE ONLY comments
 
 
 --
--- Name: comments_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: comments comments_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY comments
@@ -308,7 +360,7 @@ ALTER TABLE ONLY comments
 
 
 --
--- Name: posts_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: posts posts_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY posts
@@ -316,7 +368,7 @@ ALTER TABLE ONLY posts
 
 
 --
--- Name: tokens_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: tokens tokens_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY tokens
