@@ -3,7 +3,7 @@
     "ozy": "./bin/ozy.js"
   },
   "name": "ozymandias",
-  "version": "1.6.18",
+  "version": "1.6.19",
   "main": "index.js",
   "author": "Brad Dunbar <dunbarb2@gmail.com> (http://braddunbar.net/)",
   "license": "ISC",
