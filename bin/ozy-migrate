@@ -3,6 +3,7 @@
 'use strict'
 
 const db = require('../db/instance')
+const path = require('path')
 const migrate = require('../migrate')
 
 ;(async () => {
@@ -11,6 +12,7 @@ const migrate = require('../migrate')
   db.query = transaction.query.bind(transaction)
 
   try {
+    await migrate(__dirname, '../migrate')
     await migrate('./migrate')
     await transaction.commit()
     db.close()
