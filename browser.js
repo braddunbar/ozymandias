@@ -1,10 +1,7 @@
 'use strict'
 
 const {Builder, By} = require('selenium-webdriver')
-const {Options} = require('selenium-webdriver/chrome')
-const options = new Options()
-options.addArguments('headless')
-const driver = new Builder().setChromeOptions(options).forBrowser('chrome').build()
+const driver = new Builder().forBrowser('chrome').build()
 
 const listen = (app) => new Promise((resolve, reject) => {
   const server = app.listen()
