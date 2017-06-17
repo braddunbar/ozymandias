@@ -6,9 +6,11 @@ const db = require('../db/instance')
 const migrate = require('../migrate')
 
 ;(async () => {
+  db.log = () => {}
+  const transaction = db.transaction()
+  db.query = transaction.query.bind(transaction)
+
   try {
-    const transaction = db.transaction()
-    db.query = transaction.query.bind(transaction)
     await migrate('./migrate')
     await transaction.commit()
     db.close()
