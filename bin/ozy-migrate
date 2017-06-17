@@ -18,5 +18,6 @@ const migrate = require('../migrate')
     db.close()
   } catch (error) {
     console.error(error.message)
+    process.exit(1)
   }
 })()
