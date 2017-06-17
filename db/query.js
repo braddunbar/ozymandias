@@ -35,6 +35,10 @@ class Query {
     return +(await this.send(query)).rows[0].count
   }
 
+  async exists () {
+    return !!(await this.find())
+  }
+
   async all () {
     const Model = this.model
 

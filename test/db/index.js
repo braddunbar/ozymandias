@@ -490,3 +490,8 @@ test('search with quotes', async ({assert}) => {
   assert.is(posts.length, 1)
   assert.deepEqual(posts.map(({id}) => id), [1])
 })
+
+test('exists', async ({assert}) => {
+  assert.is((await User.where({id: 1}).exists()), true)
+  assert.is((await User.where({id: 999}).exists()), false)
+})
