@@ -27,12 +27,12 @@ module.exports = {
   },
 
   // Sign in a user
-  signIn (user) {
+  async signIn (user) {
     if (user) this.session.userId = user.id
   },
 
   // Sign out
-  signOut () {
+  async signOut () {
     this.session = null
   },
 

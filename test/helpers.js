@@ -74,11 +74,11 @@ test('json handles undefined', async ({assert, app, client}) => {
 
 test('signIn/signOut', async ({assert, app, client}) => {
   app.use(async (_) => {
-    _.signIn(null)
+    await _.signIn(null)
     assert.is(_.session.userId, undefined)
-    _.signIn({id: 1})
+    await _.signIn({id: 1})
     assert.is(_.session.userId, 1)
-    _.signOut()
+    await _.signOut()
     assert.is(_.session, null)
     _.status = 200
   })

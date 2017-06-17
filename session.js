@@ -29,7 +29,7 @@ module.exports = [
     }
 
     if (await user.authenticate(password)) {
-      _.signIn(user)
+      await _.signIn(user)
       _.body = {}
     } else {
       _.status = 422
@@ -38,7 +38,7 @@ module.exports = [
   }),
 
   del('/session', async (_) => {
-    _.signOut()
+    await _.signOut()
     _.body = {}
   }),
 
@@ -75,7 +75,7 @@ module.exports = [
     }
 
     await token.user.update(_.permit('password'))
-    _.signIn(token.user)
+    await _.signIn(token.user)
     _.body = {}
   }),
 
