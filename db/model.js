@@ -112,6 +112,7 @@ class Model {
 const queryMethods = [
   'all',
   'count',
+  'exists',
   'find',
   'groupBy',
   'include',
@@ -123,6 +124,7 @@ const queryMethods = [
   'offset',
   'order',
   'paginate',
+  'pluck',
   'search',
   'select',
   'update',
