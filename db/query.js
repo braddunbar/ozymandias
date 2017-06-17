@@ -39,6 +39,11 @@ class Query {
     return !!(await this.find())
   }
 
+  async pluck (column) {
+    const query = this.query.select(this.table[column]).from(this.from)
+    return (await this.send(query)).rows.map((row) => row[column])
+  }
+
   async all () {
     const Model = this.model
 
