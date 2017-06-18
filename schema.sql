@@ -145,7 +145,7 @@ ALTER SEQUENCE posts_id_seq OWNED BY posts.id;
 
 CREATE TABLE tokens (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
-    expires_at timestamp without time zone NOT NULL,
+    expires_at timestamp without time zone DEFAULT (now() + '1 day'::interval) NOT NULL,
     user_id integer NOT NULL
 );
 
@@ -233,6 +233,7 @@ COPY migrations (id) FROM stdin;
 2017-06-17-1031-tokens
 2017-06-17-1040-tokens-timestamp
 2017-06-17-1043-tokens-id
+2017-06-18-0827-tokens-expires-at-default
 \.
 
 

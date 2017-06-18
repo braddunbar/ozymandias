@@ -1,6 +1,5 @@
 'use strict'
 
-const ms = require('ms')
 const User = require('./user')
 const Token = require('./token')
 const forgotMail = require('./mail/forgot')
@@ -94,8 +93,7 @@ module.exports = [
       return
     }
 
-    const expiresAt = new Date(+new Date() + ms('1d'))
-    const token = await Token.create({expiresAt, userId: user.id})
+    const token = await Token.create({userId: user.id})
 
     await _.mail(forgotMail, {
       to: [user.email],
