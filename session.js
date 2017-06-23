@@ -32,13 +32,14 @@ module.exports = [
       return
     }
 
-    if (await user.authenticate(password)) {
-      await _.signIn(user)
-      _.body = {}
-    } else {
+    if (!(await user.authenticate(password))) {
       _.status = 422
       _.body = {password: ['Sorry! That password is incorrect.']}
+      return
     }
+
+    await _.signIn(user)
+    _.body = {}
   }),
 
   del('/session', async (_) => {
