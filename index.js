@@ -64,6 +64,9 @@ const ozymandias = module.exports = function () {
     require('./react')
   )
 
+  // Sections
+  app.context.section = app.context.sections = null
+
   // Who's the user?
   app.use(require('./current-user'))
 

@@ -22,6 +22,7 @@ test('render state as json', async ({assert, app, client}) => {
     x: 1,
     path: '/',
     section: null,
+    sections: null,
     statusCode: 200,
     url,
     version: '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a'
@@ -39,6 +40,7 @@ test('render state as HTML', async ({assert, app, client}) => {
       x: 1,
       path: '/',
       section: null,
+      sections: null,
       statusCode: 200,
       url: _.origin + _.originalUrl,
       version: '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a'
@@ -105,6 +107,7 @@ test('use context.state.client', async ({assert, app, client}) => {
     admin: false,
     path: '/',
     section: null,
+    sections: null,
     statusCode: 200,
     url,
     version: '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a',
@@ -112,7 +115,7 @@ test('use context.state.client', async ({assert, app, client}) => {
   })
 })
 
-test('return the correct section pattern', async ({assert, app, client}) => {
+test('return the correct section data', async ({assert, app, client}) => {
   let url
 
   app.context.sections = {x: '/x/(.*)*'}
@@ -131,7 +134,8 @@ test('return the correct section pattern', async ({assert, app, client}) => {
     currentUser: null,
     admin: false,
     path: '/x',
-    section: '/x/(.*)*',
+    section: 'x',
+    sections: {x: '/x/(.*)*'},
     statusCode: 200,
     url,
     version: '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a'
