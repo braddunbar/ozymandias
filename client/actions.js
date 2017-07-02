@@ -57,14 +57,15 @@ export const navigate = (url, {push} = {}) => {
 
   // Same section?
   let match
-  for (const key in store.getState().sections) {
+  const {section, sections} = store.getState()
+  for (const key in sections) {
     if (pathToRegexp(sections[key]).test(parse(url).path)) {
       match = key
       break
     }
   }
 
-  if (match == null || match !== store.getState().section) {
+  if (match == null || match !== section) {
     window.location = url
     return
   }
