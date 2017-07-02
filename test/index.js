@@ -17,6 +17,7 @@ require('./security')
 require('./token')
 require('./user')
 require('./react')
+require('./section')
 require('./session')
 require('./vary')
 

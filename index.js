@@ -67,6 +67,9 @@ const ozymandias = module.exports = function () {
   // Who's the user?
   app.use(require('./current-user'))
 
+  // What section is this?
+  app.use(require('./section'))
+
   return app
 }
 

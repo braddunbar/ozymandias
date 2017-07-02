@@ -21,6 +21,7 @@ test('render state as json', async ({assert, app, client}) => {
     admin: false,
     x: 1,
     path: '/',
+    section: null,
     statusCode: 200,
     url,
     version: '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a'
@@ -37,6 +38,7 @@ test('render state as HTML', async ({assert, app, client}) => {
       admin: false,
       x: 1,
       path: '/',
+      section: null,
       statusCode: 200,
       url: _.origin + _.originalUrl,
       version: '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a'
@@ -102,9 +104,36 @@ test('use context.state.client', async ({assert, app, client}) => {
     currentUser: null,
     admin: false,
     path: '/',
+    section: null,
     statusCode: 200,
     url,
     version: '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a',
     x: 1
+  })
+})
+
+test('return the correct section pattern', async ({assert, app, client}) => {
+  let url
+
+  app.context.sections = {x: '/x/(.*)*'}
+
+  app.use(async (_) => {
+    url = _.origin + _.originalUrl
+    _.react()
+  })
+
+  const response = await client
+    .get('/x')
+    .set('accept', 'application/json')
+    .send()
+
+  response.assert(200, {
+    currentUser: null,
+    admin: false,
+    path: '/x',
+    section: '/x/(.*)*',
+    statusCode: 200,
+    url,
+    version: '44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a'
   })
 })
