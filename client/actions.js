@@ -1,5 +1,7 @@
+import {parse} from 'url'
 import {del, get, post} from './json'
 import store from './store'
+import pathToRegexp from 'path-to-regexp'
 
 // Busy?
 
@@ -49,6 +51,20 @@ export const navigate = (url, {push} = {}) => {
 
   // No pushState? No problem.
   if (!window.history || !window.history.pushState) {
+    window.location = url
+    return
+  }
+
+  // Same section?
+  let match
+  for (const key in store.getState().sections) {
+    if (pathToRegexp(sections[key]).test(parse(url).path)) {
+      match = key
+      break
+    }
+  }
+
+  if (match == null || match !== store.getState().section) {
     window.location = url
     return
   }
