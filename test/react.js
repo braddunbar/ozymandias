@@ -118,7 +118,7 @@ test('use context.state.client', async ({assert, app, client}) => {
 test('return the correct section data', async ({assert, app, client}) => {
   let url
 
-  app.context.sections = {x: '/x/(.*)*'}
+  app.sections = {x: '/x/(.*)*'}
 
   app.use(async (_) => {
     url = _.origin + _.originalUrl

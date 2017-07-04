@@ -14,7 +14,7 @@ module.exports = {
     Object.assign(this.state.client, state, {
       path: url.pathname,
       section: this.section,
-      sections: this.sections,
+      sections: this.app.sections,
       statusCode: this.response._explicitStatus ? this.status : 200,
       url,
       version

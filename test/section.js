@@ -4,7 +4,7 @@ const test = require('./test')
 const {get} = require('koa-route')
 
 test('handle null sections', async ({app, client}) => {
-  app.context.sections = null
+  app.sections = null
 
   app.use(get('*', async (_) => {
     _.body = {section: _.section}
@@ -19,7 +19,7 @@ test('handle null sections', async ({app, client}) => {
 })
 
 test('match the exact path', async ({app, client}) => {
-  app.context.sections = {x: '/x/(.*)*'}
+  app.sections = {x: '/x/(.*)*'}
 
   app.use(get('*', async (_) => {
     _.body = {section: _.section}
@@ -34,7 +34,7 @@ test('match the exact path', async ({app, client}) => {
 })
 
 test('match a sub path', async ({app, client}) => {
-  app.context.sections = {x: '/x/(.*)*'}
+  app.sections = {x: '/x/(.*)*'}
 
   app.use(get('*', async (_) => {
     _.body = {section: _.section}
@@ -49,7 +49,7 @@ test('match a sub path', async ({app, client}) => {
 })
 
 test('match a sub sub path', async ({app, client}) => {
-  app.context.sections = {x: '/x/(.*)*'}
+  app.sections = {x: '/x/(.*)*'}
 
   app.use(get('*', async (_) => {
     _.body = {section: _.section}
@@ -64,7 +64,7 @@ test('match a sub sub path', async ({app, client}) => {
 })
 
 test('handle non-matches', async ({app, client}) => {
-  app.context.sections = {x: '/x/(.*)*'}
+  app.sections = {x: '/x/(.*)*'}
 
   app.use(get('*', async (_) => {
     _.body = {section: _.section}
@@ -79,7 +79,7 @@ test('handle non-matches', async ({app, client}) => {
 })
 
 test('handle multiple sections', async ({app, client}) => {
-  app.context.sections = {x: '/x/(.*)*', y: '/y/(.*)*'}
+  app.sections = {x: '/x/(.*)*', y: '/y/(.*)*'}
 
   app.use(get('*', async (_) => {
     _.body = {section: _.section}
@@ -94,7 +94,7 @@ test('handle multiple sections', async ({app, client}) => {
 })
 
 test('handle fallback', async ({app, client}) => {
-  app.context.sections = {x: '/x(.*)*', fallback: '*'}
+  app.sections = {x: '/x(.*)*', fallback: '*'}
 
   app.use(get('*', async (_) => {
     _.body = {section: _.section}
@@ -109,7 +109,7 @@ test('handle fallback', async ({app, client}) => {
 })
 
 test('handle fallback at the root', async ({app, client}) => {
-  app.context.sections = {x: '/x/(.*)*', fallback: '*'}
+  app.sections = {x: '/x/(.*)*', fallback: '*'}
 
   app.use(get('*', async (_) => {
     _.body = {section: _.section}
