@@ -22,7 +22,7 @@ test('set up', async ({assert}) => {
 test('hash files and return the asset path', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test', '1')
-  assert.deepEqual(manifest(), {
+  assert.deepEqual(await manifest(), {
     assets: {test: `assets/test-${hex('1')}`},
     integrity: {},
     files: {[`assets/test-${hex('1')}`]: {age: 0, asset: 'test'}}
@@ -33,7 +33,7 @@ test('hash files and return the asset path', async ({assert}) => {
 test('js files are added to integrity', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test.js', '1')
-  assert.deepEqual(manifest(), {
+  assert.deepEqual(await manifest(), {
     assets: {'test.js': `assets/test-${hex('1')}.js`},
     integrity: {'test.js': `sha256-${base64('1')}`},
     files: {[`assets/test-${hex('1')}.js`]: {age: 0, asset: 'test.js'}}
@@ -44,7 +44,7 @@ test('js files are added to integrity', async ({assert}) => {
 test('css files are added to integrity', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test.css', '1')
-  assert.deepEqual(manifest(), {
+  assert.deepEqual(await manifest(), {
     assets: {'test.css': `assets/test-${hex('1')}.css`},
     integrity: {'test.css': `sha256-${base64('1')}`},
     files: {[`assets/test-${hex('1')}.css`]: {age: 0, asset: 'test.css'}}
@@ -55,11 +55,11 @@ test('css files are added to integrity', async ({assert}) => {
 test('do not bump age on multiple runs', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test', '1')
-  manifest()
-  manifest()
-  manifest()
-  manifest()
-  assert.deepEqual(manifest(), {
+  await manifest()
+  await manifest()
+  await manifest()
+  await manifest()
+  assert.deepEqual(await manifest(), {
     assets: {test: `assets/test-${hex('1')}`},
     integrity: {},
     files: {[`assets/test-${hex('1')}`]: {age: 0, asset: 'test'}}
@@ -70,7 +70,7 @@ test('do not bump age on multiple runs', async ({assert}) => {
 test('write out .manifest.json', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test', '1')
-  manifest()
+  await manifest()
   const result = JSON.parse(fs.readFileSync('public/assets/.manifest.json'))
   assert.deepEqual(result, {
     assets: {test: `assets/test-${hex('1')}`},
@@ -82,7 +82,7 @@ test('write out .manifest.json', async ({assert}) => {
 test('handle file extensions correctly', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test.txt', '1')
-  assert.deepEqual(manifest(), {
+  assert.deepEqual(await manifest(), {
     assets: {'test.txt': `assets/test-${hex('1')}.txt`},
     integrity: {},
     files: {[`assets/test-${hex('1')}.txt`]: {age: 0, asset: 'test.txt'}}
@@ -94,7 +94,7 @@ test('handle directories correctly', async ({assert}) => {
   rimraf.sync('public/**/*')
   mkdirp.sync('public/test')
   fs.writeFileSync('public/test/test', '1')
-  assert.deepEqual(manifest(), {
+  assert.deepEqual(await manifest(), {
     assets: {'test/test': `assets/test/test-${hex('1')}`},
     integrity: {},
     files: {[`assets/test/test-${hex('1')}`]: {age: 0, asset: 'test/test'}}
@@ -106,15 +106,15 @@ test('ignore files and directories in public/assets/', async ({assert}) => {
   rimraf.sync('public/**/*')
   mkdirp.sync('public/assets/test/test')
   fs.writeFileSync('public/assets/test/test/test', '1')
-  assert.deepEqual(manifest(), {assets: {}, files: {}, integrity: {}})
+  assert.deepEqual(await manifest(), {assets: {}, files: {}, integrity: {}})
 })
 
 test('read existing manifest', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test', '1')
-  manifest()
+  await manifest()
   fs.writeFileSync('public/test', '2')
-  assert.deepEqual(manifest(), {
+  assert.deepEqual(await manifest(), {
     assets: {test: `assets/test-${hex('2')}`},
     integrity: {},
     files: {
@@ -129,13 +129,13 @@ test('read existing manifest', async ({assert}) => {
 test('only keep three versions', async ({assert}) => {
   rimraf.sync('public/**/*')
   fs.writeFileSync('public/test', '1')
-  manifest()
+  await manifest()
   fs.writeFileSync('public/test', '2')
-  manifest()
+  await manifest()
   fs.writeFileSync('public/test', '3')
-  manifest()
+  await manifest()
   fs.writeFileSync('public/test', '4')
-  assert.deepEqual(manifest(), {
+  assert.deepEqual(await manifest(), {
     assets: {test: `assets/test-${hex('4')}`},
     integrity: {},
     files: {
@@ -154,11 +154,11 @@ test('remove empty directories', async ({assert}) => {
   rimraf.sync('public/**/*')
   mkdirp.sync('public/dir')
   fs.writeFileSync('public/dir/test', '1')
-  manifest()
+  await manifest()
   fs.renameSync('public/dir/test', 'public/test')
-  manifest()
-  manifest()
-  assert.deepEqual(manifest(), {
+  await manifest()
+  await manifest()
+  assert.deepEqual(await manifest(), {
     assets: {test: `assets/test-${hex('1')}`},
     integrity: {},
     files: {

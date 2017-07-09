@@ -7,7 +7,7 @@ const crypto = require('crypto')
 const mkdirp = require('mkdirp')
 const {digestPath} = require('./assets')
 
-module.exports = () => {
+module.exports = async () => {
   let manifest = {}
   const assetPath = 'public/assets'
   const manifestPath = path.join(assetPath, '.manifest.json')
