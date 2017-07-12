@@ -13,7 +13,7 @@ const assets = {
 
   name: 'assets',
 
-  load (id) {
+  async load (id) {
     const file = path.relative(process.cwd(), id)
     if (!/^public\//.test(file)) return null
     const url = digestPath(path.relative('public', file))
