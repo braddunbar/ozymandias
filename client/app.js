@@ -1,3 +1,6 @@
+import './errors'
+import './analytics'
+import 'es6-promise/auto'
 import React, {PureComponent} from 'react'
 import store from './store'
 
