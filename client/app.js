@@ -1,6 +1,7 @@
 import './errors'
 import './analytics'
 import 'es6-promise/auto'
+import './to-locale-string'
 import React, {PureComponent} from 'react'
 import store from './store'
 
