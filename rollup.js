@@ -72,10 +72,11 @@ const env = {
 }
 
 module.exports = async (file) => {
-  const code = await rollup({
+  const bundle = await rollup({
     entry: file,
     onwarn: () => {},
     plugins: [buble({objectAssign: "require('object-assign')"}), assets, env]
   })
-  return code.generate({format: 'cjs'}).code
+  const {code} = await bundle.generate({format: 'cjs'})
+  return code
 }
