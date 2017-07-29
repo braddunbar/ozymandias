@@ -169,6 +169,6 @@ test('remove empty directories', async ({assert}) => {
   assert.is(fs.readFileSync(`public/assets/test-${hex('1')}`).toString(), '1')
 })
 
-test('clean up', async ({assert}) => {
+test('clean up', async () => {
   rimraf.sync('public')
 })
