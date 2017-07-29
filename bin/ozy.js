@@ -2,19 +2,15 @@
 
 'use strict'
 
-const path = require('path')
-const {execSync} = require('child_process')
+const dir = process.cwd()
+const {join} = require('path')
+const dotenv = require('dotenv')
+const {NODE_ENV} = process.env
 
-const args = process.argv.slice(3)
-const file = path.join(__dirname, `ozy-${process.argv[2]}`)
-let command = `${file} ${args.join(' ')}`
-
-if (!['production', 'test'].includes(process.env.NODE_ENV)) {
-  command = `env $(cat .env | xargs) ${command}`
+if (!NODE_ENV || NODE_ENV === 'development') {
+  const config = dotenv.config()
+  if (config.error) throw config.error
 }
 
-try {
-  execSync(command, {stdio: 'inherit'})
-} catch (error) {
-  process.exit(1)
-}
+const app = require(join(dir, require(join(dir, 'package.json')).main))
+app().cli()

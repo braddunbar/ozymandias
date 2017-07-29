@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 'use strict'
 
 const path = require('path')
@@ -73,13 +71,15 @@ const env = {
 
 }
 
-// Roll it up!
-rollup({
-  entry: process.argv[2],
-  onwarn: () => {},
-  plugins: [buble({objectAssign: "require('object-assign')"}), assets, env]
-}).then((code) => (
-  console.log(code.generate({format: 'cjs'}).code)
-)).catch((error) => {
-  console.error(error.stack)
-})
+module.exports = async function (entry) {
+  try {
+    const code = await rollup({
+      entry,
+      onwarn: () => {},
+      plugins: [buble({objectAssign: "require('object-assign')"}), assets, env]
+    })
+    console.log(code.generate({format: 'cjs'}).code)
+  } catch (error) {
+    console.error(error.stack)
+  }
+}

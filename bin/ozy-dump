@@ -1,8 +1,0 @@
-#!/bin/bash -e
-
-pg_dump \
-  --clean \
-  --create \
-  --no-owner \
-  --no-privileges \
-  $DATABASE_URL > schema.sql

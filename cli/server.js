@@ -3,9 +3,9 @@
 const cluster = require('cluster')
 const {PORT, WEB_CONCURRENCY} = process.env
 
-module.exports = (app) => {
+module.exports = function () {
   if (!cluster.isMaster) {
-    app.listen(PORT)
+    this.listen(PORT)
     console.log(`Worker ${process.pid} listening on port ${PORT}.`)
     return
   }

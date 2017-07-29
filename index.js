@@ -11,6 +11,9 @@ const compress = require('koa-compress')
 const ozymandias = module.exports = function () {
   const app = new Koa()
 
+  // CLI
+  app.cli = require('./cli')
+
   // Secrets!
   app.keys = [process.env.SECRET]
 
