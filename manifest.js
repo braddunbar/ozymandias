@@ -34,7 +34,7 @@ module.exports = async () => {
     const buffer = fs.readFileSync(path.join('public', asset))
     const base64 = crypto.createHash('sha256').update(buffer).digest('base64')
     const {dir, ext} = path.parse(asset)
-    const file = digestPath(asset)
+    const file = await digestPath(asset)
 
     // Add to assets.
     assets[asset] = file

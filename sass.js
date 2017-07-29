@@ -8,8 +8,9 @@ const render = promisify(sass.render)
 
 const functions = {
   'asset-path($file)' (file, done) {
-    const url = digestPath(file.getValue())
-    done(new sass.types.String(`url('${STATIC_ORIGIN || ''}/${url}')`))
+    digestPath(file.getValue()).then((url) => {
+      done(new sass.types.String(`url('${STATIC_ORIGIN || ''}/${url}')`))
+    })
   }
 }
 
