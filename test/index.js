@@ -5,6 +5,7 @@ const test = require('./test')
 
 require('./body')
 require('./browser')
+require('./browserify')
 require('./cache-control')
 require('./current-user')
 require('./db')
