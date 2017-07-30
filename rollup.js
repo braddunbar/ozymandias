@@ -17,17 +17,7 @@ const assets = {
     const file = path.relative(process.cwd(), id)
     if (!/^public\//.test(file)) return null
     const url = await digestPath(path.relative('public', file))
-    const code = `export default ${util.inspect((STATIC_ORIGIN || '') + '/' + url)}`
-
-    const ast = {
-      body: [],
-      end: null,
-      sourceType: 'module',
-      start: 0,
-      type: 'Program'
-    }
-
-    return {ast, code, map: {mappings: ''}}
+    return `export default ${util.inspect((STATIC_ORIGIN || '') + '/' + url)}`
   },
 
   resolveId (importee, importer) {
@@ -50,17 +40,7 @@ const env = {
     const file = path.relative(process.cwd(), id)
     if (!/^env\//.test(file)) return null
     const value = process.env[file.slice(4)]
-    const code = `export default ${util.inspect(value)}`
-
-    const ast = {
-      body: [],
-      end: null,
-      sourceType: 'module',
-      start: 0,
-      type: 'Program'
-    }
-
-    return {ast, code, map: {mappings: ''}}
+    return `export default ${util.inspect(value)}`
   },
 
   resolveId (importee, importer) {
