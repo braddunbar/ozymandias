@@ -1,7 +1,7 @@
 import bugsnag from 'bugsnag-js'
 import store from './store'
-import env from 'env/NODE_ENV'
-import key from 'env/BUGSNAG_CLIENT_KEY'
+import env from 'env:NODE_ENV'
+import key from 'env:BUGSNAG_CLIENT_KEY'
 
 bugsnag.apiKey = key
 bugsnag.releaseStage = env

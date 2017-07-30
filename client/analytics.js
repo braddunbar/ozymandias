@@ -1,4 +1,4 @@
-import id from 'env/GA_ID'
+import id from 'env:GA_ID'
 
 const ga = window.ga = window.ga || function () {
   (ga.q = ga.q || []).push(arguments)

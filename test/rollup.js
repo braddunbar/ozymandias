@@ -19,7 +19,7 @@ test('rollup some files', async ({assert}) => {
 })
 
 test('rollup with environment variables', async ({assert}) => {
-  fs.writeFileSync('tmp/test/a.js', "import value from 'env/TEST'; console.log(value)")
+  fs.writeFileSync('tmp/test/a.js', "import value from 'env:TEST'; console.log(value)")
   assert.is(await rollup('tmp/test/a.js'), "'use strict';\n\nvar value = 'x';\n\nconsole.log(value);\n")
 })
 
