@@ -13,5 +13,8 @@ module.exports = async (script) => {
       error ? reject(error) : resolve(buffer.toString())
     ))
   })
-  return process.env.NODE_ENV === 'production' ? minify(output) : output
+  if (process.env.NODE_ENV !== 'production') return output
+  const {code, error} = minify(output)
+  if (error) throw error
+  return code
 }
