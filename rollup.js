@@ -37,16 +37,13 @@ const env = {
   name: 'env',
 
   load (id) {
-    const file = path.relative(process.cwd(), id)
-    if (!file.startsWith('env:')) return null
-    const value = process.env[file.slice(4)]
+    if (!id.startsWith('env:')) return null
+    const value = process.env[id.slice(4)]
     return `export default ${util.inspect(value)}`
   },
 
   resolveId (importee, importer) {
-    if (importee.startsWith('env:')) {
-      return path.resolve(importee)
-    }
+    if (importee.startsWith('env:')) return importee
   }
 
 }
