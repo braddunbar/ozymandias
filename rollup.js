@@ -1,6 +1,5 @@
 'use strict'
 
-const path = require('path')
 const util = require('util')
 const resolve = require('resolve')
 const {rollup} = require('rollup')
@@ -14,16 +13,13 @@ const assets = {
   name: 'assets',
 
   async load (id) {
-    const file = path.relative(process.cwd(), id)
-    if (!/^public\//.test(file)) return null
-    const url = await digestPath(path.relative('public', file))
+    if (!id.startsWith('asset-path:')) return null
+    const url = await digestPath(id.slice(11))
     return `export default ${util.inspect((STATIC_ORIGIN || '') + '/' + url)}`
   },
 
   resolveId (importee, importer) {
-    if (/^public\//.test(importee)) {
-      return path.resolve(importee)
-    }
+    if (importee.startsWith('asset-path:')) return importee
 
     if (/^ozymandias\//.test(importee)) {
       return resolve.sync(importee, {basedir: process.cwd()})
