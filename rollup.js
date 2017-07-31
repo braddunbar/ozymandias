@@ -20,8 +20,7 @@ const assets = {
 
   resolveId (importee, importer) {
     if (importee.startsWith('asset-path:')) return importee
-
-    if (/^ozymandias\//.test(importee)) {
+    if (importee.startsWith('ozymandias/')) {
       return resolve.sync(importee, {basedir: process.cwd()})
     }
   }
