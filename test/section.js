@@ -94,7 +94,7 @@ test('handle multiple sections', async ({app, client}) => {
 })
 
 test('handle fallback', async ({app, client}) => {
-  app.sections = {x: '/x(.*)*', fallback: '*'}
+  app.sections = {x: '/x(.*)*', fallback: '(.*)'}
 
   app.use(get('*', async (_) => {
     _.body = {section: _.section}
@@ -109,7 +109,7 @@ test('handle fallback', async ({app, client}) => {
 })
 
 test('handle fallback at the root', async ({app, client}) => {
-  app.sections = {x: '/x/(.*)*', fallback: '*'}
+  app.sections = {x: '/x/(.*)*', fallback: '(.*)'}
 
   app.use(get('*', async (_) => {
     _.body = {section: _.section}

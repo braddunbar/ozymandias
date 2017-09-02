@@ -42,7 +42,7 @@
     "node-sass": "4.5.3",
     "object-assign": "*",
     "object-tojson": "1.0.1",
-    "path-to-regexp": "1.7.0",
+    "path-to-regexp": "2.0.0",
     "pg": "7.2.0",
     "react": "*",
     "react-dom": "*",
