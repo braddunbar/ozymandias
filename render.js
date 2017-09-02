@@ -8,7 +8,7 @@ const {URL} = require('url')
 
 module.exports = {
 
-  react (state) {
+  render (state) {
     const url = new URL(this.originalUrl, this.origin)
 
     Object.assign(this.state.client, state, {

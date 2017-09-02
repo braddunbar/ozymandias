@@ -64,7 +64,7 @@ const ozymandias = module.exports = function () {
   Object.assign(app.context,
     require('./helpers'),
     require('./mail'),
-    require('./react')
+    require('./render')
   )
 
   // Sections

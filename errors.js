@@ -27,6 +27,6 @@ module.exports = async (_, next) => {
 
     // Send back a 500
     _.status = 500
-    _.react()
+    _.render()
   }
 }

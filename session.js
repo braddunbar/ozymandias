@@ -48,16 +48,16 @@ module.exports = [
   }),
 
   get('/session/signin', async (_) => {
-    _.react()
+    _.render()
   }),
 
   get('/session/forgot', async (_) => {
-    _.react()
+    _.render()
   }),
 
   get('/session/reset/:id', async (_, id) => {
     const token = await findToken(id)
-    _.react({
+    _.render({
       token: token && token.id,
       email: token && token.user.email
     })

@@ -38,12 +38,12 @@ module.exports = {
 
   unauthorized () {
     this.status = 401
-    this.react()
+    this.render()
   },
 
   notfound () {
     this.status = 404
-    this.react()
+    this.render()
   },
 
   json (id, value) {

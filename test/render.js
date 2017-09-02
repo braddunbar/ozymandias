@@ -8,7 +8,7 @@ test('render state as json', async ({assert, app, client}) => {
 
   app.use(async (_) => {
     url = _.origin + _.originalUrl
-    _.react({x: 1})
+    _.render({x: 1})
   })
 
   const response = await client
@@ -33,7 +33,7 @@ test('render state as HTML', async ({assert, app, client}) => {
   app.context.client = ({x}) => React.createElement('em', {}, x)
 
   app.use(async (_) => {
-    _.react({x: 1})
+    _.render({x: 1})
     assert.deepEqual(_.state.client, {
       currentUser: null,
       admin: false,
@@ -55,7 +55,7 @@ test('render state as HTML', async ({assert, app, client}) => {
 })
 
 test('return html for browser accept value', async ({assert, app, client}) => {
-  app.use(async (_) => { _.react() })
+  app.use(async (_) => { _.render() })
 
   const response = await client
     .get('/')
@@ -71,7 +71,7 @@ test('toJSON', async ({assert, app, client}) => {
   }
 
   app.use(async (_) => {
-    _.react({x: {toJSON () { return 1 }}})
+    _.render({x: {toJSON () { return 1 }}})
     assert.is(_.state.client.x, 1)
   })
 
@@ -82,7 +82,7 @@ test('toJSON', async ({assert, app, client}) => {
 test('explicit 404 status', async ({assert, app, client}) => {
   app.use(async (_) => {
     _.status = 404
-    _.react()
+    _.render()
     assert.is(_.state.client.statusCode, 404)
   })
   const response = await client.get('/').send()
@@ -95,7 +95,7 @@ test('use context.state.client', async ({assert, app, client}) => {
   app.use(async (_) => {
     url = _.origin + _.originalUrl
     _.state.client.x = 1
-    _.react()
+    _.render()
   })
   const response = await client
     .get('/')
@@ -122,7 +122,7 @@ test('return the correct section data', async ({assert, app, client}) => {
 
   app.use(async (_) => {
     url = _.origin + _.originalUrl
-    _.react()
+    _.render()
   })
 
   const response = await client
