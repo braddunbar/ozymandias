@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "aws-sdk": "2.95.0",
-    "bcrypt": "1.0.2",
+    "bcrypt": "1.0.3",
     "browserify": "14.4.0",
     "bugsnag": "1.12.0",
     "bugsnag-js": "3.2.0",
