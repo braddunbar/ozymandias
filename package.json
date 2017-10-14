@@ -43,7 +43,7 @@
     "object-assign": "*",
     "object-tojson": "1.0.1",
     "path-to-regexp": "2.0.0",
-    "pg": "7.2.0",
+    "pg": "7.3.0",
     "react": "*",
     "react-dom": "*",
     "redux": "3.7.2",
