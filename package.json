@@ -23,7 +23,7 @@
     "aws-sdk": "2.133.0",
     "bcrypt": "1.0.3",
     "browserify": "14.4.0",
-    "bugsnag": "1.12.1",
+    "bugsnag": "2.0.0",
     "bugsnag-js": "3.2.1",
     "busboy": "0.2.14",
     "dotenv": "4.0.0",
