@@ -51,7 +51,7 @@ test('render state as HTML', async ({assert, app, client}) => {
     .get('/?x=1')
     .set('Accept', 'text/html')
     .send()
-  response.assert(200, `<div id='root'><em data-reactroot="" data-reactid="1" data-react-checksum="1647120041">1</em></div>`)
+  response.assert(200, `<div id='root'><em data-reactroot="">1</em></div>`)
 })
 
 test('return html for browser accept value', async ({assert, app, client}) => {
