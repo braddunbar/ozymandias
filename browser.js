@@ -1,6 +1,6 @@
 'use strict'
 
-const {Builder, By} = require('selenium-webdriver')
+const {Builder} = require('selenium-webdriver')
 const {Options} = require('selenium-webdriver/chrome')
 const options = new Options().addArguments('disable-gpu', 'headless')
 const driver = new Builder().setChromeOptions(options).forBrowser('chrome').build()
@@ -45,12 +45,12 @@ class Browser {
     driver.quit()
   }
 
-  find (selector) {
-    return driver.findElement(By.css(selector))
+  find (css) {
+    return driver.findElement({css})
   }
 
-  all (selector) {
-    return driver.findElements(By.css(selector))
+  all (css) {
+    return driver.findElements({css})
   }
 
   wait (predicate) {
