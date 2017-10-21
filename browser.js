@@ -46,7 +46,7 @@ class Browser {
   }
 
   find (css) {
-    return driver.findElement({css})
+    return this.wait(async () => driver.findElement({css}))
   }
 
   all (css) {
@@ -97,7 +97,7 @@ class Browser {
 
   assertText (text) {
     return this.wait(async () => {
-      const body = this.find('body')
+      const body = await this.find('body')
 
       if (typeof text === 'string') {
         return (await body.getText()).includes(text)
@@ -113,7 +113,7 @@ class Browser {
 
   refuteText (text) {
     return this.wait(async () => {
-      const body = this.find('body')
+      const body = await this.find('body')
 
       if (typeof text === 'string') {
         return !(await body.getText()).includes(text)
