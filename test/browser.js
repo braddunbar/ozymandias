@@ -2,14 +2,10 @@
 
 const test = require('./test')
 
-const layout = async (_, next) => {
-  await next()
-  _.body = `<!doctype html><meta charset='utf-8'>${_.body}`
-}
+const layout = (body) => `<!doctype html><meta charset='utf-8'>${body}`
 
 test('assertSelector', async ({app, assert, browser}) => {
-  app.use(layout)
-  app.use(async (_) => { _.body = '<div id="foo"></div>' })
+  app.use(async (_) => { _.body = layout('<div id="foo"></div>') })
 
   await browser.visit('/')
   await browser.assertSelector('div#foo')
@@ -20,8 +16,7 @@ test('assertSelector', async ({app, assert, browser}) => {
 })
 
 test('refuteSelector', async ({app, assert, browser}) => {
-  app.use(layout)
-  app.use(async (_) => { _.body = '<div id="foo"></div>' })
+  app.use(async (_) => { _.body = layout('<div id="foo"></div>') })
 
   await browser.visit('/')
   await browser.refuteSelector('span#bar')
@@ -32,8 +27,7 @@ test('refuteSelector', async ({app, assert, browser}) => {
 })
 
 test('assertUrl', async ({app, assert, browser}) => {
-  app.use(layout)
-  app.use(async (_) => { _.body = '' })
+  app.use(async (_) => { _.body = layout('') })
 
   await browser.visit('/path?key=value')
   await browser.assertUrl('/path?key=value')
@@ -44,16 +38,14 @@ test('assertUrl', async ({app, assert, browser}) => {
 })
 
 test('url', async ({app, assert, browser}) => {
-  app.use(layout)
-  app.use(async (_) => { _.body = '' })
+  app.use(async (_) => { _.body = layout('') })
 
   await browser.visit('/path?key=value')
   assert.is(await browser.url(), '/path?key=value')
 })
 
 test('find', async ({app, assert, browser}) => {
-  app.use(layout)
-  app.use(async (_) => { _.body = '<div id="foo"></div>' })
+  app.use(async (_) => { _.body = layout('<div id="foo"></div>') })
 
   await browser.visit('/')
   await browser.find('#foo')
@@ -64,8 +56,7 @@ test('find', async ({app, assert, browser}) => {
 })
 
 test('assertSelector with text', async ({app, assert, browser}) => {
-  app.use(layout)
-  app.use(async (_) => { _.body = '<div>test</div>' })
+  app.use(async (_) => { _.body = layout('<div>test</div>') })
 
   await browser.visit('/')
   await browser.assertSelector('body', {text: 'test'})
@@ -76,8 +67,7 @@ test('assertSelector with text', async ({app, assert, browser}) => {
 })
 
 test('assertSelector with count', async ({app, assert, browser}) => {
-  app.use(layout)
-  app.use(async (_) => { _.body = '<div></div><div></div>' })
+  app.use(async (_) => { _.body = layout('<div></div><div></div>') })
 
   await browser.visit('/')
   await browser.assertSelector('div', {count: 2})
@@ -88,8 +78,7 @@ test('assertSelector with count', async ({app, assert, browser}) => {
 })
 
 test('assertSelector with text and count', async ({app, assert, browser}) => {
-  app.use(layout)
-  app.use(async (_) => { _.body = '<div>test</div><div>test</div><div></div>' })
+  app.use(async (_) => { _.body = layout('<div>test</div><div>test</div><div></div>') })
 
   await browser.visit('/')
   await browser.assertSelector('div', {count: 2, text: 'test'})
@@ -100,16 +89,14 @@ test('assertSelector with text and count', async ({app, assert, browser}) => {
 })
 
 test('assertSelector with default count', async ({app, assert, browser}) => {
-  app.use(layout)
-  app.use(async (_) => { _.body = '<div>test</div><div>test</div>' })
+  app.use(async (_) => { _.body = layout('<div>test</div><div>test</div>') })
 
   await browser.visit('/')
   await browser.assertSelector('div', {text: 'test'})
 })
 
 test('assertSelector with regex text', async ({app, assert, browser}) => {
-  app.use(layout)
-  app.use(async (_) => { _.body = '<div>testing</div>' })
+  app.use(async (_) => { _.body = layout('<div>testing</div>') })
 
   await browser.visit('/')
   await browser.assertSelector('div', {text: /test/})
@@ -120,8 +107,7 @@ test('assertSelector with regex text', async ({app, assert, browser}) => {
 })
 
 test('refuteSelector with text', async ({app, assert, browser}) => {
-  app.use(layout)
-  app.use(async (_) => { _.body = '<div>test</div>' })
+  app.use(async (_) => { _.body = layout('<div>test</div>') })
 
   await browser.visit('/')
   await browser.refuteSelector('div', {text: 'wrong'})
@@ -132,8 +118,7 @@ test('refuteSelector with text', async ({app, assert, browser}) => {
 })
 
 test('refuteSelector with regexp text', async ({app, assert, browser}) => {
-  app.use(layout)
-  app.use(async (_) => { _.body = '<div>testing</div>' })
+  app.use(async (_) => { _.body = layout('<div>testing</div>') })
 
   await browser.visit('/')
   await browser.refuteSelector('div', {text: /wrong/})
@@ -144,8 +129,7 @@ test('refuteSelector with regexp text', async ({app, assert, browser}) => {
 })
 
 test('assertText', async ({app, assert, browser}) => {
-  app.use(layout)
-  app.use(async (_) => { _.body = '<div>test</div>' })
+  app.use(async (_) => { _.body = layout('<div>test</div>') })
 
   await browser.visit('/')
   await browser.assertText('test')
@@ -161,8 +145,7 @@ test('assertText', async ({app, assert, browser}) => {
 })
 
 test('refuteText', async ({app, assert, browser}) => {
-  app.use(layout)
-  app.use(async (_) => { _.body = '<div>test</div>' })
+  app.use(async (_) => { _.body = layout('<div>test</div>') })
 
   await browser.visit('/')
   await browser.refuteText('wrong')
