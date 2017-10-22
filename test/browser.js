@@ -4,17 +4,7 @@ const test = require('./test')
 
 const layout = async (_, next) => {
   await next()
-  _.body = `
-    <!doctype html>
-    <html>
-    <head>
-      <meta charset='utf-8'>
-      <title>Browser Testing</title>
-    </head>
-    <body>
-    ${_.body}
-    </body>
-    </html>`
+  _.body = `<!doctype html><meta charset='utf-8'>${_.body}`
 }
 
 test('assertSelector', async ({app, assert, browser}) => {
