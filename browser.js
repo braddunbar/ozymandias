@@ -56,8 +56,20 @@ class Browser {
       return Array.from(document.querySelectorAll('button')).filter((button) => (
         button.id === locator ||
         button.name === locator ||
-        button.innerText.includes(locator)
+        button.innerText === locator
       ))[0]
+    }, locator)
+  }
+
+  findField (locator) {
+    return this.find((locator) => {
+      return Array.from(document.querySelectorAll('input')).filter((field) => {
+        if (field.name === locator) return true
+        if (field.id) {
+          const label = document.querySelector(`label[for='${field.id}']`)
+          if (label && label.innerText === locator) return true
+        }
+      })[0]
     }, locator)
   }
 

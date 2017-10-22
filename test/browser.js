@@ -189,3 +189,30 @@ test('findButton by id', async ({app, assert, browser}) => {
   await browser.visit('/')
   await browser.findButton('id')
 })
+
+test('findField by name', async ({app, assert, browser}) => {
+  app.use(async (_) => { _.body = layout(`<input type='text' name='foo'>`) })
+
+  await browser.visit('/')
+  await browser.findField('foo')
+  try {
+    await browser.findField('does not exist')
+    assert.fail()
+  } catch (error) {}
+})
+
+test('findField by label text', async ({app, assert, browser}) => {
+  app.use(async (_) => {
+    _.body = layout(`
+      <label for='foo'>Bar</label>
+      <input type='text' id='foo' name='foo'>
+    `)
+  })
+
+  await browser.visit('/')
+  await browser.findField('Bar')
+  try {
+    await browser.findField('does not exist')
+    assert.fail()
+  } catch (error) {}
+})
