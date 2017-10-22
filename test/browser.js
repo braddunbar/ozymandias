@@ -171,3 +171,21 @@ test('refuteText', async ({app, assert, browser}) => {
     assert.fail()
   } catch (error) {}
 })
+
+test('findButton by text', async ({app, assert, browser}) => {
+  app.use(async (_) => { _.body = layout(`<button>test\`'"</button>`) })
+
+  await browser.visit('/')
+  await browser.findButton(`test\`'"`)
+  try {
+    await browser.findButton('does not exist')
+    assert.fail()
+  } catch (error) {}
+})
+
+test('findButton by id', async ({app, assert, browser}) => {
+  app.use(async (_) => { _.body = layout(`<button id="id"></button>`) })
+
+  await browser.visit('/')
+  await browser.findButton('id')
+})

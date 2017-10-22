@@ -51,6 +51,16 @@ class Browser {
     ))
   }
 
+  findButton (locator) {
+    return this.find((locator) => {
+      return Array.from(document.querySelectorAll('button')).filter((button) => (
+        button.id === locator ||
+        button.name === locator ||
+        button.innerText.includes(locator)
+      ))[0]
+    }, locator)
+  }
+
   all (css) {
     return driver.findElements({css})
   }
