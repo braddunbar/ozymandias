@@ -45,8 +45,10 @@ class Browser {
     driver.quit()
   }
 
-  find (css) {
-    return this.wait(async () => driver.findElement({css}))
+  find (locator) {
+    return this.wait(async () => driver.findElement(
+      typeof locator === 'function' ? {js: locator} : {css: locator}
+    ))
   }
 
   all (css) {

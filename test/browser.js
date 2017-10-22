@@ -55,6 +55,17 @@ test('find', async ({app, assert, browser}) => {
   } catch (error) {}
 })
 
+test('find by function', async ({app, assert, browser}) => {
+  app.use(async (_) => { _.body = layout('<div id="foo"></div>') })
+
+  await browser.visit('/')
+  await browser.find(() => document.querySelector('#foo'))
+  try {
+    await browser.find(() => document.querySelector('#doesnotexist'))
+    assert.fail()
+  } catch (error) {}
+})
+
 test('assertSelector with text', async ({app, assert, browser}) => {
   app.use(async (_) => { _.body = layout('<div>test</div>') })
 
