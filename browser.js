@@ -1,6 +1,6 @@
 'use strict'
 
-const {Builder} = require('selenium-webdriver')
+const {Builder, By} = require('selenium-webdriver')
 const {Options} = require('selenium-webdriver/chrome')
 const options = new Options().addArguments('disable-gpu', 'headless')
 const driver = new Builder().setChromeOptions(options).forBrowser('chrome').build()
@@ -45,9 +45,9 @@ class Browser {
     driver.quit()
   }
 
-  find (locator) {
+  find (locator, ...args) {
     return this.wait(async () => driver.findElement(
-      typeof locator === 'function' ? {js: locator} : {css: locator}
+      typeof locator === 'function' ? By.js(locator, ...args) : By.css(locator)
     ))
   }
 

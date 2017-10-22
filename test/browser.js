@@ -60,6 +60,7 @@ test('find by function', async ({app, assert, browser}) => {
 
   await browser.visit('/')
   await browser.find(() => document.querySelector('#foo'))
+  await browser.find((selector) => document.querySelector(selector), '#foo')
   try {
     await browser.find(() => document.querySelector('#doesnotexist'))
     assert.fail()
