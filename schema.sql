@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.3
--- Dumped by pg_dump version 9.6.3
+-- Dumped from database version 10.0
+-- Dumped by pg_dump version 10.0
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -218,13 +218,6 @@ COPY comments (id, post_id, user_id, body) FROM stdin;
 
 
 --
--- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('comments_id_seq', 2, true);
-
-
---
 -- Data for Name: migrations; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -250,13 +243,6 @@ COPY posts (id, body, published, user_id, search) FROM stdin;
 
 
 --
--- Name: posts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('posts_id_seq', 4, true);
-
-
---
 -- Data for Name: tokens; Type: TABLE DATA; Schema: public; Owner: -
 --
 
@@ -274,6 +260,20 @@ COPY users (id, email, first, last, birthday, password, created_at, updated_at, 
 3	jd@example.com	John	Doe	\N	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:36:14.869714-05	2015-12-05 10:36:20.117449-05	f
 4	test@example.com			\N	$2a$04$Q6vkwVPh/KrXSq4ugQPVSe4JpfWjPcSaUsYLGfc6wwiqlxgAveFm2	2015-12-05 10:41:16.14273-05	2015-12-05 10:41:16.14273-05	f
 \.
+
+
+--
+-- Name: comments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('comments_id_seq', 2, true);
+
+
+--
+-- Name: posts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('posts_id_seq', 4, true);
 
 
 --
