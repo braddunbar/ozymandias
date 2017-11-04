@@ -9,8 +9,8 @@
   "license": "ISC",
   "description": "Look on my works, ye mighty, and despair!",
   "engines": {
-    "node": "8.7.0",
-    "npm": "5.4.2"
+    "node": "9.0.0",
+    "npm": "5.5.1"
   },
   "repository": {
     "type": "git",
