@@ -165,9 +165,9 @@ class Browser {
 
   async signIn (email) {
     await this.visit('/session/signin')
-    await this.find('#email').sendKeys(email)
-    await this.find('#password').sendKeys('secret')
-    await this.find('#password').submit()
+    await (await this.find('#email')).sendKeys(email)
+    await (await this.find('#password')).sendKeys('secret')
+    await (await this.find('#password')).submit()
     await this.assertSelector('#signout')
   }
 }
