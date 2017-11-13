@@ -39,7 +39,7 @@
     "minimist": "1.2.0",
     "mkdirp": "0.5.1",
     "ms": "2.0.0",
-    "node-sass": "4.6.0",
+    "node-sass": "4.6.1",
     "object-assign": "*",
     "object-tojson": "1.0.1",
     "path-to-regexp": "2.1.0",
