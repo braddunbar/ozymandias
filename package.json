@@ -51,7 +51,7 @@
     "rimraf": "2.6.2",
     "rollup": "0.56.1",
     "rollup-plugin-buble": "0.19.2",
-    "selenium-webdriver": "3.6.0",
+    "selenium-webdriver": "4.0.0-alpha.1",
     "sql": "0.78.0",
     "tape": "4.8.0",
     "test-client": "1.0.2",
