@@ -29,7 +29,7 @@
     "dotenv": "5.0.0",
     "es6-promise": "4.2.4",
     "glob": "7.1.2",
-    "gm": "1.23.0",
+    "gm": "1.23.1",
     "koa": "2.5.0",
     "koa-bodyparser": "4.2.0",
     "koa-compress": "2.0.0",
