@@ -20,7 +20,7 @@
     "test": "env $(cat .testenv | xargs) ./bin/test"
   },
   "dependencies": {
-    "aws-sdk": "2.162.0",
+    "aws-sdk": "2.197.0",
     "bcrypt": "1.0.3",
     "browserify": "16.1.0",
     "bugsnag": "2.0.1",
