@@ -3,6 +3,7 @@
 const db = require('../db/instance')
 const test = require('./test')
 
+require('./admin')
 require('./body')
 require('./browser')
 require('./browserify')

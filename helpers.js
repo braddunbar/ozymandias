@@ -69,6 +69,15 @@ module.exports = {
     const path = assets.path(asset)
     const integrity = assets.integrity(asset)
     return `<link rel='stylesheet' href='${path}' integrity='${integrity}' crossorigin='anonymous'>`
+  },
+
+  requireUser () {
+    this.assert(this.state.currentUser, 401)
+  },
+
+  requireAdmin () {
+    this.requireUser()
+    this.assert(this.state.admin, 403)
   }
 
 }

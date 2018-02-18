@@ -67,6 +67,9 @@ const ozymandias = module.exports = function () {
     require('./render')
   )
 
+  // Default User
+  app.context.User = require('./user')
+
   // Sections
   app.sections = {}
   app.context.section = null
@@ -76,6 +79,12 @@ const ozymandias = module.exports = function () {
 
   // What section is this?
   app.use(require('./section'))
+
+  // Protect /admin section
+  app.use(require('./admin'))
+
+  // Sessions
+  for (const route of require('./session')) app.use(route)
 
   return app
 }

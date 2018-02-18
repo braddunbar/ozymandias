@@ -13,6 +13,18 @@ module.exports = async (_, next) => {
       return
     }
 
+    // Is this an unauthorized error?
+    if (error.status === 401) {
+      _.status = 401
+      return
+    }
+
+    // Is this a forbidden error?
+    if (error.status === 403) {
+      _.status = 403
+      return
+    }
+
     // Write the error to the console
     console.error(error.stack)
 

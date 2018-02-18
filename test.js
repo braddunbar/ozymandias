@@ -15,9 +15,10 @@ module.exports = (App) => (name, test) => tape(name, async (assert) => {
 
   const client = new Client(app)
 
-  client.signIn = (email) => (
-    client.post('/session').send({email, password: 'secret'})
-  )
+  client.signIn = async (email) => {
+    const response = await client.post('/session').send({email, password: 'password'})
+    response.assert(200)
+  }
 
   try {
     await test({app, assert, browser, client})

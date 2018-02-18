@@ -1,6 +1,7 @@
 'use strict'
 
 const test = require('./test')
+const {get} = require('koa-route')
 
 test('500', async ({assert, app, client}) => {
   app.use(async (_) => { throw new Error('test') })
@@ -98,4 +99,39 @@ test('csp', async ({assert, app, client}) => {
     .assert(200)
     .assert('content-security-policy', /script-src[^;]+x.net y.org;/)
     .assert('content-security-policy', /style-src[^;]+z.com;/)
+})
+
+test('requireUser', async ({assert, app, client}) => {
+  app.use(get('/test', async (_) => {
+    _.requireUser()
+    _.body = ''
+  }))
+
+  const response = await client.get('/test').send()
+
+  response.assert(401)
+})
+
+test('requireAdmin implies requireUser', async ({assert, app, client}) => {
+  app.use(get('/test', async (_) => {
+    _.requireAdmin()
+    _.body = ''
+  }))
+
+  const response = await client.get('/test').send()
+
+  response.assert(401)
+})
+
+test('requireAdmin', async ({assert, app, client}) => {
+  app.use(get('/test', async (_) => {
+    _.requireAdmin()
+    _.body = ''
+  }))
+
+  await client.signIn('jd@example.com')
+
+  const response = await client.get('/test').send()
+
+  response.assert(403)
 })
