@@ -7,7 +7,7 @@ module.exports = async (_, next) => {
   // Enforce https
   if (_.app.env === 'production') {
     // Redirect http to https
-    if (_.protocol !== 'https') {
+    if (!_.secure) {
       _.redirect(`https://${_.hostname}${_.originalUrl}`)
       return
     }
