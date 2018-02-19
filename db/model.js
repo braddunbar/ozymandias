@@ -2,7 +2,6 @@
 
 const sql = require('sql')
 const Query = require('./query')
-const {hasOwnProperty} = Object.prototype
 
 const snakeCase = (value) => (
   value.replace(/[A-Z]+/g, (upper) => `_${upper.toLowerCase()}`)
@@ -73,7 +72,7 @@ class Model {
   }
 
   static get table () {
-    if (!hasOwnProperty.call(this, '_table')) {
+    if (!this.hasOwnProperty('_table')) {
       this._table = sql.define({
         name: this.tableName,
         columns: this.columns.map((property) => ({
@@ -86,7 +85,7 @@ class Model {
   }
 
   static get relations () {
-    if (!hasOwnProperty.call(this, '_relations')) this._relations = {}
+    if (!this.hasOwnProperty('_relations')) this._relations = {}
     return this._relations
   }
 
