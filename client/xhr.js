@@ -51,13 +51,13 @@ export default (method = 'get', url, body, headers = {}) => new Promise((resolve
     reject(error)
   })
 })
-.catch((error) => {
-  if (error.status !== 422) {
-    window.Bugsnag.notifyException(error, 'XHR Error', {
-      response: error.response,
-      status: error.status,
-      url: error.url
-    })
-  }
-  throw error
-})
+  .catch((error) => {
+    if (error.status !== 422) {
+      window.Bugsnag.notifyException(error, 'XHR Error', {
+        response: error.response,
+        status: error.status,
+        url: error.url
+      })
+    }
+    throw error
+  })

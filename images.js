@@ -14,14 +14,14 @@ const strip = (file) => gm(file).strip().stream()
 // Convert a specific image size.
 const convert = (file, size) => (
   gm(file)
-  .strip()
-  .interlace('Plane')
-  .resize(size, size, '^')
-  .gravity('Center')
-  .crop(size, size, 0, 0)
-  .quality(70)
-  .density(72, 72)
-  .stream('.jpg')
+    .strip()
+    .interlace('Plane')
+    .resize(size, size, '^')
+    .gravity('Center')
+    .crop(size, size, 0, 0)
+    .quality(70)
+    .density(72, 72)
+    .stream('.jpg')
 )
 
 // Upload an image to s3.
